@@ -1,0 +1,24 @@
+{
+  "domain": "fi",
+  "app": "cmxfico",
+  "module": "gl",
+  "file": "voucher-entry.json",
+  "id": "voucher-entry",
+  "path": "凭证管理",
+  "title": "录入凭证",
+  "summary": "摘要",
+  "keywords": [
+    "凭证",
+    "录入"
+  ],
+  "order": 2,
+  "content": "# 标题\n正文",
+  "examples": [
+    {
+      "title": "e1",
+      "lang": "json",
+      "code": "{}"
+    }
+  ],
+  "updatedAt": 1782575447464
+}

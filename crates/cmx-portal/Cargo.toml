@@ -1,0 +1,48 @@
+[package]
+name = "cmx-portal"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+# 门户/设计器业务（迁移自 CMXPortalManager / CMXHTMLDesigner 的 Node 后端）。
+# 已按业务边界拆分：表单中心(pages)→cmx-form、模型中心(definitions/flexible_combination/dict)→cmx-model-meta、
+# 基础设施(config/error/fsutil/util)→cmx-jsonstore，三者经 lib.rs 再导出以保持对外 API 不变。
+# 本 crate 保留：菜单/活动/域/工作区节点等门户导航元数据(meta)、DAM 注册表、事实数据、帮助中心、
+# 功能启动器、通知中心、服务目录、AI 代理。全部为 JSON 文件存储（tokio::fs），不落库。
+
+[dependencies]
+# 内部依赖 - 共享基础设施（config / error / fsutil / util，经 lib.rs 再导出）
+cmx-jsonstore = { workspace = true }
+# 内部依赖 - 表单中心（pages：form / html / native，经 lib.rs 再导出为 cmx_portal::pages）
+cmx-form = { workspace = true }
+# 内部依赖 - 模型中心（definitions / flexible_combination / dict，经 lib.rs 再导出）
+cmx-model-meta = { workspace = true }
+# 内部依赖 - 数据库（DAM 注册表读路径切 DB，store::list_* 查 cmx_domain/application/module）
+cmx-database = { workspace = true }
+# 内部依赖 - 核心类型（DataSet/Row/Schema/DataValue，store::list_* 查 DB 结果映射用）
+cmx-core = { workspace = true }
+# 内部依赖 - 工具库（snowflake_id 用于 notify 唯一 id 生成，避免撞号）
+cmx-utils = { workspace = true }
+
+# 异步运行时（tokio::fs 文件读写 + 并发锁）
+tokio = { workspace = true }
+# 序列化框架
+serde = { workspace = true }
+# JSON 序列化/反序列化
+serde_json = { workspace = true }
+# 时间处理（版本时间戳 yyyyMMdd_HHmmssSSS）
+chrono = { workspace = true, features = ["serde"] }
+# 日志追踪
+tracing = { workspace = true }
+# 正则（ID 校验等）
+regex = { workspace = true }
+# HTTP 客户端（ai/chat 中继 DeepSeek）
+reqwest = { workspace = true }
+# 流式处理（SSE token 增量解析）
+futures-util = { workspace = true }
+
+[dev-dependencies]
+# 单元测试异步运行时
+tokio = { workspace = true }
+# 启用 base 的 testing feature：暴露 util::test_data_root_lock() 供本 crate 测试串行化数据根切换
+cmx-jsonstore = { workspace = true, features = ["testing"] }

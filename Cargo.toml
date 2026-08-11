@@ -1,0 +1,58 @@
+# cmx-portalservice —— 独立门户微服务 workspace。
+#
+# 目标：cmx-container 里不再有可执行 server bin，只剩公用库 crate。门户/流程/报表/主数据都是
+# 「代码极少、跨 workspace 复用公用库」的独立应用。本 workspace 承载门户微服务。
+#
+# 两类成员：
+# - **薄 bin** cmx-portal-server：跨 ws path 引 cmx-container 的 cmx-portal-app（承载 20 步 init +
+#   路由 + serve），牵入完整平台依赖树（同 flowengine 引 cmx-database-pg 的机理）。
+# - **门户业务层** cmx-portal（P-S1 从 cmx-container 迁入）：门户/设计器业务 store 层（notify/help/
+#   pages/dam/dict/agent/ai/meta/launcher/service_catalog）。它的唯一依赖者 cmx-api（留 cmx-container）
+#   经 keep-wired 跨 ws path 反向引用它——同 flow「引擎核在独立 ws、cmx-flow-api 壳留 container」模式。
+#   彻底解耦（cmx-api 不再引 cmx-portal，改 HTTP 反代）留待 P-S4。
+#
+# 依赖策略：cmx-portal 依赖的 cmx-* 基础库（cmx-jsonstore/form/model-meta/database/core/utils）仍是
+# cmx-container 成员，经跨 ws path 引用。外部 crate 走 aliyun 镜像，版本与 cmx-container 根对齐。
+[workspace]
+resolver = "2"
+members = [
+    "crates/cmx-portal-server",
+    "crates/cmx-portal",
+]
+
+[workspace.package]
+version = "0.1.12"
+edition = "2024"
+authors = ["skylake@pansoft.com"]
+
+[workspace.dependencies]
+# —— 本 ws 域内 crate（门户业务层）——
+cmx-portal = { path = "crates/cmx-portal", version = "0.1.12" }
+
+# —— 跨 workspace 复用 cmx-container 门户应用库（承载全部装配；仍是 cmx-container 成员）——
+# 平台总装配器：20 步有序 init + CmxAppState + 路由 + serve + 优雅关闭，暴露 run_platform(banner)。
+cmx-platform-app = { path = "../cmx-container/crates/libs/cmx-platform-app", version = "0.1.12" }
+# 通用 HTTP 服务骨架：BannerSpec（各微服务 bin 打印自己的个性化 banner）。
+cmx-web-chassis = { path = "../cmx-container/crates/libs/cmx-web-chassis", version = "0.1.12" }
+
+# —— 跨 workspace 复用 cmx-container 基础库（cmx-portal 的依赖；仍是 cmx-container 成员）——
+cmx-jsonstore = { path = "../cmx-container/crates/libs/cmx-jsonstore", version = "0.1.12" }
+cmx-form = { path = "../cmx-container/crates/libs/cmx-form", version = "0.1.12" }
+cmx-model-meta = { path = "../cmx-container/crates/libs/cmx-model/cmx-model-meta", version = "0.1.12" }
+cmx-database = { path = "../cmx-container/crates/libs/cmx-infra/cmx-database", version = "0.1.12" }
+cmx-core = { path = "../cmx-container/crates/libs/cmx-core", version = "0.1.12" }
+cmx-utils = { path = "../cmx-container/crates/libs/cmx-utils", version = "0.1.12" }
+
+# —— 外部 crate（版本照抄 cmx-container 根 [workspace.dependencies]）——
+tokio = { version = "1.41", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0", features = ["preserve_order"] }
+chrono = { version = "0.4", features = ["serde"] }
+tracing = "0.1"
+regex = "1.11"
+reqwest = { version = "0.12", default-features = false, features = ["json", "stream", "rustls-tls"] }
+futures-util = "0.3"
+
+[profile.release]
+opt-level = 3
+lto = "thin"

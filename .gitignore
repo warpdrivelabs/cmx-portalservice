@@ -1,0 +1,14 @@
+# 构建产物（target 体积极大，18G+），不入库
+/target/
+
+# 运行时日志（滚动文件），不入库
+/logs/
+
+# 本地文件存储根目录
+/storage/
+
+.DS_Store
+
+# 注意：.cargo/config.toml 必须纳入版本控制（aliyun 镜像 + nora registry 定义——跨 workspace
+# 解析 cmx-container 根 [patch.nora] 所需，缺它解析失败）；Cargo.lock 亦保留（可复现构建）。
+# .env / portal-server.toml 为本机测试配置（凭据为一次性测试值），随库提交。

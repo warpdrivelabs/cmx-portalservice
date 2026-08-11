@@ -1,0 +1,17 @@
+[package]
+name = "cmx-portal-server"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+# 门户微服务 bin（薄壳）：平台聚合服务全部装配收进跨 workspace 库 cmx-platform-app，本 bin 只调
+# run_portal()。对偶于 cmx-flow-server（流程微服务薄壳）。这是 P3 的落点——门户后端从 cmx-container
+# 的 web-server bin 迁到本独立 workspace，使 cmx-container 零可执行服务。
+
+[dependencies]
+# 平台总装配器（跨 ws path 引 cmx-container 成员；承载 20 步 init + CmxAppState + 路由 + serve）
+cmx-platform-app = { workspace = true }
+# 通用骨架：BannerSpec（本 bin 定义门户专属 banner 传给 run_platform）
+cmx-web-chassis = { workspace = true }
+# 异步运行时（#[tokio::main]）
+tokio = { workspace = true }
