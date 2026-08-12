@@ -137,6 +137,10 @@ timeout_ms = 30000
 # flow：非空 → 流程引擎独立微服务模式（S6）。门户的 /api/flow/* 经 FlowProxyModule 转发到此
 #   base 的 /api/flow/v1/*（内嵌引擎不再本进程启动）。空/注释 = 进程内嵌（默认）。
 flow = "http://127.0.0.1:8091"
+# report：非空 → 报表引擎独立微服务模式。门户的 /api/report-design/*、/api/report-source-bindings*、
+#   /api/rpt/compute 经 ReportProxyModule 转发到此 base 的同名 URL（报表微服务无 /v1 升级）。
+#   空/注释 = 进程内嵌 ReportModule（默认）。指向 report.sh 起的 cmx-rpt-server(:8092)。
+report = "http://127.0.0.1:8092"
 
 [center_client.discovery]
 nacos_group = "DEFAULT_GROUP"
