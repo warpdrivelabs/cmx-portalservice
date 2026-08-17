@@ -93,7 +93,7 @@ enabled = false
 
 # 数据库迁移（启用后自举建表；dir 在 cmx-container 内 → ../cmx-container/ 前缀）
 [migration]
-enabled = true
+enabled = false
 dir = "../cmx-container/docs/sql/migrations"
 validate_checksum = false
 lock_timeout = 60
@@ -141,6 +141,10 @@ flow = "http://127.0.0.1:8091"
 #   /api/rpt/compute 经 ReportProxyModule 转发到此 base 的同名 URL（报表微服务无 /v1 升级）。
 #   空/注释 = 进程内嵌 ReportModule（默认）。指向 report.sh 起的 cmx-rpt-server(:8092)。
 report = "http://127.0.0.1:8092"
+# rules：非空 → 决策规则引擎独立微服务模式。门户 /api/rules/* 经 RulesProxyModule 转发，
+#   /api/native-pages/{portal.rules.*} 经页面反代转发到此 base（rules-server 自暴同款 API）。
+#   规则无内嵌，不配 = 门户无规则路由。指向 rules.sh 起的 cmx-rule-server(:8094)。
+rules = "http://127.0.0.1:8094"
 
 [center_client.discovery]
 nacos_group = "DEFAULT_GROUP"
@@ -196,6 +200,7 @@ whitelist = [
     "/api/rpt",
     "/api/report-design",
     "/api/flow",
+    "/api/rules",
     "/api/jobs",
     "/api/fact",
     "/api/help",
@@ -214,5 +219,5 @@ password = "Admin@12345"
 access_ttl_secs = 1800000
 
 [opencode]
-enabled = true
+enabled = false
 base_url = "http://127.0.0.1:4096"

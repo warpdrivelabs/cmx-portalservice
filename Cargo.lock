@@ -1025,8 +1025,8 @@ dependencies = [
  "cmx-database",
  "cmx-database-pg",
  "cmx-debug",
- "cmx-iam",
  "cmx-metadata",
+ "cmx-orchestrator-rpc",
  "cmx-plugin",
  "cmx-portal",
  "cmx-rpc",
@@ -1155,7 +1155,9 @@ dependencies = [
  "axum",
  "bytes",
  "cmx-api-core",
+ "cmx-api-types",
  "cmx-biz",
+ "cmx-dct-model",
  "cmx-dct-store-pg",
  "futures",
  "rmp",
@@ -1163,6 +1165,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "tracing",
+ "utoipa",
 ]
 
 [[package]]
@@ -1175,6 +1178,7 @@ dependencies = [
  "cmx-utils",
  "serde",
  "serde_json",
+ "utoipa",
 ]
 
 [[package]]
@@ -1222,6 +1226,7 @@ dependencies = [
  "axum",
  "bytes",
  "cmx-api-core",
+ "cmx-api-types",
  "cmx-biz",
  "cmx-core",
  "cmx-database",
@@ -1235,6 +1240,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "tracing",
+ "utoipa",
 ]
 
 [[package]]
@@ -1279,142 +1285,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "cmx-flow-adapters"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "cmx-flow-engine",
- "hex",
- "hmac 0.12.1",
- "reqwest",
- "serde",
- "serde_json",
- "sha2 0.10.9",
- "tokio",
- "tracing",
-]
-
-[[package]]
 name = "cmx-flow-api"
 version = "0.1.12"
 dependencies = [
  "axum",
  "cmx-api-core",
- "cmx-flow-app",
  "cmx-traits",
  "reqwest",
  "serde_json",
- "tracing",
-]
-
-[[package]]
-name = "cmx-flow-app"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "axum",
- "chrono",
- "cmx-core",
- "cmx-database-pg",
- "cmx-flow-adapters",
- "cmx-flow-bpmn",
- "cmx-flow-def",
- "cmx-flow-engine",
- "cmx-flow-identity",
- "cmx-flow-model",
- "cmx-flow-store-pg",
- "cmx-web-monitor",
- "jsonwebtoken",
- "serde",
- "serde_json",
- "tokio",
- "tokio-stream",
- "tracing",
- "utoipa",
- "utoipa-swagger-ui",
- "uuid",
- "xxhash-rust",
-]
-
-[[package]]
-name = "cmx-flow-bpmn"
-version = "0.1.12"
-dependencies = [
- "cmx-flow-model",
- "roxmltree",
- "thiserror 2.0.20",
- "tracing",
-]
-
-[[package]]
-name = "cmx-flow-def"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "chrono",
- "cmx-core",
- "cmx-database-pg",
- "cmx-flow-bpmn",
- "cmx-flow-model",
- "serde",
- "serde_json",
- "thiserror 2.0.20",
- "tracing",
- "uuid",
-]
-
-[[package]]
-name = "cmx-flow-engine"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "chrono",
- "cmx-flow-model",
- "serde_json",
- "thiserror 2.0.20",
- "tokio",
- "tracing",
- "uuid",
-]
-
-[[package]]
-name = "cmx-flow-identity"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "cmx-core",
- "cmx-database-pg",
- "cmx-flow-model",
- "serde",
- "serde_json",
- "thiserror 2.0.20",
- "tracing",
-]
-
-[[package]]
-name = "cmx-flow-model"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "chrono",
- "serde",
- "serde_json",
- "thiserror 2.0.20",
- "tracing",
- "uuid",
-]
-
-[[package]]
-name = "cmx-flow-store-pg"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "chrono",
- "cmx-core",
- "cmx-database-pg",
- "cmx-flow-model",
- "serde_json",
- "thiserror 2.0.20",
  "tracing",
 ]
 
@@ -1554,6 +1432,7 @@ version = "0.1.12"
 dependencies = [
  "axum",
  "cmx-api-core",
+ "cmx-api-types",
  "cmx-biz",
  "cmx-database-pg",
  "cmx-dct-store-pg",
@@ -1562,6 +1441,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tracing",
+ "utoipa",
 ]
 
 [[package]]
@@ -1591,6 +1471,7 @@ dependencies = [
  "cmx-utils",
  "serde",
  "serde_json",
+ "sha2 0.10.9",
  "tokio",
  "tracing",
 ]
@@ -1666,6 +1547,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "cmx-orchestrator-rpc"
+version = "0.1.12"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "cmx-core",
+ "cmx-rpc",
+ "cmx-rpc-gen",
+ "cmx-traits",
+ "pilota",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "uuid",
+ "volo-grpc",
+]
+
+[[package]]
 name = "cmx-platform-app"
 version = "0.1.12"
 dependencies = [
@@ -1695,11 +1594,14 @@ dependencies = [
  "cmx-job-store-pg",
  "cmx-mdm-api",
  "cmx-model-api",
+ "cmx-orchestrator-rpc",
  "cmx-plugin",
  "cmx-plugin-api",
  "cmx-registry-config",
+ "cmx-resource-rpc",
  "cmx-rpc",
  "cmx-rpt-api",
+ "cmx-rule-api",
  "cmx-runtime",
  "cmx-service",
  "cmx-service-base",
@@ -1741,7 +1643,9 @@ dependencies = [
  "cmx-core",
  "cmx-database",
  "cmx-metadata",
+ "cmx-orchestrator-rpc",
  "cmx-registry-config",
+ "cmx-resource-rpc",
  "cmx-rpc",
  "cmx-service",
  "cmx-storage",
@@ -1843,6 +1747,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "cmx-resource-rpc"
+version = "0.1.12"
+dependencies = [
+ "async-trait",
+ "cmx-rpc",
+ "cmx-rpc-gen",
+ "cmx-traits",
+ "tokio",
+ "tracing",
+ "volo-grpc",
+]
+
+[[package]]
 name = "cmx-rowsource"
 version = "0.1.12"
 dependencies = [
@@ -1861,20 +1778,15 @@ version = "0.1.12"
 dependencies = [
  "anyhow",
  "async-broadcast",
- "async-trait",
- "chrono",
  "cmx-core",
  "cmx-registry-config",
- "cmx-rpc-gen",
  "cmx-traits",
  "cmx-utils",
- "pilota",
  "serde",
  "serde_json",
  "thiserror 2.0.20",
  "tokio",
  "tracing",
- "uuid",
  "volo",
  "volo-grpc",
 ]
@@ -1895,7 +1807,6 @@ version = "0.1.12"
 dependencies = [
  "axum",
  "cmx-api-core",
- "cmx-rpt-app",
  "cmx-traits",
  "reqwest",
  "serde_json",
@@ -1903,60 +1814,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "cmx-rpt-app"
+name = "cmx-rule-api"
 version = "0.1.12"
 dependencies = [
  "axum",
- "cmx-api-types",
- "cmx-rpt-formula",
- "cmx-rpt-model",
- "cmx-rpt-store-pg",
+ "cmx-api-core",
  "cmx-traits",
- "serde",
+ "reqwest",
  "serde_json",
- "tracing",
- "xxhash-rust",
-]
-
-[[package]]
-name = "cmx-rpt-formula"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "inventory",
- "rust_decimal",
- "serde",
- "serde_json",
- "tracing",
-]
-
-[[package]]
-name = "cmx-rpt-model"
-version = "0.1.12"
-dependencies = [
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "cmx-rpt-store-pg"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "base64 0.22.1",
- "cmx-api-types",
- "cmx-biz",
- "cmx-core",
- "cmx-database-pg",
- "cmx-job-core",
- "cmx-rpt-formula",
- "cmx-rpt-model",
- "cmx-utils",
- "inventory",
- "rust_decimal",
- "serde_json",
- "sha2 0.10.9",
- "tokio",
  "tracing",
 ]
 
@@ -6343,12 +6208,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "roxmltree"
-version = "0.20.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c20b6793b5c2fa6553b250154b78d6d0db37e72700ae35fad9387a46f487c97"
-
-[[package]]
 name = "rust-embed"
 version = "8.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7580,7 +7439,6 @@ dependencies = [
  "futures-core",
  "pin-project-lite",
  "tokio",
- "tokio-util",
 ]
 
 [[package]]
