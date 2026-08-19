@@ -94,9 +94,10 @@ enabled = false
 # 数据库迁移（启用后自举建表；dir 在 cmx-container 内 → ../cmx-container/ 前缀）
 [migration]
 enabled = false
-dir = "../cmx-container/docs/sql/migrations"
+dir = "../cmx-container/docs/sql/v2"
 validate_checksum = false
-lock_timeout = 60
+# 等待其他节点完成迁移的轮询超时（秒）；超时后按台账决定跳过或接管
+lock_wait_timeout = 120
 
 # ============================================
 # 文件存储配置
