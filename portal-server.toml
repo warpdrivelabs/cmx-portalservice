@@ -93,7 +93,7 @@ enabled = false
 
 # 数据库迁移（启用后自举建表；dir 在 cmx-container 内 → ../cmx-container/ 前缀）
 [migration]
-enabled = false
+enabled = true
 dir = "../cmx-container/docs/sql/v2"
 validate_checksum = false
 # 等待其他节点完成迁移的轮询超时（秒）；超时后按台账决定跳过或接管
@@ -222,3 +222,28 @@ access_ttl_secs = 1800000
 [opencode]
 enabled = false
 base_url = "http://127.0.0.1:4096"
+
+
+# ==================== MDM订阅分发 ====================
+[mdm.distribution]
+enabled = true                 # 分发引擎总开关（false：不启动 Dispatcher 循环，端点仍可用）
+scan_interval_ms = 2000        # dispatcher 扫描周期
+fanout_batch = 500             # 单轮扇出最大事件数
+deliver_batch = 100            # 单轮投递最大 dispatch 数
+deliver_concurrency = 8        # 跨订阅并发投递上限
+backoff_base_ms = 5000         # 重试退避基数
+backoff_max_ms = 1800000       # 重试退避上限（30min）
+running_reclaim_minutes = 10   # running 残留回收阈值（分钟）
+allow_private_address = true   # webhook 目标允许私网/回环地址（MDM 下游多为内网；外网部署改 false）
+
+[mdm.flow]
+# 本进程回环基址（MDM 后端发起/查询流程用；集群部署指向 LB/VIP）
+loopback_base = "http://127.0.0.1:8080"
+# 流程定义 key（data/flow/definitions/mdm_cr_approval.bpmn）
+definition_key = "mdm_cr_approval"
+# webhook 验签密钥（= flow-server .env 的 FLOW_WEBHOOK_SIGNING_KEY）
+webhook_secret = "mdm_flow_hook_dev_secret"
+# 回环调用超时（毫秒）
+timeout_ms = 10000
+# M2 手动端点（approve/reject/activate）开关：默认关闭，流程故障时运维开启
+manual_override_enabled = false
