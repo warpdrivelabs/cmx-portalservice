@@ -106,13 +106,25 @@ cmx-portalservice/                        （独立 workspace）
 
 ### 微服务开关 `[center_client]`
 
-门户对下游能力中心「内嵌 vs 独立微服务」只看这一段配置：
+门户对下游能力中心「内嵌 vs 独立微服务」只看这一段配置——服务定位为**自由键值表**（urls 手动基址 /
+discovery.services Nacos 服务名，新增微服务只加一行键值），`mode` 驱动导入器传输与反代目标来源
+（local → 不挂反代；http_url → urls 基址；http_discovery/grpc → Nacos 服务发现选例）：
 
 ```toml
+[center_client]
+mode = "http_url"
+
 [center_client.urls]
-# 非空 → 流程引擎独立微服务模式：门户的 /api/flow/* 转发到此 base（本进程不启内嵌引擎）。
-# 空/注释 → 进程内嵌（默认）。
+# 导入器目标（自环门户统一端点）
+menu = "http://127.0.0.1:8080"
+# 反代目标：非空 → 独立微服务模式，门户的 /api/flow/* 转发到此基址；不配 → 门户无该路由。
 flow = "http://127.0.0.1:8091"
+report = "http://127.0.0.1:8092"
+rules = "http://127.0.0.1:8094"
+
+[center_client.discovery.services]
+# mode = "http_discovery"/"grpc" 时改查此表（Nacos 注册名）
+flow = "cmx-flow-server"
 ```
 
 ---

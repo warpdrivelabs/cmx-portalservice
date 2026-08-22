@@ -130,29 +130,38 @@ base_path = "cmx-server/"
 # ============================================
 # 基础服务中心配置
 # ============================================
+# 服务定位为「自由键值表」：urls（手动基址）与 discovery.services（Nacos 服务名），新增微服务
+# 只在 toml 加一行键值，无需改代码。mode 同时决定导入器传输与反代（flow/report/rules）目标来源
+#（local/未知值 → 全内嵌不挂反代；http_url → urls 基址；http_discovery/grpc → Nacos 服务发现）。
 [center_client]
-mode = "mock"
+# 部署蓝本：三引擎独立微服务 + 手动基址反代（原 mode="mock" 为历史遗留值，已按 urls 配置意图归一）。
+mode = "http_url"
 timeout_ms = 30000
 
+# URL 直连模式（mode = "http_url" 时生效）：服务键 → 纯基址（无路径，端点由消费方拼接）
 [center_client.urls]
-# flow：非空 → 流程引擎独立微服务模式（S6）。门户的 /api/flow/* 经 FlowProxyModule 转发到此
-#   base 的 /api/flow/v1/*（内嵌引擎不再本进程启动）。空/注释 = 进程内嵌（默认）。
+# 导入器目标：菜单/权限/表单定义导入 → 门户自身统一端点（自环）
+menu = "http://127.0.0.1:8080"
+perm = "http://127.0.0.1:8080"
+form = "http://127.0.0.1:8080"
+# 反代目标：独立微服务基址。flow → 门户 /api/flow/* 经 FlowProxyModule 转发到其 /api/flow/v1/*；
+# report → /api/report-design/*、/api/report-source-bindings*、/api/rpt/compute 恒等转发（无 /v1）；
+# rules → /api/rules/* + portal.rules.* 页面反代（规则无内嵌，不配 = 门户无规则路由）。
 flow = "http://127.0.0.1:8091"
-# report：非空 → 报表引擎独立微服务模式。门户的 /api/report-design/*、/api/report-source-bindings*、
-#   /api/rpt/compute 经 ReportProxyModule 转发到此 base 的同名 URL（报表微服务无 /v1 升级）。
-#   空/注释 = 进程内嵌 ReportModule（默认）。指向 report.sh 起的 cmx-rpt-server(:8092)。
 report = "http://127.0.0.1:8092"
-# rules：非空 → 决策规则引擎独立微服务模式。门户 /api/rules/* 经 RulesProxyModule 转发，
-#   /api/native-pages/{portal.rules.*} 经页面反代转发到此 base（rules-server 自暴同款 API）。
-#   规则无内嵌，不配 = 门户无规则路由。指向 rules.sh 起的 cmx-rule-server(:8094)。
 rules = "http://127.0.0.1:8094"
 
+# 服务发现模式（mode = "http_discovery" 或 "grpc" 时生效；http_url 下不读，为切发现模式备好）
 [center_client.discovery]
 nacos_group = "DEFAULT_GROUP"
-menu_service = "cmx-server-local"
-perm_service = "cmx-server-local"
-form_service = "cmx-server-local"
-flow_service = "cmx-server-local"
+# 注册名以各服务 .env 的 NACOS_NAMING_SERVICE_NAME 为准（门户实注册 cmx-portal-local）。
+[center_client.discovery.services]
+menu = "cmx-portal-local"
+perm = "cmx-portal-local"
+form = "cmx-portal-local"
+flow = "cmx-flow-server"
+report = "cmx-rpt-server"
+rules = "cmx-rule-server"
 
 # ============================================
 # RPC 配置（默认关闭）
