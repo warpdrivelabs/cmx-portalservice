@@ -131,37 +131,33 @@ base_path = "cmx-server/"
 # 基础服务中心配置
 # ============================================
 # 服务定位为「自由键值表」：urls（手动基址）与 discovery.services（Nacos 服务名），新增微服务
-# 只在 toml 加一行键值，无需改代码。mode 同时决定导入器传输与反代（flow/report/rules）目标来源
-#（local/未知值 → 全内嵌不挂反代；http_url → urls 基址；http_discovery/grpc → Nacos 服务发现）。
+# 只在 toml 加一行键值，无需改代码。定位与传输均 per-key：每键自带 url/discovery 定位
+#（url 优先，删 url 即切 Nacos 选例）与可选 transport 覆盖（http|grpc，仅导入调用生效）。
 [center_client]
-# 部署蓝本：三引擎独立微服务 + 手动基址反代（原 mode="mock" 为历史遗留值，已按 urls 配置意图归一）。
-mode = "http_url"
+# 部署蓝本：三引擎独立微服务 + 手动基址反代。
+# 服务间调用全局传输缺省：http | grpc（grpc 需 [rpc] + 各键 discovery）；键级 transport 可覆盖。
+default_transport = "http"
+# Nacos 分组（discovery 定位的键共用，缺省 DEFAULT_GROUP）
+nacos_group = "DEFAULT_GROUP"
 timeout_ms = 30000
 
-# URL 直连模式（mode = "http_url" 时生效）：服务键 → 纯基址（无路径，端点由消费方拼接）
-[center_client.urls]
-# 导入器目标：菜单/权限/表单定义导入 → 门户自身统一端点（自环）
-menu = "http://127.0.0.1:8080"
-perm = "http://127.0.0.1:8080"
-form = "http://127.0.0.1:8080"
-# 反代目标：独立微服务基址。flow → 门户 /api/flow/* 经 FlowProxyModule 转发到其 /api/flow/v1/*；
+# 服务键 → 服务描述（自由表，新增微服务加一行即可）：
+# - url       = 静态基址（纯基址无路径，端点由消费方拼接）；与 discovery 并存时 url 优先
+# - discovery = Nacos 服务名（删 url 即切服务发现选例；transport=grpc 时必配）
+# - transport = http|grpc（仅服务间导入调用生效，反代恒 HTTP；缺省取 default_transport）
+# 环境变量覆盖：CENTER_CLIENT__SERVICES__FLOW__URL 等（值需带 scheme，纯数字值会被解析为整数）
+[center_client.services]
+# 导入器目标：菜单/权限/表单定义导入 → 门户自身统一端点（自环）。
+# 服务发现备用值：注册名以各服务 .env 的 NACOS_NAMING_SERVICE_NAME 为准（门户实注册 cmx-portal-local）。
+menu = { url = "http://127.0.0.1:8080", discovery = "cmx-portal-local" }
+perm = { url = "http://127.0.0.1:8080", discovery = "cmx-portal-local" }
+form = { url = "http://127.0.0.1:8080", discovery = "cmx-portal-local" }
+# 反代目标：独立微服务。flow → 门户 /api/flow/* 经 FlowProxyModule 转发到其 /api/flow/v1/*；
 # report → /api/report-design/*、/api/report-source-bindings*、/api/rpt/compute 恒等转发（无 /v1）；
 # rules → /api/rules/* + portal.rules.* 页面反代（规则无内嵌，不配 = 门户无规则路由）。
-flow = "http://127.0.0.1:8091"
-report = "http://127.0.0.1:8092"
-rules = "http://127.0.0.1:8094"
-
-# 服务发现模式（mode = "http_discovery" 或 "grpc" 时生效；http_url 下不读，为切发现模式备好）
-[center_client.discovery]
-nacos_group = "DEFAULT_GROUP"
-# 注册名以各服务 .env 的 NACOS_NAMING_SERVICE_NAME 为准（门户实注册 cmx-portal-local）。
-[center_client.discovery.services]
-menu = "cmx-portal-local"
-perm = "cmx-portal-local"
-form = "cmx-portal-local"
-flow = "cmx-flow-server"
-report = "cmx-rpt-server"
-rules = "cmx-rule-server"
+flow = { url = "http://127.0.0.1:8091", discovery = "cmx-flow-server" }
+report = { url = "http://127.0.0.1:8092", discovery = "cmx-rpt-server" }
+rules = { url = "http://127.0.0.1:8094", discovery = "cmx-rule-server" }
 
 # ============================================
 # RPC 配置（默认关闭）
