@@ -158,6 +158,7 @@ form = { url = "http://127.0.0.1:8080", discovery = "cmx-portal-local" }
 flow = { url = "http://127.0.0.1:8091", discovery = "cmx-flow-server" }
 report = { url = "http://127.0.0.1:8092", discovery = "cmx-rpt-server" }
 rules = { url = "http://127.0.0.1:8094", discovery = "cmx-rule-server" }
+mdm = { url = "http://127.0.0.1:8095", discovery = "cmx-mdm-server" }
 
 # ============================================
 # RPC 配置（默认关闭）
