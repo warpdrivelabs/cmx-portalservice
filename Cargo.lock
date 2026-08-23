@@ -1427,63 +1427,9 @@ dependencies = [
 name = "cmx-mdm-api"
 version = "0.1.12"
 dependencies = [
- "async-trait",
  "axum",
  "cmx-api-core",
- "cmx-api-types",
- "cmx-biz",
- "cmx-core",
- "cmx-database-pg",
- "cmx-dct-store-pg",
- "cmx-mdm-model",
- "cmx-mdm-store-pg",
- "cmx-portal",
- "cmx-traits",
- "cmx-utils",
- "dashmap",
- "hex",
- "hmac 0.12.1",
- "rand 0.8.7",
- "reqwest",
- "serde",
- "serde_json",
- "sha2 0.10.9",
- "tokio",
- "tracing",
- "utoipa",
-]
-
-[[package]]
-name = "cmx-mdm-model"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "chrono",
- "cmx-biz",
- "cmx-core",
- "cmx-utils",
- "serde",
- "serde_json",
- "tracing",
-]
-
-[[package]]
-name = "cmx-mdm-store-pg"
-version = "0.1.12"
-dependencies = [
- "cmx-api-types",
- "cmx-biz",
- "cmx-core",
- "cmx-database-pg",
- "cmx-dct-store-pg",
- "cmx-mdm-model",
- "cmx-traits",
- "cmx-utils",
- "serde",
- "serde_json",
- "sha2 0.10.9",
- "tokio",
- "tracing",
+ "cmx-proxy-core",
 ]
 
 [[package]]
