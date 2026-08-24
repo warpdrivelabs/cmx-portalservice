@@ -155,9 +155,12 @@ form = { url = "http://127.0.0.1:8080", discovery = "cmx-portal-local" }
 # 反代目标：独立微服务。flow → 门户 /api/flow/* 经 FlowProxyModule 转发到其 /api/flow/v1/*；
 # report → /api/report-design/*、/api/report-source-bindings*、/api/rpt/compute 恒等转发（无 /v1）；
 # rules → /api/rules/* + portal.rules.* 页面反代（规则无内嵌，不配 = 门户无规则路由）。
+# model → /api/{dct,dict,doc,model,definitions,flexible-combination,code}/* + 模型中心页面反代
+#   （配了 = 反代到独立 cmx-model-server；不配 = 门户进程内嵌 Dct/Doc/Model/Code）。
 flow = { url = "http://127.0.0.1:8091", discovery = "cmx-flow-server" }
 report = { url = "http://127.0.0.1:8092", discovery = "cmx-rpt-server" }
 rules = { url = "http://127.0.0.1:8094", discovery = "cmx-rule-server" }
+model = { url = "http://127.0.0.1:8093", discovery = "cmx-model-server" }
 mdm = { url = "http://127.0.0.1:8095", discovery = "cmx-mdm-server" }
 
 # ============================================
@@ -204,6 +207,8 @@ whitelist = [
     "/api/dict",
     "/api/dct",
     "/api/doc",
+    "/api/model",
+    "/api/code",
     "/api/rpt",
     "/api/report-design",
     "/api/consol",

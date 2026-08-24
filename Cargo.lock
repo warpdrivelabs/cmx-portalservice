@@ -975,40 +975,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cmx-code-api"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "axum",
- "cmx-api-core",
- "cmx-api-types",
- "cmx-code-model",
- "cmx-core",
- "cmx-database-pg",
- "cmx-traits",
- "cmx-utils",
- "regex",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "cmx-code-model"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "chrono",
- "cmx-core",
- "rand 0.8.7",
- "regex",
- "serde",
- "serde_json",
- "thiserror 2.0.20",
-]
-
-[[package]]
 name = "cmx-common-api"
 version = "0.1.12"
 dependencies = [
@@ -1149,62 +1115,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cmx-dct-api"
-version = "0.1.12"
-dependencies = [
- "axum",
- "bytes",
- "cmx-api-core",
- "cmx-api-types",
- "cmx-biz",
- "cmx-dct-model",
- "cmx-dct-store-pg",
- "futures",
- "rmp",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
- "utoipa",
-]
-
-[[package]]
-name = "cmx-dct-model"
-version = "0.1.12"
-dependencies = [
- "chrono",
- "cmx-biz",
- "cmx-core",
- "cmx-utils",
- "serde",
- "serde_json",
- "utoipa",
-]
-
-[[package]]
-name = "cmx-dct-store-pg"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "bytes",
- "cmx-api-types",
- "cmx-biz",
- "cmx-core",
- "cmx-database-pg",
- "cmx-dct-model",
- "cmx-master-slave",
- "cmx-model-meta",
- "cmx-rowsource",
- "cmx-traits",
- "csv",
- "futures",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
-]
-
-[[package]]
 name = "cmx-debug"
 version = "0.1.12"
 dependencies = [
@@ -1217,71 +1127,6 @@ dependencies = [
  "tracing",
  "utoipa",
  "walkdir",
-]
-
-[[package]]
-name = "cmx-doc-api"
-version = "0.1.12"
-dependencies = [
- "axum",
- "bytes",
- "cmx-api-core",
- "cmx-api-types",
- "cmx-biz",
- "cmx-core",
- "cmx-database",
- "cmx-database-pg",
- "cmx-doc-model",
- "cmx-doc-store-pg",
- "cmx-model-meta",
- "futures",
- "rmp",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
- "utoipa",
-]
-
-[[package]]
-name = "cmx-doc-model"
-version = "0.1.12"
-dependencies = [
- "base64 0.22.1",
- "chrono",
- "cmx-biz",
- "cmx-core",
- "cmx-utils",
- "rust_decimal",
- "serde",
- "serde_json",
- "thiserror 2.0.20",
-]
-
-[[package]]
-name = "cmx-doc-store-pg"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "chrono",
- "cmx-api-types",
- "cmx-biz",
- "cmx-core",
- "cmx-database",
- "cmx-database-pg",
- "cmx-doc-model",
- "cmx-master-slave",
- "cmx-model-meta",
- "cmx-rowsource",
- "cmx-traits",
- "cmx-utils",
- "dashmap",
- "rmp-serde",
- "rust_decimal",
- "serde",
- "serde_json",
- "time",
- "tracing",
 ]
 
 [[package]]
@@ -1413,18 +1258,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "cmx-master-slave"
-version = "0.1.12"
-dependencies = [
- "async-trait",
- "cmx-rowsource",
- "serde",
- "serde_json",
- "thiserror 2.0.20",
-]
-
-[[package]]
-name = "cmx-mdm-api"
+name = "cmx-mdm-proxy"
 version = "0.1.12"
 dependencies = [
  "axum",
@@ -1452,43 +1286,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cmx-model-api"
-version = "0.1.12"
-dependencies = [
- "axum",
- "cmx-api-core",
- "cmx-api-types",
- "cmx-core",
- "cmx-model-deploy",
- "cmx-model-meta",
- "futures",
- "serde",
- "serde_json",
- "tokio",
-]
-
-[[package]]
-name = "cmx-model-deploy"
-version = "0.1.12"
-dependencies = [
- "anyhow",
- "chrono",
- "cmx-api-types",
- "cmx-biz",
- "cmx-core",
- "cmx-database",
- "cmx-metadata",
- "cmx-model-meta",
- "cmx-traits",
- "cmx-utils",
- "serde",
- "serde_json",
- "sha2 0.10.9",
- "tokio",
- "tracing",
-]
-
-[[package]]
 name = "cmx-model-meta"
 version = "0.1.12"
 dependencies = [
@@ -1500,6 +1297,15 @@ dependencies = [
  "serde_json",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "cmx-model-proxy"
+version = "0.1.12"
+dependencies = [
+ "axum",
+ "cmx-api-core",
+ "cmx-proxy-core",
 ]
 
 [[package]]
@@ -1534,22 +1340,19 @@ dependencies = [
  "cmx-biz",
  "cmx-biz-api",
  "cmx-buffer",
- "cmx-code-api",
  "cmx-common-api",
  "cmx-core",
  "cmx-database",
  "cmx-database-pg",
- "cmx-dct-api",
  "cmx-debug",
- "cmx-doc-api",
  "cmx-flow-api",
  "cmx-iam",
  "cmx-iam-api",
  "cmx-job-api",
  "cmx-job-core",
  "cmx-job-store-pg",
- "cmx-mdm-api",
- "cmx-model-api",
+ "cmx-mdm-proxy",
+ "cmx-model-proxy",
  "cmx-orchestrator-rpc",
  "cmx-plugin",
  "cmx-plugin-api",
