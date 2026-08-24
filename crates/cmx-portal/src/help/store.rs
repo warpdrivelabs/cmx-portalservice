@@ -461,7 +461,7 @@ mod tests {
     #[tokio::test]
     #[allow(clippy::await_holding_lock)]
     async fn help_doc_roundtrip_and_validation() {
-        // 串行化对 CMX_PORTAL_DATA_ROOT 的修改，避免与其它切换数据根的测试并行污染。
+        // 串行化对 ASSETS__ROOT 的修改，避免与其它切换数据根的测试并行污染。
         let _env = crate::util::test_data_root_lock().lock().unwrap();
         // 唯一临时数据根（放 crate target 下，避免与其它测试/真实数据互相污染）。
         let crate_dir = env!("CARGO_MANIFEST_DIR");
@@ -478,7 +478,7 @@ mod tests {
             .join("test-data")
             .join(unique);
         // SAFETY: 测试内单线程设置进程环境变量；data_root() 读取它。
-        unsafe { std::env::set_var("CMX_PORTAL_DATA_ROOT", &data_root) };
+        unsafe { std::env::set_var("ASSETS__ROOT", &data_root) };
 
         // 1) 保存一份文档（file 由 id 推导）。
         let saved = save_doc(HelpDocInput {

@@ -9,6 +9,10 @@
 [server]
 host = "0.0.0.0"
 port = 8080
+# 日志目录 / 日志级别 / 优雅关闭（chassis 框架级；env 覆盖 SERVER__LOG_DIR / SERVER__LOG_LEVEL / SERVER__GRACEFUL_TIMEOUT_SECS）
+log_dir = "logs"
+log_level = "info"
+graceful_timeout_secs = 10
 
 # 部署模式（mono：单体，服务所有域/应用/模块；数据源加载全部 status=1 记录，app_id 固定 default）
 [deploy]
@@ -25,17 +29,22 @@ module_code = "gl"
 node_id = 1
 
 # ============================================
-# 门户/设计器业务数据根 + 同源托管前端构建产物
+# 页面/内容资产（统一 [assets] 段）+ 同源托管前端构建产物
 # 路径相对 cmx-portalservice/ 运行目录：前端在 presentation 级 → ../ 前缀。
+# env 覆盖：ASSETS__ROOT / ASSETS__WEB_PORTAL_DIST / ...（段名 + __ + 键名大写）。
 # ============================================
-[portal]
-# ★ 业务数据根：native-pages/html-pages/menu-pages/dict/... 全部页面/字典/单据数据的 JSON 存储根。
+[assets]
+# ★ 内容根：native-pages/html-pages/menu-pages/dict/... 全部页面/字典/单据数据的 JSON 存储根。
 #   这些是**平台共享业务数据**，物理仍在 cmx-container/data（P3 只迁 bin 不迁数据）→ 指向它，
 #   否则 cwd=cmx-portalservice 下 ./data 不存在，所有页面查不到 → 前端"找不到页面"。
-data_root = "../cmx-container/data"
+root = "../cmx-container/data"
 web_portal_dist = "../CMXPortalManager/dist"
 web_html_dist = "../CMXHTMLDesigner/dist"
 web_shared_dist = "../packages/cmx-ui5-runtime/dist"
+# 页面 moka L1 缓存（进程内文件内容缓存；默认关闭，改后新请求即时生效/重建键需重启）
+page_cache_enabled = false
+page_cache_ttl_secs = 30
+page_cache_max_entries = 4096
 
 # ============================================
 # 数据源配置数组
@@ -235,27 +244,3 @@ access_ttl_secs = 1800000
 enabled = false
 base_url = "http://127.0.0.1:4096"
 
-
-# ==================== MDM订阅分发 ====================
-[mdm.distribution]
-enabled = true                 # 分发引擎总开关（false：不启动 Dispatcher 循环，端点仍可用）
-scan_interval_ms = 2000        # dispatcher 扫描周期
-fanout_batch = 500             # 单轮扇出最大事件数
-deliver_batch = 100            # 单轮投递最大 dispatch 数
-deliver_concurrency = 8        # 跨订阅并发投递上限
-backoff_base_ms = 5000         # 重试退避基数
-backoff_max_ms = 1800000       # 重试退避上限（30min）
-running_reclaim_minutes = 10   # running 残留回收阈值（分钟）
-allow_private_address = true   # webhook 目标允许私网/回环地址（MDM 下游多为内网；外网部署改 false）
-
-[mdm.flow]
-# 本进程回环基址（MDM 后端发起/查询流程用；集群部署指向 LB/VIP）
-loopback_base = "http://127.0.0.1:8080"
-# 流程定义 key（data/flow/definitions/mdm_cr_approval.bpmn）
-definition_key = "mdm_cr_approval"
-# webhook 验签密钥（= flow-server .env 的 FLOW_WEBHOOK_SIGNING_KEY）
-webhook_secret = "mdm_flow_hook_dev_secret"
-# 回环调用超时（毫秒）
-timeout_ms = 10000
-# M2 手动端点（approve/reject/activate）开关：默认关闭，流程故障时运维开启
-manual_override_enabled = false

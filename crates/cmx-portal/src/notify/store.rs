@@ -529,7 +529,7 @@ mod tests {
             .join("target")
             .join("test-data")
             .join(unique);
-        unsafe { std::env::set_var("CMX_PORTAL_DATA_ROOT", &root) };
+        unsafe { std::env::set_var("ASSETS__ROOT", &root) };
 
         let uid = "u1";
         // 初始计数为 0

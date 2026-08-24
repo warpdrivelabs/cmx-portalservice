@@ -104,7 +104,7 @@ mod tests {
     #[tokio::test]
     #[allow(clippy::await_holding_lock)]
     async fn domains_derived_from_dam_registry() {
-        // 串行化对 CMX_PORTAL_DATA_ROOT 的修改，避免与其它切换数据根的测试并行污染。
+        // 串行化对 ASSETS__ROOT 的修改，避免与其它切换数据根的测试并行污染。
         let _env = crate::util::test_data_root_lock().lock().unwrap();
         // 指向 Node 后端的真实数据目录（相对 cmx-portal crate 根：../../../../CMXPortalManager/...）
         let crate_dir = env!("CARGO_MANIFEST_DIR");
@@ -112,7 +112,7 @@ mod tests {
             .join("../../../../CMXPortalManager/cmx-node-server/data");
         // 该数据目录来自旧的 monorepo 布局，独立检出 cmx-container 时并不存在——
         // 缺失时优雅跳过（对齐 PG 集成测试「无 TEST_PG_URL 即跳过」的做法），
-        // 避免把「缺测试夹具」误报成「代码回归」，也不污染共享的 CMX_PORTAL_DATA_ROOT。
+        // 避免把「缺测试夹具」误报成「代码回归」，也不污染共享的 ASSETS__ROOT。
         if !data_root.join("dam").exists() && !data_root.exists() {
             eprintln!(
                 "跳过 domains_derived_from_dam_registry：未找到夹具目录 {}",
@@ -121,7 +121,7 @@ mod tests {
             return;
         }
         // SAFETY: 测试单线程设置进程环境变量；data_root() 读取它。
-        unsafe { std::env::set_var("CMX_PORTAL_DATA_ROOT", data_root) };
+        unsafe { std::env::set_var("ASSETS__ROOT", data_root) };
 
         let doc = get_domains_doc().await.expect("应成功派生域清单");
         assert_eq!(doc["source"], "dam", "应优先从 DAM 注册表派生");
