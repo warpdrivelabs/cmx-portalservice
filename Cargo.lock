@@ -1005,6 +1005,7 @@ dependencies = [
  "modql",
  "percent-encoding",
  "regex",
+ "reqwest",
  "rmp",
  "rmp-serde",
  "sea-query",
