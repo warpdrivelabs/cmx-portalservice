@@ -1,0 +1,246 @@
+# ============================================
+# 门户微服务配置（cmx-portalservice 独立 workspace）
+# ============================================
+# 蓝本 = cmx-container/dev-local.toml。差异：本 ws 在 presentation/cmx-portalservice/，若从该目录
+# 运行（CONFIG_FILE=./portal-server.toml cargo run -p cmx-portal-server），凡指向 cmx-container 内
+# 资源的相对路径需前缀 ../cmx-container/（templates / migration.dir）。指向 presentation 级同胞前端
+# 的路径（CMXPortalManager/CMXHTMLDesigner/packages）改为 ../ 前缀。
+
+[server]
+host = "0.0.0.0"
+port = 8080
+# 日志目录 / 日志级别 / 优雅关闭（chassis 框架级；env 覆盖 SERVER__LOG_DIR / SERVER__LOG_LEVEL / SERVER__GRACEFUL_TIMEOUT_SECS）
+log_dir = "logs"
+log_level = "info"
+graceful_timeout_secs = 10
+
+# 部署模式（mono：单体，服务所有域/应用/模块；数据源加载全部 status=1 记录，app_id 固定 default）
+[deploy]
+mode = "mono"
+
+# 应用标识（仅 micro 模式生效；mono 下整体不生效）
+[app]
+domain_code = "fi"
+application_code = "cmxfico"
+module_code = "gl"
+
+# 主键 ID 生成（DCT/DOC bigint id 后端铸号；node_id 跨部署须唯一）
+[id_gen]
+node_id = 1
+
+# ============================================
+# 页面/内容资产（统一 [assets] 段）+ 同源托管前端构建产物
+# 路径相对 cmx-portalservice/ 运行目录：前端在 presentation 级 → ../ 前缀。
+# env 覆盖：ASSETS__ROOT / ASSETS__WEB_PORTAL_DIST / ...（段名 + __ + 键名大写）。
+# ============================================
+[assets]
+# ★ 内容根：native-pages/html-pages/menu-pages/dict/... 全部页面/字典/单据数据的 JSON 存储根。
+#   这些是**平台共享业务数据**，物理仍在 cmx-container/data（P3 只迁 bin 不迁数据）→ 指向它，
+#   否则 cwd=cmx-portalservice 下 ./data 不存在，所有页面查不到 → 前端"找不到页面"。
+root = "../cmx-container/data"
+web_portal_dist = "../CMXPortalManager/dist"
+web_html_dist = "../CMXHTMLDesigner/dist"
+web_shared_dist = "../packages/cmx-ui5-runtime/dist"
+# 页面 moka L1 缓存（进程内文件内容缓存；默认关闭，改后新请求即时生效/重建键需重启）
+page_cache_enabled = false
+page_cache_ttl_secs = 30
+page_cache_max_entries = 4096
+
+# ============================================
+# 数据源配置数组
+# ============================================
+[[databases]]
+db_id = "primary"
+db_name = "主控数据库"
+db_type = "postgres"
+db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmxlocal"
+#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmxlocal"default = true
+pool_config = { max_connections = 15, min_connections = 3, connect_timeout = 20, idle_timeout = 300, max_lifetime = 900 }
+health_check_interval = 60
+health_check_timeout = 5
+
+[[databases]]
+db_id = "fico-db"
+db_name = "总账数据库"
+db_type = "postgres"
+db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmx_fico"
+#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmx_fico"default = false
+source_type = "biz"
+pool_config = { max_connections = 15, min_connections = 3, connect_timeout = 20, idle_timeout = 300, max_lifetime = 900 }
+health_check_interval = 60
+health_check_timeout = 5
+
+[redis]
+url = "redis://localhost:6379/12"
+
+[templates]
+# 模板目录在 cmx-container 内 → ../cmx-container/ 前缀
+path = "../cmx-container/crates/libs/cmx-dev/templates"
+
+[code_server]
+url = "http://127.0.0.1:8081/"
+
+[code_server_extension_server]
+url = "http://127.0.0.1:9000"
+
+# WASM 运行时配置
+[runtime]
+memory_max = 4096
+timeout = 30
+pool_max_instances = 8
+fuel_limit = 0
+
+# 插件配置
+[plugin]
+install_root = "plugins/root"
+backup_root = "plugins/backup"
+temp_root = "plugins/temp"
+upload_root = "plugins/uploads"
+
+[plugin.auto_install]
+enabled = false
+
+# 数据库迁移（启用后自举建表；dir 在 cmx-container 内 → ../cmx-container/ 前缀）
+[migration]
+enabled = true
+dir = "../cmx-container/docs/sql/v2"
+validate_checksum = false
+# 等待其他节点完成迁移的轮询超时（秒）；超时后按台账决定跳过或接管
+lock_wait_timeout = 120
+
+# ============================================
+# 文件存储配置
+# ============================================
+[storage]
+default_platform = "local"
+
+[[storage.instances]]
+platform = "local"
+storage_type = "local"
+enable_storage = true
+domain = "http://localhost:8080/files/"
+base_path = "uploads"
+storage_path = "./storage"
+enable_access = true
+path_patterns = "/files/**"
+
+[[storage.instances]]
+platform = "minio"
+storage_type = "s3"
+enable_storage = true
+access_key = "Wa8GQ78My7d0b4AedpLS"
+secret_key = "3T0IYmsQP0OeBqKZ1jB5tk3pLmMD3ZT97AnNFIXV"
+region = "us-east-1"
+endpoint = "http://192.168.157.46:9000/"
+bucket_name = "cmx-bucket"
+domain = "http://192.168.157.46:9000/"
+base_path = "cmx-server/"
+
+# ============================================
+# 基础服务中心配置
+# ============================================
+# 服务定位为「自由键值表」：urls（手动基址）与 discovery.services（Nacos 服务名），新增微服务
+# 只在 toml 加一行键值，无需改代码。定位与传输均 per-key：每键自带 url/discovery 定位
+#（url 优先，删 url 即切 Nacos 选例）与可选 transport 覆盖（http|grpc，仅导入调用生效）。
+[center_client]
+# 部署蓝本：三引擎独立微服务 + 手动基址反代。
+# 服务间调用全局传输缺省：http | grpc（grpc 需 [rpc] + 各键 discovery）；键级 transport 可覆盖。
+default_transport = "http"
+# Nacos 分组（discovery 定位的键共用，缺省 DEFAULT_GROUP）
+nacos_group = "DEFAULT_GROUP"
+timeout_ms = 30000
+
+# 服务键 → 服务描述（自由表，新增微服务加一行即可）：
+# - url       = 静态基址（纯基址无路径，端点由消费方拼接）；与 discovery 并存时 url 优先
+# - discovery = Nacos 服务名（删 url 即切服务发现选例；transport=grpc 时必配）
+# - transport = http|grpc（仅服务间导入调用生效，反代恒 HTTP；缺省取 default_transport）
+# 环境变量覆盖：CENTER_CLIENT__SERVICES__FLOW__URL 等（值需带 scheme，纯数字值会被解析为整数）
+[center_client.services]
+# 导入器目标：菜单/权限/表单定义导入 → 门户自身统一端点（自环）。
+# 服务发现备用值：注册名以各服务 .env 的 NACOS_NAMING_SERVICE_NAME 为准（门户实注册 cmx-portal-local）。
+menu = { url = "http://127.0.0.1:8080", discovery = "cmx-portal-local" }
+perm = { url = "http://127.0.0.1:8080", discovery = "cmx-portal-local" }
+form = { url = "http://127.0.0.1:8080", discovery = "cmx-portal-local" }
+# 反代目标：独立微服务。flow → 门户 /api/flow/* 经 FlowProxyModule 转发到其 /api/flow/v1/*；
+# report → /api/report-design/*、/api/report-source-bindings*、/api/rpt/compute 恒等转发（无 /v1）；
+# rules → /api/rules/* + portal.rules.* 页面反代（规则无内嵌，不配 = 门户无规则路由）。
+# model → /api/{dct,dict,doc,model,definitions,flexible-combination,code}/* + 模型中心页面反代
+#   （配了 = 反代到独立 cmx-model-server；不配 = 门户进程内嵌 Dct/Doc/Model/Code）。
+flow = { url = "http://127.0.0.1:8091", discovery = "cmx-flow-server" }
+report = { url = "http://127.0.0.1:8092", discovery = "cmx-rpt-server" }
+rules = { url = "http://127.0.0.1:8094", discovery = "cmx-rule-server" }
+model = { url = "http://127.0.0.1:8093", discovery = "cmx-model-server" }
+mdm = { url = "http://127.0.0.1:8095", discovery = "cmx-mdm-server" }
+
+# ============================================
+# RPC 配置（默认关闭）
+# ============================================
+[rpc]
+enabled = false
+protocol = "grpc"
+warmup_services = []
+
+[rpc.grpc]
+port = 9090
+timeout_ms = 30000
+connect_timeout_ms = 3000
+retry_count = 0
+
+# ============================================
+# 服务对外身份配置
+# ============================================
+[service_auth]
+outgoing_api_key = "cmx_sk_dev_A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6"
+
+# ============================================
+# 认证配置
+# ============================================
+[auth]
+whitelist = [
+    "/api/html-pages",
+    "/api/form-pages",
+    "/api/native-pages",
+    "/api/workspace-nodes",
+    "/api/registry",
+    "/api/service-catalog",
+    "/api/definitions",
+    "/api/flexible-combination",
+    "/api/launcher",
+    "/api/domains",
+    "/api/menu-pages",
+    "/api/menu",
+    "/api/activities",
+    "/api/modules",
+    "/api/module-resources",
+    "/api/dam-registry",
+    "/api/dict",
+    "/api/dct",
+    "/api/doc",
+    "/api/model",
+    "/api/code",
+    "/api/rpt",
+    "/api/report-design",
+    "/api/consol",
+    "/api/flow",
+    "/api/rules",
+    "/api/jobs",
+    "/api/fact",
+    "/api/help",
+]
+
+[[auth.static_api_keys]]
+key = "cmx_sk_dev_A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6"
+service_name = "dev-internal"
+description = "开发环境默认 API Key"
+
+[auth.super_admin]
+username = "admin"
+password = "Admin@12345"
+
+[auth.token]
+access_ttl_secs = 1800000
+
+[opencode]
+enabled = false
+base_url = "http://127.0.0.1:4096"
+
