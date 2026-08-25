@@ -37,7 +37,7 @@ node_id = 1
 # ★ 内容根：native-pages/html-pages/menu-pages/dict/... 全部页面/字典/单据数据的 JSON 存储根。
 #   这些是**平台共享业务数据**，物理仍在 cmx-container/data（P3 只迁 bin 不迁数据）→ 指向它，
 #   否则 cwd=cmx-portalservice 下 ./data 不存在，所有页面查不到 → 前端"找不到页面"。
-root = "../cmx-container/data"
+root = "../cmx-container/assets/portal/data"
 web_portal_dist = "../CMXPortalManager/dist"
 web_html_dist = "../CMXHTMLDesigner/dist"
 web_shared_dist = "../packages/cmx-ui5-runtime/dist"
