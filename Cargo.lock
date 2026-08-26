@@ -975,6 +975,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "cmx-build"
+version = "0.1.12"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "dashmap",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.20",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "cmx-build-store-pg"
+version = "0.1.12"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "cmx-build",
+ "cmx-core",
+ "cmx-database",
+ "serde_json",
+ "tracing",
+]
+
+[[package]]
 name = "cmx-common-api"
 version = "0.1.12"
 dependencies = [
@@ -987,13 +1014,18 @@ dependencies = [
  "cmx-auth",
  "cmx-biz",
  "cmx-buffer",
+ "cmx-build",
+ "cmx-build-store-pg",
  "cmx-core",
  "cmx-database",
  "cmx-database-pg",
  "cmx-debug",
+ "cmx-dev-workspace",
  "cmx-metadata",
  "cmx-orchestrator-rpc",
  "cmx-plugin",
+ "cmx-plugin-trigger",
+ "cmx-plugin-trigger-store-pg",
  "cmx-portal",
  "cmx-rpc",
  "cmx-service",
@@ -1131,6 +1163,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "cmx-dev-workspace"
+version = "0.1.12"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "cmx-core",
+ "cmx-database",
+ "serde",
+ "serde_json",
+ "tracing",
+]
+
+[[package]]
 name = "cmx-flow-api"
 version = "0.1.12"
 dependencies = [
@@ -1151,6 +1196,22 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror 2.0.20",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "cmx-http"
+version = "0.1.12"
+dependencies = [
+ "chrono",
+ "cmx-core",
+ "cmx-traits",
+ "dashmap",
+ "reqwest",
+ "rmp-serde",
+ "serde",
+ "serde_json",
  "tokio",
  "tracing",
 ]
@@ -1273,6 +1334,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "cmx-meta-proxy"
+version = "0.1.12"
+dependencies = [
+ "axum",
+ "cmx-api-core",
+ "cmx-proxy-core",
+]
+
+[[package]]
 name = "cmx-metadata"
 version = "0.1.12"
 dependencies = [
@@ -1346,6 +1416,8 @@ dependencies = [
  "cmx-biz",
  "cmx-biz-api",
  "cmx-buffer",
+ "cmx-build",
+ "cmx-build-store-pg",
  "cmx-common-api",
  "cmx-core",
  "cmx-database",
@@ -1358,10 +1430,13 @@ dependencies = [
  "cmx-job-core",
  "cmx-job-store-pg",
  "cmx-mdm-proxy",
+ "cmx-meta-proxy",
  "cmx-model-proxy",
  "cmx-orchestrator-rpc",
  "cmx-plugin",
  "cmx-plugin-api",
+ "cmx-plugin-trigger",
+ "cmx-plugin-trigger-store-pg",
  "cmx-registry-config",
  "cmx-resource-rpc",
  "cmx-rpc",
@@ -1391,6 +1466,7 @@ dependencies = [
  "tracing-subscriber",
  "utoipa",
  "utoipa-swagger-ui",
+ "zip 2.4.2",
 ]
 
 [[package]]
@@ -1465,6 +1541,33 @@ dependencies = [
  "tracing",
  "utoipa",
  "uuid",
+]
+
+[[package]]
+name = "cmx-plugin-trigger"
+version = "0.1.12"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "cmx-core",
+ "cmx-traits",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "cmx-plugin-trigger-store-pg"
+version = "0.1.12"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "cmx-core",
+ "cmx-database",
+ "cmx-plugin-trigger",
+ "serde_json",
+ "tracing",
 ]
 
 [[package]]
@@ -1646,6 +1749,7 @@ dependencies = [
  "cmx-database",
  "cmx-database-pg",
  "cmx-debug",
+ "cmx-http",
  "cmx-plugin",
  "cmx-registry-config",
  "cmx-rpc",
