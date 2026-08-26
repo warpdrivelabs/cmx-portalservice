@@ -53,7 +53,8 @@ page_cache_max_entries = 4096
 db_id = "primary"
 db_name = "主控数据库"
 db_type = "postgres"
-db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmxlocal"
+#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmxlocal"
+db_url = "postgres://postgres:postgres@192.168.1.100:5432/cmx"
 #db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmxlocal"
 default = true
 pool_config = { max_connections = 15, min_connections = 3, connect_timeout = 20, idle_timeout = 300, max_lifetime = 900 }
@@ -64,7 +65,8 @@ health_check_timeout = 5
 db_id = "fico-db"
 db_name = "总账数据库"
 db_type = "postgres"
-db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmx_fico"
+#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmx_fico"
+db_url = "postgres://postgres:postgres@192.168.1.100:5432/fico"
 default = false
 source_type = "biz"
 pool_config = { max_connections = 15, min_connections = 3, connect_timeout = 20, idle_timeout = 300, max_lifetime = 900 }
