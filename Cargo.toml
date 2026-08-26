@@ -45,6 +45,8 @@ cmx-model-meta = { path = "../cmx-model/crates/cmx-model-meta", version = "0.1.1
 cmx-database = { path = "../cmx-container/crates/libs/cmx-infra/cmx-database", version = "0.1.12" }
 cmx-core = { path = "../cmx-container/crates/libs/cmx-core", version = "0.1.12" }
 cmx-utils = { path = "../cmx-container/crates/libs/cmx-utils", version = "0.1.12" }
+# 通知中心集群广播（Redis pub/sub：publish_json + GlobalSubscriberManager 订阅转发，照抄 cmx-plugin 先例）
+cmx-buffer = { path = "../cmx-container/crates/libs/cmx-infra/cmx-buffer", version = "0.1.12" }
 
 # —— 外部 crate（版本照抄 cmx-container 根 [workspace.dependencies]）——
 tokio = { version = "1.41", features = ["full"] }

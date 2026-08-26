@@ -12,11 +12,11 @@ use tokio::sync::broadcast;
 /// 经通道广播的一条推送事件。
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NotifyEvent {
-    /// 目标用户（SSE 连接据此过滤，仅下发本人事件）。
+    /// 目标用户(SSE 连接据此过滤,仅下发本人事件;fanout 事件为空串,所有连接都处理)。
     pub user_id: String,
-    /// 事件类型：`notify`（新通知）/`counts`（角标刷新）。
+    /// 事件类型:`notify`(新通知)/`counts`(角标刷新)/`fanout`(大群发提示,连接方自行拉取 counts)。
     pub kind: String,
-    /// 负载：notify 为新通知项；counts 为 { task, message, log, total }。
+    /// 负载:notify 为新通知项;counts 为 { task, message, log, total };fanout 为空对象。
     pub data: serde_json::Value,
 }
 

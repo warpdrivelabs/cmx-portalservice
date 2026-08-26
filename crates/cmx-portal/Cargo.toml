@@ -8,7 +8,8 @@ authors.workspace = true
 # 已按业务边界拆分：表单中心(pages)→cmx-form、模型中心(definitions/flexible_combination/dict)→cmx-model-meta、
 # 基础设施(config/error/fsutil/util)→cmx-jsonstore，三者经 lib.rs 再导出以保持对外 API 不变。
 # 本 crate 保留：菜单/活动/域/工作区节点等门户导航元数据(meta)、DAM 注册表、事实数据、帮助中心、
-# 功能启动器、通知中心、服务目录、AI 代理。全部为 JSON 文件存储（tokio::fs），不落库。
+# 功能启动器、通知中心、服务目录、AI 代理。多数资源为 JSON 文件存储（tokio::fs）；
+# 通知中心（notify）与 DAM 注册表读路径已迁平台库 PostgreSQL（cmx_notification / cmx_notification_recipient）。
 
 [dependencies]
 # 内部依赖 - 共享基础设施（config / error / fsutil / util，经 lib.rs 再导出）
@@ -23,6 +24,8 @@ cmx-database = { workspace = true }
 cmx-core = { workspace = true }
 # 内部依赖 - 工具库（snowflake_id 用于 notify 唯一 id 生成，避免撞号）
 cmx-utils = { workspace = true }
+# 内部依赖 - Redis 缓存/发布订阅（通知中心集群广播 + 发布限流；GlobalCacheManager/GlobalSubscriberManager）
+cmx-buffer = { workspace = true }
 
 # 异步运行时（tokio::fs 文件读写 + 并发锁）
 tokio = { workspace = true }

@@ -1575,6 +1575,7 @@ name = "cmx-portal"
 version = "0.1.12"
 dependencies = [
  "chrono",
+ "cmx-buffer",
  "cmx-core",
  "cmx-database",
  "cmx-form",
