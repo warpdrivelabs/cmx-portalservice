@@ -198,38 +198,7 @@ outgoing_api_key = "cmx_sk_dev_A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6"
 # 认证配置
 # ============================================
 [auth]
-whitelist = [
-    "/api/html-pages",
-    "/api/form-pages",
-    "/api/native-pages",
-    "/api/workspace-nodes",
-    "/api/registry",
-    "/api/service-catalog",
-    "/api/definitions",
-    "/api/flexible-combination",
-    "/api/launcher",
-    "/api/domains",
-    "/api/menu-pages",
-    "/api/menu",
-    "/api/activities",
-    "/api/modules",
-    "/api/module-resources",
-    "/api/dam-registry",
-    "/api/dict",
-    "/api/dct",
-    "/api/doc",
-    "/api/model",
-    "/api/code",
-    "/api/meta",
-    "/api/rpt",
-    "/api/report-design",
-    "/api/consol",
-    "/api/flow",
-    "/api/rules",
-    "/api/jobs",
-    "/api/fact",
-    "/api/help",
-]
+whitelist = []
 
 [[auth.static_api_keys]]
 key = "cmx_sk_dev_A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6"
