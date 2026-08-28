@@ -244,7 +244,7 @@ pub struct PublishCtx {
     pub is_service: bool,
 }
 
-/// 列表过滤 + keyset 分页参数。
+/// 列表过滤 + 分页参数(cursor 游标 / offset 页码两模式)。
 #[derive(Debug, Clone, Default)]
 pub struct NotifyListFilter {
     /// 通知中心;`None` 表示三中心全部。
@@ -259,9 +259,12 @@ pub struct NotifyListFilter {
     pub limit: Option<i64>,
     /// 游标(`created_at_id` 编码;首页 `None`)。
     pub cursor: Option<String>,
+    /// 页码分页偏移(0 起 = (页码-1)*页大小);有 cursor 时忽略。
+    /// 页码模式下响应恒带 total,供分页条计算总页数。
+    pub offset: Option<i64>,
 }
 
-/// 列表结果(items + 分页游标 + 首页总数)。
+/// 列表结果(items + 分页游标 + 总数)。
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NotifyListResult {
@@ -269,7 +272,7 @@ pub struct NotifyListResult {
     pub items: Vec<NotifyItem>,
     /// 下一页游标;`None` 表示没有更多。
     pub next_cursor: Option<String>,
-    /// 总条数(仅首页返回,后续页为 0)。
+    /// 总条数(游标模式仅首页返回,offset 页码模式每页都返回)。
     pub total: i64,
 }
 
@@ -557,10 +560,17 @@ async fn broadcast_to_recipients(item: &NotifyItem, recipients: &[String]) {
         })
         .await;
     }
-    if let Ok(c) = counts(recipients.first().map(String::as_str).unwrap_or_default()).await {
-        // 逐人 counts 事件量与 notify 同级,同样受上限约束;此处仅对首人示意,其余由前端
-        // 收到 notify 后自行拉取。简化:不发逐人 counts,fanout 场景由 SSE 端拉取。
-        let _ = c;
+    // 逐人 counts 事件(一次批量 GROUP BY):驱动各端 shellbar 铃铛角标即时 +1。
+    // 事件量与 notify 同级,同样受 PER_RECIPIENT_EVENT_CAP 约束。
+    if let Ok(list) = counts_for_users(recipients).await {
+        for (uid, c) in list {
+            broadcast_event(NotifyEvent {
+                user_id: uid,
+                kind: "counts".to_string(),
+                data: serde_json::to_value(c).unwrap_or(json!({})),
+            })
+            .await;
+        }
     }
 }
 
@@ -995,7 +1005,7 @@ fn parse_cursor(s: &str) -> Option<(i64, i64)> {
     Some((ts.parse().ok()?, id.parse().ok()?))
 }
 
-/// 列出某用户的通知(过滤 + keyset 分页)。
+/// 列出某用户的通知(过滤 + 分页:cursor 游标 / offset 页码两模式)。
 ///
 /// # Arguments
 ///
@@ -1004,7 +1014,7 @@ fn parse_cursor(s: &str) -> Option<(i64, i64)> {
 ///
 /// # Returns
 ///
-/// 当前页列表 + 下一页游标 + 总数(仅首页)。
+/// 当前页列表 + 下一页游标 + 总数(游标模式仅首页;offset 页码模式每页)。
 ///
 /// # Errors
 ///
@@ -1018,6 +1028,12 @@ pub async fn list(user_id: &str, filter: &NotifyListFilter) -> PortalResult<Noti
     }
     let limit = filter.limit.unwrap_or(50).clamp(1, 200);
     let cursor = filter.cursor.as_deref().and_then(parse_cursor);
+    // offset 页码模式仅在无游标时生效(游标优先,保持旧客户端行为)。
+    let offset = if cursor.is_none() {
+        filter.offset.unwrap_or(0).clamp(0, 1_000_000)
+    } else {
+        0
+    };
 
     // 动态 WHERE(参数化):user 必选,center/type/level/is_read/游标可选。
     let mut cond: Vec<String> = vec!["r.user_id = $1".to_string()];
@@ -1062,6 +1078,10 @@ pub async fn list(user_id: &str, filter: &NotifyListFilter) -> PortalResult<Noti
         params.push(DataValue::Int(ts));
         params.push(DataValue::Int(id));
         sql.push_str(&format!(" AND (n.created_at, n.id) < (${}, ${})", params.len() - 1, params.len()));
+    }
+    if offset > 0 {
+        params.push(DataValue::Int(offset));
+        sql.push_str(&format!(" OFFSET ${}", params.len()));
     }
     params.push(DataValue::Int(limit + 1)); // 多取一条判断是否有下一页
     sql.push_str(&format!(
@@ -1140,6 +1160,72 @@ pub async fn counts(user_id: &str) -> PortalResult<NotifyCounts> {
     Ok(c)
 }
 
+/// 批量取多用户未读数(逐人 counts 事件用;单条 GROUP BY 而非 N 次查询)。
+async fn counts_for_users(user_ids: &[String]) -> PortalResult<Vec<(String, NotifyCounts)>> {
+    if user_ids.is_empty() {
+        return Ok(Vec::new());
+    }
+    let (mm, db_id) = db_handle().await?;
+    let ds = query(
+        mm,
+        &db_id,
+        "批量未读计数",
+        "SELECT user_id, center, COUNT(*) AS cnt FROM cmx_notification_recipient \
+         WHERE user_id = ANY($1) AND is_read = false GROUP BY user_id, center",
+        vec![str_array(user_ids)],
+    )
+    .await?;
+    let mut map: std::collections::HashMap<String, NotifyCounts> = user_ids
+        .iter()
+        .map(|u| {
+            (
+                u.clone(),
+                NotifyCounts {
+                    task: 0,
+                    message: 0,
+                    log: 0,
+                    total: 0,
+                },
+            )
+        })
+        .collect();
+    for i in 0..ds.rows.len() {
+        let uid = row_str(&ds, i, "user_id");
+        let center = row_str(&ds, i, "center");
+        let n = row_i64(&ds, i, "cnt");
+        if let Some(c) = map.get_mut(&uid) {
+            match center.as_str() {
+                "task" => c.task = n,
+                "message" => c.message = n,
+                "log" => c.log = n,
+                _ => {}
+            }
+        }
+    }
+    Ok(map
+        .into_iter()
+        .map(|(u, mut c)| {
+            c.total = c.task + c.message + c.log;
+            (u, c)
+        })
+        .collect())
+}
+
+/// 已读状态变化后广播本人 counts 事件(驱动 shellbar 铃铛角标刷新);失败仅 warn 不影响主流程。
+async fn broadcast_counts(user_id: &str) {
+    match counts(user_id).await {
+        Ok(c) => {
+            broadcast_event(NotifyEvent {
+                user_id: user_id.to_string(),
+                kind: "counts".to_string(),
+                data: serde_json::to_value(c).unwrap_or(json!({})),
+            })
+            .await;
+        }
+        Err(e) => tracing::warn!(target: "cmx_portal::notify", error = %e, "广播 counts 事件失败"),
+    }
+}
+
 // ───────────────────── 已读 ─────────────────────
 
 /// 标记单条已读(按 notification_id 定位本人收件行)。返回是否发生变化。
@@ -1179,7 +1265,11 @@ pub async fn mark_read(user_id: &str, id: &str) -> PortalResult<bool> {
         ],
     )
     .await?;
-    Ok(n > 0)
+    let changed = n > 0;
+    if changed {
+        broadcast_counts(uid).await;
+    }
+    Ok(changed)
 }
 
 /// 标记某用户全部(或某中心)已读。返回标记的条数。
@@ -1218,6 +1308,9 @@ pub async fn mark_all_read(user_id: &str, center: Option<NotifyCenter>) -> Porta
         ),
     };
     let n = exec(mm, &db_id, None, "全部已读", sql, params).await?;
+    if n > 0 {
+        broadcast_counts(uid).await;
+    }
     Ok(n as i64)
 }
 
