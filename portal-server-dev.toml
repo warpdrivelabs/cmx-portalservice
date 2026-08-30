@@ -53,9 +53,11 @@ page_cache_max_entries = 4096
 db_id = "primary"
 db_name = "主控数据库"
 db_type = "postgres"
-db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmxlocal"
+#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmxlocal"
 #db_url = "postgres://postgres:postgres@192.168.1.100:5433/cmx"
-#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmxlocal"
+db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmxlocal"
+# （临时指向 cmx_fico 以将 onto 菜单落入该库，用完恢复上一行 cmxlocal）
+#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmx_fico"
 default = true
 pool_config = { max_connections = 15, min_connections = 3, connect_timeout = 20, idle_timeout = 300, max_lifetime = 900 }
 health_check_interval = 60
@@ -65,7 +67,8 @@ health_check_timeout = 5
 db_id = "fico-db"
 db_name = "总账数据库"
 db_type = "postgres"
-db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmx_fico"
+db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmx_fico"
+#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmx_fico"
 #db_url = "postgres://postgres:postgres@192.168.1.100:5433/fico"
 default = false
 source_type = "biz"
@@ -74,8 +77,8 @@ health_check_interval = 60
 health_check_timeout = 5
 
 [redis]
-#url = "redis://localhost:6379/12"
-url = "redis://192.168.1.14:6379/13"
+url = "redis://localhost:6379/12"
+#url = "redis://192.168.1.14:6379/13"
 
 [templates]
 # 模板目录在 cmx-container 内 → ../cmx-container/ 前缀
@@ -173,6 +176,7 @@ form = { url = "http://127.0.0.1:8080", discovery = "cmx-portal-local" }
 flow = { url = "http://127.0.0.1:8091", discovery = "cmx-flow-server" }
 report = { url = "http://127.0.0.1:8092", discovery = "cmx-rpt-server" }
 rules = { url = "http://127.0.0.1:8094", discovery = "cmx-rule-server" }
+onto = { url = "http://127.0.0.1:8097", discovery = "cmx-onto-server" }
 model = { url = "http://127.0.0.1:8093", discovery = "cmx-model-server" }
 mdm = { url = "http://127.0.0.1:8095", discovery = "cmx-mdm-server" }
 

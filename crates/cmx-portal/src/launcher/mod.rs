@@ -45,6 +45,7 @@ const MENU_REFS: &[&str] = &[
     "fi.cmxfico.gl.explorer-menu",
     "fi.cmxfico.report.report-menu",
     "basic.dataplatform.mdm.mdm-menu",
+    "basic.dataplatform.onto.onto-menu",
 ];
 
 /// 递归收集一棵菜单树里所有 `type:"workspace-node"` 且带 workspace 的项。
@@ -156,10 +157,18 @@ fn derive_keywords(caption: &str, id: &str) -> Vec<String> {
 pub async fn list_catalog() -> PortalResult<Vec<LauncherItem>> {
     let mut out: Vec<LauncherItem> = Vec::new();
     for menu_ref in MENU_REFS {
-        // 从 cmx_menu 数据库回源（替代原 menu-pages 文件读取）
-        let doc = get_menu_page_json(menu_ref).await?;
-        if let Some(items) = doc.get("items").and_then(|v| v.as_array()) {
-            collect_nodes(items, menu_ref, &mut out);
+        // 从 cmx_menu 数据库回源（替代原 menu-pages 文件读取）。
+        // 单个菜单缺失（该 domain/app/module 未 seed）不应拖垮整个目录——跳过并告警，
+        // 其余已 seed 的模块（如 mdm/onto）照常进目录，launcher 保持可用。
+        match get_menu_page_json(menu_ref).await {
+            Ok(doc) => {
+                if let Some(items) = doc.get("items").and_then(|v| v.as_array()) {
+                    collect_nodes(items, menu_ref, &mut out);
+                }
+            }
+            Err(e) => {
+                tracing::warn!("[launcher] 跳过缺失菜单 {menu_ref}：{e}");
+            }
         }
     }
     // 去重（同 id 取第一个）
