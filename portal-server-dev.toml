@@ -77,8 +77,8 @@ health_check_interval = 60
 health_check_timeout = 5
 
 [redis]
-url = "redis://localhost:6379/12"
-#url = "redis://192.168.1.14:6379/13"
+#url = "redis://localhost:6379/12"
+url = "redis://192.168.1.14:6379/13"
 
 [templates]
 # 模板目录在 cmx-container 内 → ../cmx-container/ 前缀
