@@ -179,6 +179,7 @@ rules = { url = "http://127.0.0.1:8094", discovery = "cmx-rule-server" }
 onto = { url = "http://127.0.0.1:8097", discovery = "cmx-onto-server" }
 model = { url = "http://127.0.0.1:8093", discovery = "cmx-model-server" }
 mdm = { url = "http://127.0.0.1:8095", discovery = "cmx-mdm-server" }
+dataauth = { url = "http://127.0.0.1:8098", discovery = "cmx-dataauth-server" }
 
 # ============================================
 # RPC 配置（默认关闭）

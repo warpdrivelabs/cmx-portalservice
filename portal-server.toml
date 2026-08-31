@@ -173,6 +173,7 @@ model = { url = "http://127.0.0.1:8093", discovery = "cmx-model-server" }
 mdm = { url = "http://127.0.0.1:8095", discovery = "cmx-mdm-server" }
 # meta → /api/meta/* + meta.* 页面反代（元数据管理独立微服务 cmx-meta-server；不配 = 门户无元数据路由）。
 meta = { url = "http://127.0.0.1:8096", discovery = "cmx-meta-server" }
+dataauth = { url = "http://127.0.0.1:8098", discovery = "cmx-dataauth-server" }
 
 # ============================================
 # RPC 配置（默认关闭）
