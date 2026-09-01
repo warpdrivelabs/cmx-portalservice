@@ -1079,6 +1079,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "cmx-dataauth-proxy"
+version = "0.1.12"
+dependencies = [
+ "axum",
+ "cmx-api-core",
+ "cmx-proxy-core",
+]
+
+[[package]]
 name = "cmx-database"
 version = "0.1.12"
 dependencies = [
@@ -1385,6 +1394,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "cmx-onto-api"
+version = "0.1.12"
+dependencies = [
+ "axum",
+ "cmx-api-core",
+ "cmx-proxy-core",
+]
+
+[[package]]
 name = "cmx-orchestrator-rpc"
 version = "0.1.12"
 dependencies = [
@@ -1420,6 +1438,7 @@ dependencies = [
  "cmx-build-store-pg",
  "cmx-common-api",
  "cmx-core",
+ "cmx-dataauth-proxy",
  "cmx-database",
  "cmx-database-pg",
  "cmx-debug",
@@ -1432,6 +1451,7 @@ dependencies = [
  "cmx-mdm-proxy",
  "cmx-meta-proxy",
  "cmx-model-proxy",
+ "cmx-onto-api",
  "cmx-orchestrator-rpc",
  "cmx-plugin",
  "cmx-plugin-api",
