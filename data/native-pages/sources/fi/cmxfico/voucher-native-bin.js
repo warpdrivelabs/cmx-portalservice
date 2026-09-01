@@ -19,32 +19,17 @@ const DB_ID = 'fico-db'
 const ROOT_TABLE = 'cv_batch'
 
 const cmx = () => (typeof globalThis !== 'undefined' && globalThis.__cmxDataComp) || {}
+const { apiJson: _apiJson } = globalThis.__cmxDataComp // 共享 fetch 封装（cmx-data-comp/lib/cmx-page-helpers.js）
 
 /* ── 后端 API ─────────────────────────────────────────────────────────── */
-/* 装载走 C.loadDocData(二进制)，见 loadVoucher；save 仍用裸 fetch（下方 apiPost）。
+/* 装载走 C.loadDocData(二进制)，见 loadVoucher；save 走共享封装（下方 apiPost）。
    注意：CMXPortalManager 的 api-client 全局 patch 了 window.fetch，对 JSON 端点透明拆
    ApiResp 信封（res.ok=true 时 res.json() 直接拿内层 data），对 application/x-msgpack
    原样透传（loadDocData 内部据此 arrayBuffer + msgpack.decode）。 */
 
-/** 从响应归一取业务数据：兼容 patched（裸 data）与未 patched（{code,msg,data}）。 */
-function unwrap (res, body) {
-  if (body && typeof body === 'object' && typeof body.code === 'number') {
-    if (body.code !== 0) throw new Error(body.msg || `业务错误 code ${body.code}`)
-    return body.data
-  }
-  if (!res.ok) throw new Error((body && body.error) || `HTTP ${res.status}`)
-  return body
-}
-
+/** POST JSON（带本页 db_id 头）：共享封装负责信封解包与错误透传，双模式均兼容。 */
 async function apiPost (url, payload) {
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json', db_id: DB_ID },
-    credentials: 'same-origin',
-    body: JSON.stringify(payload),
-  })
-  const body = await res.json().catch(() => null)
-  return unwrap(res, body)
+  return _apiJson(url, { method: 'POST', headers: { db_id: DB_ID }, body: JSON.stringify(payload || {}) })
 }
 
 const saveQuery = () => {

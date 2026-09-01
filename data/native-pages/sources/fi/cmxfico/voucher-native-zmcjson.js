@@ -24,41 +24,23 @@ const ROOT_TABLE = 'cv_batch'
 const API_PATH = '/api/doc/data/tokio-zmc-json'
 
 const cmx = () => (typeof globalThis !== 'undefined' && globalThis.__cmxDataComp) || {}
+const { apiJson: _apiJson } = globalThis.__cmxDataComp // 共享 fetch 封装（cmx-data-comp/lib/cmx-page-helpers.js）
 
 /* ── 后端 API ─────────────────────────────────────────────────────────── */
-/* 装载走本页 apiGet + unwrap（GET /api/doc/data/tokio-zmc-json，纯 JSON），再 CmxDataSet.fromJSON；
-   save 走 apiPost。unwrap 同时兼容「门户 api-client 已拆信封的裸 data」与「原始 {code,msg,data}」
+/* 装载走本页 apiGet（GET /api/doc/data/tokio-zmc-json，纯 JSON），再 CmxDataSet.fromJSON；
+   save 走 apiPost。共享封装同时兼容「门户 api-client 已拆信封的裸 data」与「原始 {code,msg,data}」
    两种形态——这正是不用 C.loadDocData 的原因：其 JSON 路仍按 {code,data} 硬校验，
    遇到门户拦截器拆过信封的裸 data 会误报失败（数据到了前端却不进 grid）。 */
 
-/** 从响应归一取业务数据：兼容 patched（裸 data）与未 patched（{code,msg,data}）。 */
-function unwrap (res, body) {
-  if (body && typeof body === 'object' && typeof body.code === 'number') {
-    if (body.code !== 0) throw new Error(body.msg || `业务错误 code ${body.code}`)
-    return body.data
-  }
-  if (!res.ok) throw new Error((body && body.error) || `HTTP ${res.status}`)
-  return body
-}
-
+/** GET JSON（带本页 db_id 头）：共享封装负责信封解包与错误透传，
+ *  双模式（门户拦截器已拆包的裸 data / 原始 {code,msg,data} 信封）均兼容。 */
 async function apiGet (url) {
-  const res = await fetch(url, {
-    headers: { Accept: 'application/json', db_id: DB_ID },
-    credentials: 'same-origin',
-  })
-  const body = await res.json().catch(() => null)
-  return unwrap(res, body)
+  return _apiJson(url, { headers: { db_id: DB_ID } })
 }
 
+/** POST JSON（带本页 db_id 头）。 */
 async function apiPost (url, payload) {
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json', db_id: DB_ID },
-    credentials: 'same-origin',
-    body: JSON.stringify(payload),
-  })
-  const body = await res.json().catch(() => null)
-  return unwrap(res, body)
+  return _apiJson(url, { method: 'POST', headers: { db_id: DB_ID }, body: JSON.stringify(payload || {}) })
 }
 
 /** 第五套端点查询串（domain/app/module/file + extra）。 */

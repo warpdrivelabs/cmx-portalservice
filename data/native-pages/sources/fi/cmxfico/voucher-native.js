@@ -18,42 +18,22 @@ const DB_ID = 'fico-db'
 const ROOT_TABLE = 'cv_batch'
 
 const cmx = () => (typeof globalThis !== 'undefined' && globalThis.__cmxDataComp) || {}
+const { apiJson: _apiJson } = globalThis.__cmxDataComp // 共享 fetch 封装（cmx-data-comp/lib/cmx-page-helpers.js）
 
 /* ── 后端 API ─────────────────────────────────────────────────────────── */
 /* 注意：CMXPortalManager 的 api-client 全局 patch 了 window.fetch，成功时会
    透明拆掉 ApiResp 信封 → res.json() 直接拿到内层 data（res.ok=true）；
    业务错误 → 非 2xx + { error }。这里同时兼容「已拆包」与「原始信封」两种形态。 */
 
-/** 从响应归一取业务数据：兼容 patched（裸 data）与未 patched（{code,msg,data}）。 */
-function unwrap (res, body) {
-  // 未 patch：原始 ApiResp 信封
-  if (body && typeof body === 'object' && typeof body.code === 'number') {
-    if (body.code !== 0) throw new Error(body.msg || `业务错误 code ${body.code}`)
-    return body.data
-  }
-  // 已 patch：body 就是内层 data；失败时 res.ok=false 且 body 可能是 { error }
-  if (!res.ok) throw new Error((body && body.error) || `HTTP ${res.status}`)
-  return body
-}
-
+/** GET JSON（带本页 db_id 头）：共享封装负责信封解包与错误透传，
+ *  双模式（门户拦截器已拆包的裸 data / 原始 {code,msg,data} 信封）均兼容。 */
 async function apiGet (url) {
-  const res = await fetch(url, {
-    headers: { Accept: 'application/json', db_id: DB_ID },
-    credentials: 'same-origin',
-  })
-  const body = await res.json().catch(() => null)
-  return unwrap(res, body)
+  return _apiJson(url, { headers: { db_id: DB_ID } })
 }
 
+/** POST JSON（带本页 db_id 头）。 */
 async function apiPost (url, payload) {
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json', db_id: DB_ID },
-    credentials: 'same-origin',
-    body: JSON.stringify(payload),
-  })
-  const body = await res.json().catch(() => null)
-  return unwrap(res, body)
+  return _apiJson(url, { method: 'POST', headers: { db_id: DB_ID }, body: JSON.stringify(payload || {}) })
 }
 
 const dataQuery = (extra = {}) => {
