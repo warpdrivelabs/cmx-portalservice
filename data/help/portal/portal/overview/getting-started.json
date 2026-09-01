@@ -1,0 +1,29 @@
+{
+  "domain": "portal",
+  "app": "portal",
+  "module": "overview",
+  "file": "getting-started.json",
+  "id": "getting-started",
+  "path": "",
+  "title": "快速开始",
+  "summary": "CMX 门户的整体布局与帮助中心的使用方式。",
+  "keywords": [
+    "快速开始",
+    "入门",
+    "门户",
+    "帮助",
+    "shellbar",
+    "工作台"
+  ],
+  "order": 0,
+  "content": "# 快速开始\n\n欢迎使用 **CMX 门户**。门户采用 **三区工作台** 布局：\n\n- **explorer（左）**：导航 / 目录区。\n- **content（中）**：主要内容编辑与展示区。\n- **property（右）**：属性 / 样例 / 操作区。\n\n## 帮助中心\n\n点击顶部 shellbar 的 **帮助(?)** 按钮即可打开本帮助中心。帮助按 **DAM(域 / 应用 / 模块)** 组织，一直细分到某模块中的某项具体功能：\n\n- 左侧目录区可 **搜索**、可 **分级展开**。\n- 选中某项后，中间显示 **详细内容**。\n- 若该项含示例，右侧 **样例区** 显示可复制的示例代码。\n\n## 站内跳转与前进/后退\n\n详细内容里的紫色链接（带「›」）是 **站内帮助跳转**，点击直接打开另一篇帮助，上方标题区随之切换；用标题区左上的 **后退 / 前进** 按钮可在浏览过的帮助间来回切换，与浏览器一致。\n\n试一试：跳到财务总账的 [总账模块概述](help:fi/cmxfico/gl/gl-overview)，再点其中的链接逐层深入，然后用 **后退** 返回。\n\n## 提示\n\n在搜索框输入关键字（标题、关键字、模块名均可命中），目录会自动展开并过滤到匹配项。",
+  "examples": [
+    {
+      "title": "帮助文档数据结构",
+      "lang": "json",
+      "note": "后端按 help/<domain>/<app>/<module>/<file>.json 存储；本示例即一份帮助文档的字段。content 里用 [文字](help:目标) 写站内链接。",
+      "code": "{\n  \"domain\": \"fi\",\n  \"app\": \"cmxfico\",\n  \"module\": \"gl\",\n  \"id\": \"voucher-entry\",\n  \"path\": \"凭证管理\",\n  \"title\": \"录入凭证\",\n  \"summary\": \"...\",\n  \"keywords\": [\"凭证\", \"录入\"],\n  \"content\": \"见 [会计科目](help:master-account) 与 [总账概述](help:fi/cmxfico/gl/gl-overview)\",\n  \"examples\": [{ \"title\": \"...\", \"lang\": \"json\", \"code\": \"...\" }]\n}"
+    }
+  ],
+  "updatedAt": 0
+}

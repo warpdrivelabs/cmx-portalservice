@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>原生页面演示 · 自包含交互</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8edf3 100%);
+      color: #1d2d3e;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .wrap { max-width: 920px; margin: 0 auto; }
+    .hero {
+      background: linear-gradient(120deg, #0a6ed1 0%, #1b4f9c 100%);
+      color: #fff; border-radius: 14px; padding: 22px 26px; margin-bottom: 18px;
+      box-shadow: 0 6px 24px rgba(10,110,209,0.25);
+    }
+    .hero h1 { margin: 0 0 6px; font-size: 1.45rem; font-weight: 800; }
+    .hero p { margin: 0; opacity: 0.92; font-size: 0.9rem; }
+    .clock { font-variant-numeric: tabular-nums; font-weight: 700; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: #fff; border: 1px solid #e0e6ed; border-radius: 12px;
+      padding: 18px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    }
+    .card h2 { margin: 0 0 14px; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .badge { background: #eaf4ff; color: #0a6ed1; border-radius: 20px; padding: 2px 10px; font-size: 0.72rem; font-weight: 600; }
+    button {
+      font: inherit; cursor: pointer; border: 0; border-radius: 8px;
+      padding: 9px 16px; font-weight: 600; transition: transform .08s, box-shadow .15s;
+    }
+    button:active { transform: translateY(1px); }
+    .btn-primary { background: #0a6ed1; color: #fff; }
+    .btn-primary:hover { box-shadow: 0 3px 12px rgba(10,110,209,0.35); }
+    .btn-ghost { background: #f0f3f7; color: #1d2d3e; }
+    .btn-ghost:hover { background: #e3e9f0; }
+    .counter-display { font-size: 2.6rem; font-weight: 800; text-align: center; margin: 8px 0 16px; color: #0a6ed1; font-variant-numeric: tabular-nums; }
+    .counter-btns { display: flex; gap: 10px; justify-content: center; }
+    .todo-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .todo-input-row input {
+      flex: 1; font: inherit; padding: 9px 12px; border: 1px solid #cdd6e0; border-radius: 8px; outline: none;
+    }
+    .todo-input-row input:focus { border-color: #0a6ed1; box-shadow: 0 0 0 2px rgba(10,110,209,0.15); }
+    ul.todos { list-style: none; margin: 0; padding: 0; }
+    ul.todos li {
+      display: flex; align-items: center; gap: 10px; padding: 9px 4px;
+      border-bottom: 1px solid #eef2f6; font-size: 0.92rem;
+    }
+    ul.todos li:last-child { border-bottom: 0; }
+    ul.todos li.done span.txt { text-decoration: line-through; color: #9aa7b5; }
+    ul.todos li input[type=checkbox] { width: 17px; height: 17px; cursor: pointer; accent-color: #0a6ed1; }
+    ul.todos li span.txt { flex: 1; }
+    ul.todos li button.del { background: transparent; color: #bb0000; padding: 2px 8px; font-size: 0.8rem; }
+    .empty { color: #9aa7b5; font-size: 0.85rem; padding: 12px 4px; text-align: center; }
+    .foot { margin-top: 18px; font-size: 0.78rem; color: #6a6d70; text-align: center; }
+    .stat-row { display: flex; gap: 18px; margin-top: 8px; font-size: 0.82rem; color: #6a6d70; justify-content: center; }
+    .stat-row b { color: #0a6ed1; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>🚀 原生页面演示（native_pages）</h1>
+      <p>这是一个完整的、自包含的 HTML 文档，含 &lt;script&gt; 交互逻辑——模拟手写或大模型生成的页面。当前时间：<span class="clock" id="clock">--:--:--</span></p>
+    </div>
+
+    <div class="grid">
+      <!-- 计数器卡片：演示状态 + 事件 -->
+      <div class="card">
+        <h2>计数器 <span class="badge">点击事件</span></h2>
+        <div class="counter-display" id="count">0</div>
+        <div class="counter-btns">
+          <button class="btn-ghost" id="dec">− 减一</button>
+          <button class="btn-primary" id="inc">＋ 加一</button>
+          <button class="btn-ghost" id="reset">重置</button>
+        </div>
+        <div class="stat-row">累计点击 <b id="clicks">0</b> 次</div>
+      </div>
+
+      <!-- 待办卡片：演示动态 DOM + 列表渲染 -->
+      <div class="card">
+        <h2>待办清单 <span class="badge">动态 DOM</span></h2>
+        <div class="todo-input-row">
+          <input id="todo-input" type="text" placeholder="输入待办，回车或点添加…" maxlength="60">
+          <button class="btn-primary" id="todo-add">添加</button>
+        </div>
+        <ul class="todos" id="todo-list"></ul>
+        <div class="stat-row" id="todo-stat"></div>
+      </div>
+    </div>
+
+    <div class="foot">
+      页面通过 native_pages 视图类型加载 · sourceType=html · 由 iframe 承载，脚本与样式独立运行
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ── 实时时钟 ──
+      var clockEl = document.getElementById('clock');
+      function tick() {
+        var d = new Date();
+        var p = function (n) { return String(n).padStart(2, '0'); };
+        clockEl.textContent = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+      }
+      tick();
+      setInterval(tick, 1000);
+
+      // ── 计数器 ──
+      var count = 0, clicks = 0;
+      var countEl = document.getElementById('count');
+      var clicksEl = document.getElementById('clicks');
+      function render() { countEl.textContent = count; clicksEl.textContent = clicks; }
+      function bump(delta) { count += delta; clicks += 1; render(); }
+      document.getElementById('inc').addEventListener('click', function () { bump(1); });
+      document.getElementById('dec').addEventListener('click', function () { bump(-1); });
+      document.getElementById('reset').addEventListener('click', function () { count = 0; clicks += 1; render(); });
+
+      // ── 待办清单 ──
+      var todos = [
+        { id: 1, text: '体验 native_pages 视图类型', done: true },
+        { id: 2, text: '把大模型生成的页面贴进来', done: false },
+      ];
+      var seq = 3;
+      var listEl = document.getElementById('todo-list');
+      var statEl = document.getElementById('todo-stat');
+      var inputEl = document.getElementById('todo-input');
+
+      function renderTodos() {
+        listEl.innerHTML = '';
+        if (todos.length === 0) {
+          var empty = document.createElement('div');
+          empty.className = 'empty';
+          empty.textContent = '暂无待办，添加一条试试 →';
+          listEl.appendChild(empty);
+        } else {
+          todos.forEach(function (t) {
+            var li = document.createElement('li');
+            if (t.done) li.className = 'done';
+            var cb = document.createElement('input');
+            cb.type = 'checkbox'; cb.checked = t.done;
+            cb.addEventListener('change', function () { t.done = cb.checked; renderTodos(); });
+            var span = document.createElement('span');
+            span.className = 'txt'; span.textContent = t.text;
+            var del = document.createElement('button');
+            del.className = 'del'; del.textContent = '删除';
+            del.addEventListener('click', function () {
+              todos = todos.filter(function (x) { return x.id !== t.id; });
+              renderTodos();
+            });
+            li.appendChild(cb); li.appendChild(span); li.appendChild(del);
+            listEl.appendChild(li);
+          });
+        }
+        var doneCount = todos.filter(function (t) { return t.done; }).length;
+        statEl.innerHTML = '共 <b>' + todos.length + '</b> 项 · 已完成 <b>' + doneCount + '</b> 项';
+      }
+
+      function addTodo() {
+        var text = inputEl.value.trim();
+        if (!text) return;
+        todos.push({ id: seq++, text: text, done: false });
+        inputEl.value = '';
+        renderTodos();
+        inputEl.focus();
+      }
+      document.getElementById('todo-add').addEventListener('click', addTodo);
+      inputEl.addEventListener('keydown', function (e) { if (e.key === 'Enter') addTodo(); });
+
+      render();
+      renderTodos();
+    })();
+  </script>
+</body>
+</html>

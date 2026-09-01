@@ -1,0 +1,130 @@
+<div data-node-id="n-1" style="display:flex;flex-direction:column;width:100%;height:100%;min-height:520px;gap:8px;padding:8px;box-sizing:border-box;background:var(--sapBackgroundColor,#fafafa);">
+  <ui5-bar design="Header" accessible-role="Toolbar" data-node-id="n-2">
+    <ui5-label slot="startContent" data-node-id="n-2a" wrapping-type="Normal" style="font-weight:800;font-size:1.05rem;color:var(--sapShellTitleColor,var(--sapTitleColor));">cmx-tabulator · 会计科目树（gl_account 自分级字典）</ui5-label>
+    <ui5-button design="Emphasized" icon="begin" slot="endContent" accessible-role="Button" data-node-id="n-3" data-eventclick="loadDemoData();">加载科目</ui5-button>
+    <ui5-button design="Default" icon="expand-all" slot="endContent" accessible-role="Button" data-node-id="n-4" data-eventclick="expandAllNodes();">全部展开</ui5-button>
+    <ui5-button design="Default" icon="collapse-all" slot="endContent" accessible-role="Button" data-node-id="n-5" data-eventclick="collapseAllNodes();">全部折叠</ui5-button>
+    <ui5-button design="Positive" icon="add" slot="endContent" accessible-role="Button" data-node-id="n-6" data-eventclick="addChildNode();">新增下级科目</ui5-button>
+    <ui5-button design="Negative" icon="delete" slot="endContent" accessible-role="Button" data-node-id="n-7" data-eventclick="removeNode();">删除科目</ui5-button>
+  </ui5-bar>
+  <ui5-label id="treeInfo" data-node-id="n-8" wrapping-type="Normal" style="font-size:0.8rem;color:var(--sapContent_LabelColor);min-height:1.1rem;padding:0 4px;">点「加载科目」从 dct 数据服务拉取 gl_account 会计科目字典（自分级，按 parent_id 重建层级）；选中科目后可新增下级 / 删除（连同下级）。</ui5-label>
+  <div data-node-id="n-9" style="flex:1 1 0;min-height:0;display:flex;flex-direction:column;border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:4px;overflow:hidden;background:var(--sapList_Background,#fff);">
+    <cmx-tabulator id="treeGrid" data-cmx-height="100%" style="display:block;width:100%;flex:1;min-height:0;" data-node-id="n-10"></cmx-tabulator>
+  </div>
+</div>
+<script>
+/* 设计时脚本预览 */
+/* pageId: tabulator-treegrid-demo */
+
+function loadDemoData() {
+  var C = (typeof globalThis !== 'undefined' && globalThis.__cmxDataComp) || host.__cmxClasses;
+  if (!C) { alert('CMX 数据类尚未加载，请稍后重试'); return; }
+  var CmxColumnModel = C.CmxColumnModel, CmxColumn = C.CmxColumn;
+  var root = host.shadowRoot;
+  var grid = root.querySelector('#treeGrid');
+
+  // 列模型：cf_gl_account 会计科目字典字段；iconCol 指向 icon 字段 → 树列单元格前缀 <ui5-icon>
+  var model = new CmxColumnModel({
+    datasetId: 'cf_gl_account',
+    caption: '会计科目',
+    iconCol: 'icon',
+    members: [
+      new CmxColumn({ id: 'name', caption: '科目名称', type: 'text', width: '300px', editMode: 'readonly' }),
+      new CmxColumn({ id: 'code', caption: '科目编码', type: 'text', width: '140px', editMode: 'readonly' }),
+      new CmxColumn({ id: 'account_type_text', caption: '科目类型', type: 'text', width: '110px', editMode: 'readonly' }),
+      new CmxColumn({ id: 'pl_bs_flag', caption: '损益/资负', type: 'text', width: '90px', align: 'center', editMode: 'readonly' }),
+      new CmxColumn({ id: 'account_currency_code', caption: '币种', type: 'text', width: '80px', align: 'center', editMode: 'readonly' }),
+      new CmxColumn({ id: 'level_no', caption: '层级', type: 'number', width: '70px', align: 'right', editMode: 'readonly' }),
+      new CmxColumn({ id: 'is_leaf_text', caption: '末级', type: 'text', width: '70px', align: 'center', editMode: 'readonly' })
+    ]
+  });
+
+  // 科目类型码 → 中文 + 图标（A资产/L负债/E权益/R收入/X费用/C成本）；非末级用文件夹，末级用单据
+  var TYPE_TEXT = { A: '资产', L: '负债', E: '权益', R: '收入', X: '费用', C: '成本' };
+  var ICON_BY_TYPE = { A: 'money-bills', L: 'credit-card', E: 'capital-projects', R: 'sales-order', X: 'receipt', C: 'supplier' };
+  var rowToNode = function (r) {
+    var leaf = Number(r.is_leaf) === 1;
+    var t = r.account_type_code || r.account_type || '';
+    // cf_gl_account 的主键是 code、parent_id 引用父的 code。
+    // 这里把 code 同时写入 id：组件默认按 id 做选中/展开/重建层级（parentField 仍是 parent_id，
+    // 因 id=code，子行 parent_id 正好指向父行 id），无需改 index，与组件既有 id 语义一致。
+    return {
+      id: r.code,
+      code: r.code,
+      parent_id: r.parent_id,
+      name: r.name,
+      account_type_code: t,
+      account_type_text: TYPE_TEXT[t] || t,
+      pl_bs_flag: r.pl_bs_flag || '',
+      account_currency_code: r.account_currency_code || '',
+      level_no: r.level_no,
+      is_leaf: r.is_leaf,
+      is_leaf_text: leaf ? '是' : '否',
+      icon: leaf ? 'document-text' : (ICON_BY_TYPE[t] || 'folder')
+    };
+  };
+
+  var applyRows = function (rows) {
+    // 顺序：先 setColumnModel（填列 + iconField），再 setOptions（重建表 + 算树列），最后 setData。
+    // rowToNode 已把 code 写入 id，故用组件默认 index:'id'；parentField:'parent_id'（父引用子的 code=id）。
+    grid.setColumnModel(model);
+    grid.setOptions({
+      dataTree: true,
+      parentField: 'parent_id',
+      treeColumn: 'name',
+      treeStartExpanded: false,
+      selectionMode: 'single',
+      movableColumns: true,
+      layout: 'fitDataFill'
+    });
+    grid.setData((rows || []).map(rowToNode));
+    host.treeGrid = grid;
+    var info = root.querySelector('#treeInfo');
+    if (info) info.textContent = '已加载 cf_gl_account 会计科目字典：' + (rows ? rows.length : 0) + ' 个科目（自分级，按 code/parent_id 重建层级）。';
+  };
+
+  // 从字典检索服务拉 cf_gl_account 扁平行（treeMode 省略=平表，组件本地按 code/parent_id 建树）
+  fetch('/api/dct/data/search?domain=fi&application=cmxfico&module=gl&dict=gl_account&file=cmxfico_dct_meta_v3.json', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ pageSize: 9999 })
+  }).then(function (resp) {
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    return resp.json();
+  }).then(function (data) {
+    applyRows(data && ((data.data && data.data.rows) || data.rows || data.hits || data.items) || []);
+  }).catch(function (e) {
+    var info = root.querySelector('#treeInfo');
+    if (info) info.textContent = '加载 cf_gl_account 字典失败：' + (e && e.message || e) + '（请确认模型中心 dct 数据服务可用）';
+  });
+
+  $data.seq = 0;
+}
+
+function expandAllNodes() { if (host.treeGrid) host.treeGrid.expandAll(); }
+
+function collapseAllNodes() { if (host.treeGrid) host.treeGrid.collapseAll(); }
+
+function addChildNode() {
+  if (!host.treeGrid) { alert('请先点「加载数据」'); return; }
+  var grid = host.treeGrid;
+  var sel = grid._selectedId;
+  if (!sel) { alert('请先在树中选择一个父科目，再新增下级科目'); return; }
+  $data.seq = ($data.seq || 0) + 1;
+  var n = $data.seq;
+  // 选中行 id = 父科目 code；新科目 code 以父 code 派生，parent_id 指向父 code，id=code（与 rowToNode 一致）
+  var childCode = String(sel) + '.N' + n;
+  var row = { id: childCode, code: childCode, parent_id: sel, icon: 'document-text', name: '新建下级科目 ' + n, account_type_code: '', account_type_text: '', pl_bs_flag: '', account_currency_code: '', level_no: '', is_leaf: 1, is_leaf_text: '是' };
+  grid.addRow(row);
+  grid.expandRow(sel);
+}
+
+function removeNode() {
+  if (!host.treeGrid) { alert('请先点「加载数据」'); return; }
+  var grid = host.treeGrid;
+  var sel = grid._selectedId;
+  if (!sel) { alert('请先选择要删除的科目（将连同其下级科目一并删除）'); return; }
+  grid.removeRows([sel]);
+}
+</script>
+<script type="application/json" id="__designer_meta__">{"pageData":[{"name":"seq","type":"number","defaultValue":"0"}],"pageFns":[{"name":"loadDemoData","params":"","body":"var C = (typeof globalThis !== 'undefined' && globalThis.__cmxDataComp) || host.__cmxClasses;\nif (!C) { alert('CMX 数据类尚未加载，请稍后重试'); return; }\nvar CmxColumnModel = C.CmxColumnModel, CmxColumn = C.CmxColumn;\nvar root = host.shadowRoot;\nvar grid = root.querySelector('#treeGrid');\n\n// 列模型：cf_gl_account 会计科目字典字段；iconCol 指向 icon 字段 → 树列单元格前缀 <ui5-icon>\nvar model = new CmxColumnModel({\n  datasetId: 'cf_gl_account',\n  caption: '会计科目',\n  iconCol: 'icon',\n  members: [\n    new CmxColumn({ id: 'name', caption: '科目名称', type: 'text', width: '300px', editMode: 'readonly' }),\n    new CmxColumn({ id: 'code', caption: '科目编码', type: 'text', width: '140px', editMode: 'readonly' }),\n    new CmxColumn({ id: 'account_type_text', caption: '科目类型', type: 'text', width: '110px', editMode: 'readonly' }),\n    new CmxColumn({ id: 'pl_bs_flag', caption: '损益/资负', type: 'text', width: '90px', align: 'center', editMode: 'readonly' }),\n    new CmxColumn({ id: 'account_currency_code', caption: '币种', type: 'text', width: '80px', align: 'center', editMode: 'readonly' }),\n    new CmxColumn({ id: 'level_no', caption: '层级', type: 'number', width: '70px', align: 'right', editMode: 'readonly' }),\n    new CmxColumn({ id: 'is_leaf_text', caption: '末级', type: 'text', width: '70px', align: 'center', editMode: 'readonly' })\n  ]\n});\n\n// 科目类型码 → 中文 + 图标（A资产/L负债/E权益/R收入/X费用/C成本）；非末级用文件夹，末级用单据\nvar TYPE_TEXT = { A: '资产', L: '负债', E: '权益', R: '收入', X: '费用', C: '成本' };\nvar ICON_BY_TYPE = { A: 'money-bills', L: 'credit-card', E: 'capital-projects', R: 'sales-order', X: 'receipt', C: 'supplier' };\nvar rowToNode = function (r) {\n  var leaf = Number(r.is_leaf) === 1;\n  var t = r.account_type_code || r.account_type || '';\n  // cf_gl_account 的主键是 code、parent_id 引用父的 code。\n  // 这里把 code 同时写入 id：组件默认按 id 做选中/展开/重建层级（parentField 仍是 parent_id，\n  // 因 id=code，子行 parent_id 正好指向父行 id），无需改 index，与组件既有 id 语义一致。\n  return {\n    id: r.code,\n    code: r.code,\n    parent_id: r.parent_id,\n    name: r.name,\n    account_type_code: t,\n    account_type_text: TYPE_TEXT[t] || t,\n    pl_bs_flag: r.pl_bs_flag || '',\n    account_currency_code: r.account_currency_code || '',\n    level_no: r.level_no,\n    is_leaf: r.is_leaf,\n    is_leaf_text: leaf ? '是' : '否',\n    icon: leaf ? 'document-text' : (ICON_BY_TYPE[t] || 'folder')\n  };\n};\n\nvar applyRows = function (rows) {\n  // 顺序：先 setColumnModel（填列 + iconField），再 setOptions（重建表 + 算树列），最后 setData。\n  // rowToNode 已把 code 写入 id，故用组件默认 index:'id'；parentField:'parent_id'（父引用子的 code=id）。\n  grid.setColumnModel(model);\n  grid.setOptions({\n    dataTree: true,\n    parentField: 'parent_id',\n    treeColumn: 'name',\n    treeStartExpanded: false,\n    selectionMode: 'single',\n    movableColumns: true,\n    layout: 'fitDataFill'\n  });\n  grid.setData((rows || []).map(rowToNode));\n  host.treeGrid = grid;\n  var info = root.querySelector('#treeInfo');\n  if (info) info.textContent = '已加载 cf_gl_account 会计科目字典：' + (rows ? rows.length : 0) + ' 个科目（自分级，按 code/parent_id 重建层级）。';\n};\n\n// 从字典检索服务拉 cf_gl_account 扁平行（treeMode 省略=平表，组件本地按 code/parent_id 建树）\nfetch('/api/dct/data/search?domain=fi&application=cmxfico&module=gl&dict=gl_account&file=cmxfico_dct_meta_v3.json', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({ pageSize: 9999 })\n}).then(function (resp) {\n  if (!resp.ok) throw new Error('HTTP ' + resp.status);\n  return resp.json();\n}).then(function (data) {\n  applyRows(data && ((data.data && data.data.rows) || data.rows || data.hits || data.items) || []);\n}).catch(function (e) {\n  var info = root.querySelector('#treeInfo');\n  if (info) info.textContent = '加载 cf_gl_account 字典失败：' + (e && e.message || e) + '（请确认模型中心 dct 数据服务可用）';\n});\n\n$data.seq = 0;","readsVars":[],"writesVars":["seq"]},{"name":"expandAllNodes","params":"","body":"if (host.treeGrid) host.treeGrid.expandAll();","readsVars":[],"writesVars":[]},{"name":"collapseAllNodes","params":"","body":"if (host.treeGrid) host.treeGrid.collapseAll();","readsVars":[],"writesVars":[]},{"name":"addChildNode","params":"","body":"if (!host.treeGrid) { alert('请先点「加载数据」'); return; }\nvar grid = host.treeGrid;\nvar sel = grid._selectedId;\nif (!sel) { alert('请先在树中选择一个父科目，再新增下级科目'); return; }\n$data.seq = ($data.seq || 0) + 1;\nvar n = $data.seq;\n// 选中行 id = 父科目 code；新科目 code 以父 code 派生，parent_id 指向父 code，id=code（与 rowToNode 一致）\nvar childCode = String(sel) + '.N' + n;\nvar row = { id: childCode, code: childCode, parent_id: sel, icon: 'document-text', name: '新建下级科目 ' + n, account_type_code: '', account_type_text: '', pl_bs_flag: '', account_currency_code: '', level_no: '', is_leaf: 1, is_leaf_text: '是' };\ngrid.addRow(row);\ngrid.expandRow(sel);","readsVars":["seq"],"writesVars":["seq"]},{"name":"removeNode","params":"","body":"if (!host.treeGrid) { alert('请先点「加载数据」'); return; }\nvar grid = host.treeGrid;\nvar sel = grid._selectedId;\nif (!sel) { alert('请先选择要删除的科目（将连同其下级科目一并删除）'); return; }\ngrid.removeRows([sel]);","readsVars":[],"writesVars":[]}],"pageServices":[],"pageDeps":[],"pageInterfaces":[{"name":"initPage","enabled":true,"body":"if (host.loadDemoData) host.loadDemoData();\nvar root = host.shadowRoot;\nvar grid = root.querySelector('#treeGrid');\nvar info = root.querySelector('#treeInfo');\nif (!grid || !info) return;\ngrid.addEventListener('cmx-row-selected', function (e) {\n  var r = (e.detail && e.detail.row) || {};\n  info.textContent = '已选择：' + (r.name || r.id || '') + '（编码 ' + (r.code || '-') + '）';\n});\nvar onToggle = function (e) {\n  var d = e.detail || {};\n  var open = e.type === 'cmx-tree-row-expanded';\n  info.textContent = (open ? '展开' : '折叠') + '：' + (d.row && d.row.name || d.id || '') + '  ·  当前展开 ' + grid.getExpandedIds().length + ' 个节点';\n};\ngrid.addEventListener('cmx-tree-row-expanded', onToggle);\ngrid.addEventListener('cmx-tree-row-collapsed', onToggle);"},{"name":"onActivate","enabled":true,"body":""},{"name":"isDirty","enabled":true,"body":"return false;"},{"name":"getState","enabled":true,"body":"return Object.assign({}, $data);"},{"name":"validate","enabled":true,"body":"return { valid: true };"}],"dataSources":[],"dataFlow":{"schema":[],"aggregations":[],"relations":[]},"models":[]}</script>

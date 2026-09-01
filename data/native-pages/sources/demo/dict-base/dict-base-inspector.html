@@ -1,0 +1,96 @@
+<div class="dictbx-insp" style="display:flex;flex-direction:column;height:100%;font:13px/1.45 -apple-system,'Segoe UI','PingFang SC',sans-serif;color:var(--sapTextColor,#1d2d3e);background:var(--sapBackgroundColor,#fff);box-sizing:border-box">
+  <div style="padding:9px 12px;border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);font-weight:700;flex:0 0 auto">字段检查器</div>
+  <div id="form" style="flex:1 1 auto;overflow:auto;padding:10px"></div>
+
+  <style>
+    .dictbx-insp .dx-form{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px 10px;align-items:center}
+    .dictbx-insp .dx-form label{color:var(--sapContent_LabelColor,#6a6d70)}
+    .dictbx-insp input,.dictbx-insp select,.dictbx-insp textarea{width:100%;box-sizing:border-box;border:1px solid var(--sapField_BorderColor,#89919a);border-radius:4px;padding:5px 7px;background:var(--sapField_Background,#fff);color:inherit;font:inherit}
+    .dictbx-insp textarea{min-height:56px;resize:vertical}
+    .dictbx-insp .dx-empty{padding:12px;color:var(--sapContent_LabelColor,#6a6d70)}
+  </style>
+
+  <script>
+    /* 字典基础元数据 · 检查器（property 区）：编辑当前选中字段的完整属性。
+       读写同一 workspace.context（dictDoc + dictSelectedFieldSet + dictSelectedFieldIndex），
+       与 manager/list 联动；改值后写回 dictDoc 并广播，manager 表格同步。 */
+    var root = host.renderRoot;
+    var ctx = workspace && workspace.context;
+    var DATA_TYPES = ['VARCHAR', 'BIGINT', 'INT', 'TINYINT', 'DECIMAL', 'DATE', 'DATETIME', 'TEXT'];
+    var EDIT_MODES = ['', 'cmx-text-input', 'cmx-textarea-input', 'cmx-richtext-input', 'cmx-number-input', 'cmx-date-input', 'cmx-datetime-input', 'cmx-dict-select', 'checkbox'];
+    var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+    function get (k) { return ctx ? ctx.get(k) : null; }
+    function set (k, v) { if (ctx) ctx.set(k, v); }
+    function optionHtml (items, value) { return items.map(function (it) { return '<option value="' + esc(it) + '"' + (String(value || '') === it ? ' selected' : '') + '>' + esc(it || '无') + '</option>'; }).join(''); }
+
+    function curFieldSet () { var doc = get('dictDoc'); var fsn = get('dictSelectedFieldSet'); return doc && doc.fieldSets && doc.fieldSets[fsn] || null; }
+    function curField () { var fs = curFieldSet(); if (!fs || !Array.isArray(fs.fields)) return null; return fs.fields[get('dictSelectedFieldIndex')] || null; }
+
+    function setPath (obj, path, value, type) {
+      var segs = path.split('.'); var leaf = segs.pop(); var node = obj;
+      segs.forEach(function (s) { if (!node[s] || typeof node[s] !== 'object') node[s] = {}; node = node[s]; });
+      if (type === 'boolean') node[leaf] = !!value;
+      else if (type === 'number') { if (value === '') delete node[leaf]; else { var n = Number(value); node[leaf] = Number.isFinite(n) ? n : value; } }
+      else if (value === '') delete node[leaf]; else node[leaf] = value;
+    }
+
+    function render () {
+      var box = root.querySelector('#form');
+      var fsn = get('dictSelectedFieldSet') || '';
+      var fs = curFieldSet();
+      var f = curField();
+      if (!fs) { box.innerHTML = '<div class="dx-empty">请选择文件 / 字段集</div>'; return; }
+      var rows = '<label>字段集名</label><input value="' + esc(fsn) + '" readonly>'
+        + '<label>字段集说明</label><textarea data-fs-remark>' + esc(fs.remark || '') + '</textarea>';
+      if (f) {
+        rows += '<label>字段ID</label><input data-p="id" value="' + esc(f.id || '') + '">'
+          + '<label>字段名称</label><input data-p="name" value="' + esc(f.name || '') + '">'
+          + '<label>标题</label><input data-p="caption.zh_CN" value="' + esc(f.caption && f.caption.zh_CN || '') + '">'
+          + '<label>数据类型</label><select data-p="dataType">' + optionHtml(DATA_TYPES, f.dataType) + '</select>'
+          + '<label>长度</label><input data-p="fieldLength" data-t="number" type="number" value="' + esc(f.fieldLength == null ? '' : f.fieldLength) + '">'
+          + '<label>整数位</label><input data-p="intDigits" data-t="number" type="number" value="' + esc(f.intDigits == null ? '' : f.intDigits) + '">'
+          + '<label>小数位</label><input data-p="decimalDigits" data-t="number" type="number" value="' + esc(f.decimalDigits == null ? '' : f.decimalDigits) + '">'
+          + '<label>允许为空</label><input data-p="nullable" data-t="boolean" type="checkbox"' + (f.nullable !== false ? ' checked' : '') + '>'
+          + '<label>参照字典</label><input data-p="refDict" value="' + esc(f.refDict || '') + '">'
+          + '<label>参照字段</label><input data-p="refField" value="' + esc(f.refField || '') + '">'
+          + '<label>显示字段</label><input data-p="displayField" value="' + esc(f.displayField || '') + '">'
+          + '<label>录入控件</label><select data-p="edit.mode">' + optionHtml(EDIT_MODES, f.edit && f.edit.mode) + '</select>';
+      } else {
+        rows += '<label>当前字段</label><div>无（在设计页选择一行）</div>';
+      }
+      rows += '<label>保存状态</label><div>' + (get('dictDirty') ? '未保存' : '已保存') + '</div>';
+      box.innerHTML = '<div class="dx-form">' + rows + '</div>';
+      bind(box);
+    }
+
+    function bind (box) {
+      var remarkEl = box.querySelector('[data-fs-remark]');
+      if (remarkEl) remarkEl.addEventListener('input', function () {
+        var fs = curFieldSet(); if (!fs) return; fs.remark = remarkEl.value;
+        set('dictDirty', true); set('dictDoc', get('dictDoc')); set('dictFieldTick', Date.now());
+      });
+      box.querySelectorAll('[data-p]').forEach(function (el) {
+        var evt = el.type === 'checkbox' ? 'change' : 'input';
+        el.addEventListener(evt, function () {
+          var f = curField(); if (!f) return;
+          var p = el.getAttribute('data-p');
+          setPath(f, p, el.type === 'checkbox' ? el.checked : el.value, el.getAttribute('data-t') || '');
+          if (p === 'id' && !f.name) f.name = el.value;
+          if (p === 'name' && !f.id) f.id = el.value;
+          set('dictDirty', true); set('dictDoc', get('dictDoc')); set('dictFieldTick', Date.now());
+        });
+      });
+    }
+
+    if (ctx) {
+      var onChange = function (ev) {
+        if (['dictDoc', 'dictSelectedFieldSet', 'dictSelectedFieldIndex', 'dictDirty', 'dictFieldTick'].indexOf(ev.key) >= 0) render();
+      };
+      ctx.on('change', onChange);
+      host.onDispose = function () { try { ctx.off('change', onChange); } catch (e) {} };
+      render();
+    } else {
+      root.querySelector('#form').innerHTML = '<div class="dx-empty">workspace.context 不可用</div>';
+    }
+  </script>
+</div>

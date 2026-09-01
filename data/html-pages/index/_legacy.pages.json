@@ -1,0 +1,198 @@
+{
+  "version": 1,
+  "domain": "_legacy",
+  "pages": [
+    {
+      "id": "welcome",
+      "name": "门户欢迎页",
+      "details": "Portal 启动欢迎页：Neo 科技风 Hero、KPI、快速入口、平台能力与 AI 助手引导（localStorage cmx_portal_show_welcome 同步）",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "welcome",
+      "relPath": "_legacy/welcome.html",
+      "latestHtmlFile": "welcome.html"
+    },
+    {
+      "id": "tabulator-treegrid-demo",
+      "name": "cmx-tabulator 会计科目树",
+      "details": "cmx-tabulator treegrid：cf_gl_account 会计科目自分级字典（/api/dict 拉取扁平行，按 code/parent_id 重建层级）+ 展开/折叠 + iconCol 图标 + CmxColumnModel 绑定",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "tabulator-treegrid-demo",
+      "relPath": "_legacy/tabulator-treegrid-demo.html",
+      "latestHtmlFile": "tabulator-treegrid-demo.html"
+    },
+    {
+      "details": "CmxRevoGrid + CmxMasterSlave + CmxColumnModel + CmxDataSet 主从表格演示",
+      "id": "demo-master-slave",
+      "latestHtmlFile": "demo-master-slave.html",
+      "name": "主从表格示例",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "demo-master-slave",
+      "relPath": "_legacy/demo-master-slave.html"
+    },
+    {
+      "details": "exp_view1",
+      "id": "exp_view1",
+      "latestHtmlFile": "exp_view1.html",
+      "name": "exp_view1",
+      "timestamp": "20260511_212102222",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "exp_view1",
+      "relPath": "_legacy/exp_view1.html"
+    },
+    {
+      "details": "pro_view1",
+      "id": "pro_view1",
+      "latestHtmlFile": "pro_view1.html",
+      "name": "pro_view1",
+      "timestamp": "20260510_224732724",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "pro_view1",
+      "relPath": "_legacy/pro_view1.html"
+    },
+    {
+      "details": "ctn_view1",
+      "id": "ctn_view1",
+      "latestHtmlFile": "ctn_view1.html",
+      "name": "ctn_view1",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "ctn_view1",
+      "relPath": "_legacy/ctn_view1.html"
+    },
+    {
+      "details": "ctn_view2",
+      "id": "ctn_view2",
+      "latestHtmlFile": "ctn_view2.html",
+      "name": "ctn_view2",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "ctn_view2",
+      "relPath": "_legacy/ctn_view2.html"
+    },
+    {
+      "details": "btm_view1",
+      "id": "btm_view1",
+      "latestHtmlFile": "btm_view1.html",
+      "name": "btm_view1",
+      "timestamp": "20260508_083125970",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "btm_view1",
+      "relPath": "_legacy/btm_view1.html"
+    },
+    {
+      "details": "btm_view2",
+      "id": "btm_view2",
+      "latestHtmlFile": "btm_view2.html",
+      "name": "btm_view2",
+      "timestamp": "20260508_083148146",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "btm_view2",
+      "relPath": "_legacy/btm_view2.html"
+    },
+    {
+      "details": "pre_view1",
+      "id": "pre_view1",
+      "latestHtmlFile": "pre_view1.html",
+      "name": "pre_view1",
+      "timestamp": "20260508_083419316",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "pre_view1",
+      "relPath": "_legacy/pre_view1.html"
+    },
+    {
+      "details": "inner_page1",
+      "id": "inner_page1",
+      "latestHtmlFile": "inner_page1.html",
+      "name": "inner_page1",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "inner_page1",
+      "relPath": "_legacy/inner_page1.html"
+    },
+    {
+      "details": "inner_page2",
+      "id": "inner_page2",
+      "latestHtmlFile": "inner_page2.html",
+      "name": "inner_page2",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "inner_page2",
+      "relPath": "_legacy/inner_page2.html"
+    },
+    {
+      "details": "embed_page1",
+      "id": "embed_page1",
+      "latestHtmlFile": "embed_page1.html",
+      "name": "embed_page1",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "embed_page1",
+      "relPath": "_legacy/embed_page1.html"
+    },
+    {
+      "details": "embed_page2",
+      "id": "embed_page2",
+      "latestHtmlFile": "embed_page2.html",
+      "name": "embed_page2",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "embed_page2",
+      "relPath": "_legacy/embed_page2.html"
+    },
+    {
+      "id": "combo-box-demo",
+      "name": "cmx-combo-box 三模式演示",
+      "details": "cmx-combo-box 的 list / tree / grid 三种 dropdown + pageService 异步搜索 + AbortSignal 透传演示",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "combo-box-demo",
+      "relPath": "_legacy/combo-box-demo.html",
+      "latestHtmlFile": "combo-box-demo.html"
+    },
+    {
+      "id": "cmx-input-editors-demo",
+      "name": "录入控件演示（text/number/date/datetime）",
+      "details": "四个录入控件组件 cmx-text/number/date/datetime-input 的 form 端实时编辑 + grid 端单元格编辑演示；对应三端「录入控件」下拉的 input/number/date/datetime 四值",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "cmx-input-editors-demo",
+      "relPath": "_legacy/cmx-input-editors-demo.html",
+      "latestHtmlFile": "cmx-input-editors-demo.html"
+    },
+    {
+      "id": "cmx-grid-form-linkage-demo",
+      "name": "grid↔form 联动（四录入组件 · 模型面板驱动）",
+      "details": "cmx-revo-grid + cmx-ui5-form 共用模型面板定义的 CmxColumnModel/CmxDataSet/CmxMasterSlave；四列分别用 input/number/date/datetime 四组件，grid 选中行与 form 双向联动",
+      "domain": "_legacy",
+      "app": "",
+      "module": "",
+      "page": "cmx-grid-form-linkage-demo",
+      "relPath": "_legacy/cmx-grid-form-linkage-demo.html",
+      "latestHtmlFile": "cmx-grid-form-linkage-demo.html"
+    }
+  ]
+}

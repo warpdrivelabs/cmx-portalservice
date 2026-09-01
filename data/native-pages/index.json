@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "pages": [
+    {
+      "id": "portal.datasource.cluster",
+      "name": "集群数据源浏览",
+      "details": "native_pages 三区只读功能：explorer DAM 下拉 + 数据库列表(cmx-ignite-list) + 属性(cmx-ui5-form)；content 三视图(数据字典/业务单据/弹性组合)按档案+版本只读展示；property 只读详情",
+      "sourceType": "js",
+      "relPath": "portal/datasource/cluster-datasource.js"
+    },
+    {
+      "id": "portal.dam.registry-center",
+      "name": "DAM 注册管理中心",
+      "details": "Domain / Application / Module 注册主数据管理中心",
+      "sourceType": "js",
+      "relPath": "portal/dam/registry-center.js"
+    },
+    {
+      "id": "portal.help.center",
+      "name": "帮助中心",
+      "details": "按 DAM(域/应用/模块) 组织的帮助中心：explorer 可搜索分级目录、content 详细内容、property 样例/示例，三区共享同一页面的三视图（借鉴 DAM 注册中心）",
+      "sourceType": "js",
+      "relPath": "portal/help/center.js"
+    },
+    {
+      "id": "portal.notify.center",
+      "name": "通知中心",
+      "details": "任务/消息/日志 通知列表（props.center 区分），支持标记已读/全部已读；数据来自 /api/notifications，SSE 实时推送",
+      "sourceType": "js",
+      "relPath": "portal/notify/center.js"
+    },
+    {
+      "id": "demo.product-explorer",
+      "name": "产品列表(explorer)",
+      "details": "native_pages 演示 · explorer 区 CE，点击产品经 workspace.context 通知 content 区",
+      "sourceType": "html",
+      "relPath": "demo/product-explorer.html"
+    },
+    {
+      "id": "demo.product-content",
+      "name": "产品详情(content)",
+      "details": "native_pages 演示 · content 区 CE，订阅 workspace.context 显示选中产品详情",
+      "sourceType": "html",
+      "relPath": "demo/product-content.html"
+    },
+    {
+      "id": "demo.interactive",
+      "name": "自包含交互页(整页HTML)",
+      "details": "native_pages 演示 · 完整 HTML 文档(含 <script>)，由 iframe 承载，脚本/样式隔离运行",
+      "sourceType": "html",
+      "relPath": "demo/interactive-demo.html"
+    },
+    {
+      "id": "demo.dict-base.list",
+      "name": "字典基础元数据·文件/字段集",
+      "details": "native_pages 新模式 · explorer 区，文件与字段集列表，选择经 workspace.context 通知",
+      "sourceType": "html",
+      "relPath": "demo/dict-base/dict-base-list.html"
+    },
+    {
+      "id": "demo.dict-base.manager",
+      "name": "字典基础元数据·设计",
+      "details": "native_pages 新模式 · content 区，字段表格编辑+保存，doc 单一来源放 workspace.context",
+      "sourceType": "html",
+      "relPath": "demo/dict-base/dict-base-manager.html"
+    },
+    {
+      "id": "demo.dict-base.inspector",
+      "name": "字典基础元数据·检查器",
+      "details": "native_pages 新模式 · property 区，当前字段详编，与设计页经 workspace.context 联动",
+      "sourceType": "html",
+      "relPath": "demo/dict-base/dict-base-inspector.html"
+    },
+    {
+      "id": "demo.dict-base.source",
+      "name": "字典基础元数据·源码",
+      "details": "native_pages 新模式 · content 区源码 tab，编辑 doc JSON 经 workspace.context 同步",
+      "sourceType": "html",
+      "relPath": "demo/dict-base/dict-base-source.html"
+    },
+    {
+      "id": "demo.doc-base.list",
+      "name": "业务单据定义·单据/表",
+      "details": "native_pages 新模式 · explorer 区，单据文件与多层表(L1/L2/L3)，选择经 workspace.context 通知",
+      "sourceType": "html",
+      "relPath": "demo/doc-base/doc-base-list.html"
+    },
+    {
+      "id": "demo.doc-base.manager",
+      "name": "业务单据定义·设计",
+      "details": "native_pages 新模式 · content 区，选中表的字段表格(含维度/聚合)+保存，DOC 单一来源放 workspace.context",
+      "sourceType": "html",
+      "relPath": "demo/doc-base/doc-base-manager.html"
+    },
+    {
+      "id": "demo.doc-base.inspector",
+      "name": "业务单据定义·检查器",
+      "details": "native_pages 新模式 · property 区，当前字段详编(含 dimType/refField)，与设计页经 workspace.context 联动",
+      "sourceType": "html",
+      "relPath": "demo/doc-base/doc-base-inspector.html"
+    },
+    {
+      "id": "demo.doc-base.source",
+      "name": "业务单据定义·源码",
+      "details": "native_pages 新模式 · content 区源码 tab，编辑 DOC JSON 经 workspace.context 同步",
+      "sourceType": "html",
+      "relPath": "demo/doc-base/doc-base-source.html"
+    },
+    {
+      "id": "demo.doc-base.schema",
+      "name": "业务单据定义·Schema",
+      "details": "native_pages 新模式 · content 区 Schema tab，只读展开多层表+主从关系+聚合",
+      "sourceType": "html",
+      "relPath": "demo/doc-base/doc-base-schema.html"
+    },
+    {
+      "id": "fi.cmxfico.gl.voucher-native",
+      "name": "会计凭证（native_pages）",
+      "details": "cmx-fico 总账凭证四层主从（凭证批→凭证头→科目行→辅助行），基于 /api/doc/* + fico-db 装载/回存",
+      "sourceType": "js",
+      "relPath": "fi/cmxfico/voucher-native.js"
+    },
+    {
+      "id": "fi.cmxfico.gl.voucher-native-bin",
+      "name": "会计凭证（native_pages · tokio 二进制）",
+      "details": "第四套实现：同四层主从凭证表，装载走 /api/doc/data/tokio-zmc-msgpack（tokio-postgres + ZmcDataSet → 列式二进制 msgpack，零拷贝）",
+      "sourceType": "js",
+      "relPath": "fi/cmxfico/voucher-native-bin.js"
+    },
+    {
+      "id": "fi.cmxfico.gl.voucher-native-zmcjson",
+      "name": "会计凭证（native_pages · Zmc零拷贝→JSON）",
+      "details": "第五套实现：同四层主从凭证表，ZmcDataSet 零拷贝装载但纯 JSON 出口，装载走 /api/doc/data/tokio-zmc-json（tokio + ZmcDataSet → JSON，前端无需 msgpack 解码）",
+      "sourceType": "js",
+      "relPath": "fi/cmxfico/voucher-native-zmcjson.js"
+    },
+    {
+      "id": "portal.system.registry-editor",
+      "name": "注册表编辑器",
+      "details": "仿 Windows regedit 的注册表编辑器（native_pages）：左树右值 + 地址栏 + 搜索 + 右键菜单 + 导入/导出 .json；数据为 JSON 树（__values__ 存值，REG_SZ/REG_DWORD/REG_BOOL/REG_JSON 四类型），可编辑根存 localStorage，HKEY_PORTAL_RUNTIME 只读根实时接 /api/registry/dam。",
+      "sourceType": "js",
+      "relPath": "portal/system/registry-editor.js"
+    },
+    {
+      "id": "portal.system.service-topology",
+      "name": "系统集成状态",
+      "details": "服务依赖 / 集成拓扑（native_pages, portal.system）：门户各功能后端来源可视化——某能力是进程内内嵌还是反代到独立微服务、目标 URL、以及对 proxy 目标的活体探测（可达/延迟/对端服务名/在线时长）。数据源 GET /_mon/deps（平台通用监控 cmx-web-monitor 提供，同源，与 /_mon 技术页、各独立服务 /_mon 同一真相）。今天 flow 唯一可 embedded/proxy 切换（读 center_client.urls.flow），其余模块进程内嵌。每 5s 轮询。",
+      "sourceType": "js",
+      "relPath": "portal/system/service-topology.js"
+    },
+    {
+      "id": "portal.job.monitor",
+      "name": "任务中心",
+      "details": "native_pages 异步任务管理与监控三区工作台（异步任务中心 M1+M2+M3 全能力）：explorer 集群概览(按状态计数+活跃数,点击卡片过滤)+新建作业(job.demo/rpt.compute/rpt.verify 动态表单+优先级+整体失败开关+未知种类原始JSON)+过滤器(种类/状态/关键字)；content 活跃/历史双 tab——活跃作业列表(实时进度条+状态徽标+归属节点+优先级+时间,活跃优先排序)+选中作业监控详情(大进度条+阶段+ETA+明细流+实时日志+全控制条 暂停/恢复/停止/重启/归档)，历史作业列表(已归档只读)+历史详情；property 作业完整属性(含归档时间)。归档=RU/HI 分离(DELETE 转移到 cmx_job_hi 历史表,非真删),历史查询 GET /api/jobs/history。控制走 POST /api/jobs/*+DELETE归档，进度走 SSE /api/jobs/{id}/events+/api/jobs/events汇总流；后端 cmx-job-api(JobModule)+JobManager(PgJobStore持久化+分布式SKIP LOCKED抢占HA+历史归档)。",
+      "sourceType": "js",
+      "relPath": "portal/job/job-monitor.js"
+    },
+    {
+      "id": "portal.display.showcase",
+      "name": "展示组件库演示",
+      "details": "展示组件库演示 · native_pages · 静态演示 6 个展示类组件（cmx-panel/cmx-toolbar/cmx-status-tag/cmx-empty-state/cmx-desc-list/cmx-filter-bar）+ cmxConfirm 确认对话框，neo 主题；纯前端模拟数据，无后端依赖。",
+      "sourceType": "js",
+      "relPath": "portal/display/showcase.js"
+    }
+  ]
+}

@@ -1,0 +1,901 @@
+<div class="voucher-neo-root" data-node-id="vn-root" style="display:flex;flex-direction:column;width:100%;height:100%;gap:4px;padding:10px;box-sizing:border-box;position:relative;overflow:hidden;">
+  <style data-node-id="vn-style">
+    .voucher-neo-root {
+      --neo-cyan: #00b4d8;
+      --neo-violet: #7c3aed;
+      --neo-mint: #10b981;
+      --neo-warn: #f59e0b;
+      --neo-accent: var(--neo-cyan);
+      --neo-accent-2: var(--neo-violet);
+      --neo-glass: color-mix(in srgb, var(--sapList_Background, #fff) 86%, transparent);
+      --neo-glass-strong: color-mix(in srgb, var(--sapObjectHeader_Background, #f5f6f7) 90%, transparent);
+      --neo-border: color-mix(in srgb, var(--neo-cyan) 26%, var(--sapGroup_ContentBorderColor, #d9d9d9));
+      --neo-border-subtle: color-mix(in srgb, var(--neo-cyan) 11%, var(--sapGroup_TitleBorderColor, #ddd));
+      --neo-glow: color-mix(in srgb, var(--neo-cyan) 18%, transparent);
+      --neo-glow-violet: color-mix(in srgb, var(--neo-violet) 14%, transparent);
+      --neo-edge-highlight: color-mix(in srgb, var(--sapTextColor, #32363a) 7%, transparent);
+      --neo-shadow: color-mix(in srgb, var(--sapShellColor, #223548) 10%, transparent);
+      --neo-panel-bg:
+        linear-gradient(
+          165deg,
+          color-mix(in srgb, var(--sapGroup_ContentBackground, #fafafa) 96%, var(--neo-violet) 4%),
+          color-mix(in srgb, var(--sapGroup_ContentBackground, #fafafa) 97%, var(--neo-cyan) 3%)
+        );
+      background:
+        radial-gradient(ellipse 120% 75% at 100% -15%, color-mix(in srgb, var(--neo-violet) 14%, transparent), transparent 52%),
+        radial-gradient(ellipse 95% 65% at 0% 105%, color-mix(in srgb, var(--neo-cyan) 12%, transparent), transparent 48%),
+        radial-gradient(ellipse 70% 50% at 50% 50%, color-mix(in srgb, var(--neo-mint) 4%, transparent), transparent 70%),
+        var(--sapBackgroundColor, #f4f6f8);
+      color: var(--sapTextColor, #32363a);
+    }
+    .voucher-neo-root::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(color-mix(in srgb, var(--neo-cyan) 5%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--neo-cyan) 5%, transparent) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(ellipse 95% 85% at 50% 15%, #000 12%, transparent 72%);
+      opacity: 0.42;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .voucher-neo-root > * { position: relative; z-index: 1; }
+    .neo-hero {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      padding: 5.5px 12px;
+      min-height: 58px;
+      box-sizing: border-box;
+      border-radius: 12px;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg,
+          color-mix(in srgb, var(--neo-violet) 10%, var(--neo-glass)),
+          color-mix(in srgb, var(--neo-cyan) 7%, var(--neo-glass)) 48%,
+          color-mix(in srgb, var(--neo-mint) 5%, var(--neo-glass)));
+      border: 1px solid var(--neo-border);
+      box-shadow:
+        0 8px 28px var(--neo-shadow),
+        0 0 0 1px color-mix(in srgb, var(--neo-cyan) 8%, transparent),
+        inset 0 1px 0 var(--neo-edge-highlight);
+      backdrop-filter: none;
+    }
+    .neo-hero::before {
+      content: '';
+      position: absolute;
+      inset: -35% -8%;
+      background: conic-gradient(from 210deg,
+        color-mix(in srgb, var(--neo-violet) 22%, transparent),
+        color-mix(in srgb, var(--neo-cyan) 18%, transparent),
+        color-mix(in srgb, var(--neo-mint) 12%, transparent),
+        color-mix(in srgb, var(--neo-violet) 22%, transparent));
+      filter: none;
+      opacity: 0.42;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .neo-hero::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neo-violet), var(--neo-cyan), var(--neo-mint), transparent);
+      opacity: 0.75;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .neo-hero > * { position: relative; z-index: 1; }
+    .neo-hero-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: visible;
+      align-self: center;
+    }
+    .neo-hero-title h1 {
+      margin: 0;
+      font-size: 1.12rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0;
+    }
+    .neo-title-text {
+      background: linear-gradient(92deg, var(--sapTitleColor, #223548), var(--neo-cyan) 52%, var(--neo-violet));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .neo-hero-sub {
+      font-size: 0.72rem;
+      color: var(--sapContent_LabelColor, #6a6d70);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: 0.03em;
+    }
+    .neo-kpi-row {
+      display: flex;
+      gap: 10px;
+      flex: 0 0 auto;
+      margin-left: auto;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      align-self: center;
+      min-height: 43px;
+    }
+    .neo-kpi {
+      flex: 0 0 auto;
+      min-width: 96px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      background: color-mix(in srgb, var(--sapList_Background, #fff) 72%, transparent);
+      border: 1px solid var(--neo-border-subtle);
+      box-shadow: inset 0 1px 0 var(--neo-edge-highlight);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+    }
+    .neo-kpi-lbl {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--sapContent_LabelColor);
+      line-height: 1.2;
+      min-height: 0.78rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .neo-kpi-val {
+      font-size: 1.05rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      font-family: ui-monospace, monospace;
+      color: var(--sapTitleColor);
+      white-space: nowrap;
+      line-height: 1.35;
+      min-height: 1.35em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .neo-kpi-status { min-width: 108px; max-width: 108px; flex: 0 0 108px; }
+    .neo-kpi-status .neo-kpi-val { min-width: 100%; text-align: center; }
+    .neo-kpi-val.neo-ok { color: var(--neo-mint); }
+    .neo-kpi-val.neo-warn { color: var(--neo-warn); }
+    .neo-ring-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    #txMixRing {
+      width: 28px; height: 28px; border-radius: 50%;
+      padding: 2px;
+      flex-shrink: 0;
+      background: conic-gradient(var(--neo-cyan) 0% 50%, var(--neo-violet) 50% 100%);
+      box-shadow: 0 0 10px var(--neo-glow);
+    }
+    #txMixRing::after {
+      content: '';
+      display: block;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: var(--neo-glass-strong);
+    }
+    #voucherFlowBadge {
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      font-family: ui-monospace, monospace;
+      color: var(--neo-cyan);
+      white-space: nowrap;
+    }
+    #voucherFlowBadge[data-state="ok"] { color: var(--neo-mint); }
+    #voucherFlowBadge[data-state="warn"] { color: var(--neo-warn); }
+    .neo-panel {
+      display: flex;
+      flex-direction: column;
+      background: var(--neo-panel-bg);
+      border: 1px solid var(--neo-border-subtle);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow:
+        0 4px 20px var(--neo-shadow),
+        inset 0 1px 0 var(--neo-edge-highlight);
+      backdrop-filter: blur(10px);
+    }
+    .neo-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      border-bottom: 1px solid var(--neo-border-subtle);
+      background:
+        linear-gradient(90deg,
+          color-mix(in srgb, var(--neo-cyan) 10%, var(--neo-glass-strong)),
+          color-mix(in srgb, var(--neo-violet) 6%, transparent) 55%,
+          transparent);
+    }
+    .neo-grid-zone > .neo-panel-head {
+      flex: 0 0 auto;
+      min-height: 0;
+      padding: 3px 10px;
+      gap: 8px;
+      border-bottom: 1px solid var(--neo-border-subtle);
+      background:
+        linear-gradient(90deg,
+          color-mix(in srgb, var(--neo-cyan) 10%, var(--neo-glass-strong)),
+          color-mix(in srgb, var(--neo-violet) 6%, transparent) 55%,
+          transparent);
+    }
+    .neo-panel-head .neo-sec-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--sapTitleColor);
+    }
+    .neo-grid-zone > .neo-panel-head .neo-sec-title {
+      gap: 6px;
+      font-size: 0.74rem;
+      line-height: 1.1;
+    }
+    .neo-sec-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--neo-cyan);
+      box-shadow: 0 0 8px var(--neo-glow);
+    }
+    .neo-grid-zone > .neo-panel-head .neo-sec-dot {
+      width: 5px;
+      height: 5px;
+      box-shadow: 0 0 6px var(--neo-glow);
+    }
+    .neo-panel-body {
+      flex: 1 1 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 4px 6px 6px;
+    }
+    .neo-panel[data-neo-tone="cyan"] .neo-panel-body {
+      background:
+        linear-gradient(180deg,
+          color-mix(in srgb, var(--neo-cyan) 9%, var(--sapList_Background, #fff)),
+          color-mix(in srgb, var(--neo-cyan) 3%, transparent) 52%,
+          transparent);
+    }
+    .neo-panel[data-neo-tone="azure"] .neo-panel-body {
+      background:
+        linear-gradient(180deg,
+          color-mix(in srgb, #0284c7 8%, var(--sapList_Background, #fff)),
+          color-mix(in srgb, #00b4d8 3%, transparent) 52%,
+          transparent);
+    }
+    .neo-panel.neo-grid-zone[data-neo-tone="cyan"] {
+      border-color: color-mix(in srgb, var(--neo-cyan) 30%, var(--neo-border-subtle));
+    }
+    .neo-panel.neo-grid-zone[data-neo-tone="azure"] {
+      border-color: color-mix(in srgb, #0284c7 30%, var(--neo-border-subtle));
+    }
+    .neo-grid-zone > .neo-panel-body {
+      padding: 0;
+      background: transparent !important;
+    }
+    .neo-grid-zone cmx-revo-grid.neo-voucher-grid-host {
+      flex: 1 1 0;
+      min-height: 0;
+      border-radius: 0;
+    }
+    .neo-panel-body cmx-revo-grid {
+      --revo-grid-bg: transparent;
+    }
+    .neo-form-panel { flex: 0 0 auto; padding: 4px 8px; --_ui5_input_height: 1.85rem; }
+    .neo-grid-zone { flex: 1 1 0; min-height: 140px; }
+    .neo-voucher-seal {
+      flex-shrink: 0;
+      align-self: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transform: rotate(-12deg);
+      color: #ea580c;
+      background: color-mix(in srgb, currentColor 10%, var(--neo-glass));
+      border: 2px double currentColor;
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, currentColor 55%, transparent),
+        0 2px 8px color-mix(in srgb, currentColor 24%, transparent);
+      opacity: 0.94;
+      user-select: none;
+    }
+    .neo-voucher-seal::before {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      border: 1px solid color-mix(in srgb, currentColor 70%, transparent);
+      pointer-events: none;
+    }
+    .neo-voucher-seal::after {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      border: 1px dashed color-mix(in srgb, currentColor 35%, transparent);
+      pointer-events: none;
+    }
+    .neo-seal-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      font-size: 0.58rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.14em;
+      font-family: "STKaiti", "KaiTi", "Songti SC", serif;
+      z-index: 1;
+    }
+    .neo-voucher-seal[data-status="draft"] { color: #ea580c; }
+    .neo-voucher-seal[data-status="void"] { color: #dc2626; }
+    .neo-voucher-seal[data-status="saved"] { color: #16a34a; }
+    .neo-voucher-seal[data-status="audited"] { color: #7c3aed; }
+    .neo-voucher-seal[data-status="posted"] { color: #2563eb; }
+    .neo-hero-right {
+      flex-shrink: 0;
+      margin-left: auto;
+      align-self: center;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .neo-hero-util-rail {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 2px 4px;
+      border-radius: 7px;
+      border: 1px solid var(--neo-border-subtle);
+      background: color-mix(in srgb, var(--sapList_Background, #fff) 58%, transparent);
+      box-shadow: inset 0 0 12px color-mix(in srgb, var(--neo-cyan) 5%, transparent);
+    }
+    .neo-util-chip {
+      --util-hue: var(--neo-cyan);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      margin: 0;
+      padding: 0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--util-hue);
+      font-size: 0.72rem;
+      font-weight: 800;
+      font-family: "STKaiti", "KaiTi", "Songti SC", serif;
+      transition: transform 0.18s ease, box-shadow 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .neo-util-chip::before {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: 4px;
+      border: 1px solid color-mix(in srgb, var(--util-hue) 28%, transparent);
+      background: color-mix(in srgb, var(--sapList_Background) 85%, transparent);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      z-index: 0;
+    }
+    .neo-util-chip span { position: relative; z-index: 1; }
+    .neo-util-chip:hover:not(:disabled):not(.is-disabled) { transform: translateY(-1px); }
+    .neo-util-chip:hover:not(:disabled):not(.is-disabled)::before {
+      border-color: color-mix(in srgb, var(--util-hue) 55%, transparent);
+      box-shadow: 0 0 8px color-mix(in srgb, var(--util-hue) 25%, transparent);
+    }
+    .neo-util-chip.is-active::before {
+      border-color: var(--util-hue);
+      background: color-mix(in srgb, var(--util-hue) 12%, transparent);
+      box-shadow: inset 0 0 6px color-mix(in srgb, var(--util-hue) 15%, transparent);
+    }
+    .neo-util-chip:disabled,
+    .neo-util-chip.is-disabled {
+      opacity: 0.32;
+      cursor: not-allowed;
+      filter: grayscale(0.85);
+    }
+    .neo-hero-act-rail {
+      flex-shrink: 0;
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      padding: 3px 8px;
+      border-radius: 9px;
+      background: color-mix(in srgb, var(--sapList_Background, #fff) 68%, transparent);
+      border: 1px solid var(--neo-border-subtle);
+      box-shadow:
+        inset 0 0 16px color-mix(in srgb, var(--neo-cyan) 6%, transparent),
+        inset 0 1px 0 var(--neo-edge-highlight);
+    }
+    .neo-act-chip {
+      --act-hue: var(--neo-cyan);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 34px;
+      margin: 0;
+      padding: 2px 4px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--act-hue);
+      font-family: ui-monospace, monospace;
+      transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .neo-act-chip::before {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border-radius: 6px;
+      background:
+        linear-gradient(145deg, color-mix(in srgb, var(--act-hue) 18%, transparent), transparent 55%),
+        color-mix(in srgb, var(--sapList_Background, #fff) 82%, transparent);
+      border: 1px solid color-mix(in srgb, var(--act-hue) 38%, transparent);
+      box-shadow: inset 0 1px 0 var(--neo-edge-highlight);
+      transition: box-shadow 0.25s ease, border-color 0.25s ease;
+      z-index: 0;
+    }
+    .neo-act-chip::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -1px;
+      width: 10px;
+      height: 2px;
+      transform: translateY(-50%);
+      background: linear-gradient(90deg, color-mix(in srgb, var(--act-hue) 55%, transparent), transparent);
+      opacity: 0.65;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .neo-act-chip:last-child::after { display: none; }
+    .neo-act-chip[data-act="save"] { --act-hue: var(--neo-mint); }
+    .neo-act-chip[data-act="audit"] { --act-hue: var(--neo-violet); }
+    .neo-act-chip[data-act="post"] { --act-hue: #2563eb; }
+    .neo-act-glyph {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      font-family: "STKaiti", "KaiTi", "Songti SC", serif;
+      background: linear-gradient(160deg, var(--act-hue), color-mix(in srgb, var(--act-hue) 42%, var(--sapTextColor, #fff)));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 4px color-mix(in srgb, var(--act-hue) 40%, transparent));
+    }
+    .neo-act-chip:hover:not(:disabled):not(.is-disabled)::before {
+      box-shadow:
+        inset 0 1px 0 var(--neo-edge-highlight),
+        0 0 12px color-mix(in srgb, var(--act-hue) 35%, transparent);
+      border-color: color-mix(in srgb, var(--act-hue) 65%, transparent);
+    }
+    .neo-act-chip:hover:not(:disabled):not(.is-disabled) {
+      transform: translateY(-1px) scale(1.03);
+    }
+    .neo-act-chip[data-done="true"]::before {
+      border-color: color-mix(in srgb, var(--act-hue) 55%, transparent);
+      background:
+        linear-gradient(145deg, color-mix(in srgb, var(--act-hue) 22%, transparent), transparent 55%),
+        color-mix(in srgb, var(--sapList_Background, #fff) 82%, transparent);
+    }
+    .neo-act-chip[data-current="true"]::before {
+      border-color: var(--act-hue);
+      box-shadow:
+        0 0 12px color-mix(in srgb, var(--act-hue) 40%, transparent),
+        inset 0 0 8px color-mix(in srgb, var(--act-hue) 12%, transparent);
+    }
+    .neo-act-chip:disabled,
+    .neo-act-chip.is-disabled {
+      cursor: not-allowed;
+      opacity: 0.32;
+      filter: grayscale(0.85);
+      transform: none;
+    }
+    .neo-meta-strip {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      padding: 4px 10px 4px 0;
+      min-width: 0;
+      position: relative;
+      border-radius: 11px;
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      isolation: isolate;
+      --_ui5_input_height: 1.25rem;
+      --lane-a: var(--neo-cyan);
+      --lane-b: var(--neo-violet);
+    }
+    .neo-lane-accent {
+      flex: 0 0 auto;
+      align-self: stretch;
+      width: 4px;
+      margin: 6px 10px 6px 0;
+      border-radius: 0 4px 4px 0;
+      background: linear-gradient(180deg, var(--lane-a), var(--lane-b));
+      box-shadow: 0 0 12px color-mix(in srgb, var(--lane-a) 45%, transparent);
+    }
+    .neo-lane-tag {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      min-width: 34px;
+      padding: 4px 6px;
+      margin-right: 8px;
+      border-radius: 8px;
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1.05;
+      font-family: ui-monospace, monospace;
+      color: color-mix(in srgb, var(--lane-a) 88%, var(--sapTitleColor));
+      background: color-mix(in srgb, var(--lane-a) 10%, var(--sapList_Background));
+      border: 1px solid color-mix(in srgb, var(--lane-a) 28%, transparent);
+      box-shadow: inset 0 0 10px color-mix(in srgb, var(--lane-a) 8%, transparent);
+      user-select: none;
+    }
+    .neo-lane--head {
+      --lane-a: var(--neo-cyan);
+      --lane-b: var(--neo-violet);
+      background:
+        linear-gradient(105deg,
+          color-mix(in srgb, var(--neo-cyan) 11%, var(--sapList_Background, #fff)) 0%,
+          color-mix(in srgb, var(--neo-violet) 7%, var(--sapList_Background, #fff)) 55%,
+          color-mix(in srgb, var(--sapList_Background, #fff) 92%, transparent) 100%);
+      border: 1px solid color-mix(in srgb, var(--neo-cyan) 30%, var(--neo-violet) 16%);
+      box-shadow:
+        0 3px 18px color-mix(in srgb, var(--neo-cyan) 8%, transparent),
+        inset 0 1px 0 var(--neo-edge-highlight);
+    }
+    .neo-lane--head::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 48px; right: 12px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--neo-cyan), var(--neo-violet), transparent 85%);
+      opacity: 0.7;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .neo-lane--head::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 120% at 0% 50%, color-mix(in srgb, var(--neo-cyan) 12%, transparent), transparent 65%),
+        radial-gradient(ellipse 40% 100% at 100% 50%, color-mix(in srgb, var(--neo-violet) 8%, transparent), transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .neo-lane--foot {
+      --lane-a: var(--neo-mint);
+      --lane-b: var(--neo-cyan);
+      background:
+        linear-gradient(285deg,
+          color-mix(in srgb, var(--neo-mint) 10%, var(--sapList_Background, #fff)) 0%,
+          color-mix(in srgb, var(--neo-cyan) 6%, var(--sapList_Background, #fff)) 48%,
+          color-mix(in srgb, var(--sapList_Background, #fff) 94%, transparent) 100%);
+      border: 1px solid color-mix(in srgb, var(--neo-mint) 28%, var(--neo-cyan) 14%);
+      box-shadow:
+        0 -2px 16px color-mix(in srgb, var(--neo-mint) 7%, transparent),
+        inset 0 -1px 0 color-mix(in srgb, var(--neo-mint) 18%, transparent);
+    }
+    .neo-lane--foot::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 48px; right: 12px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 15%, var(--neo-mint) 40%, var(--neo-cyan) 70%, transparent);
+      opacity: 0.65;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .neo-lane--foot::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 50% 110% at 100% 50%, color-mix(in srgb, var(--neo-mint) 10%, transparent), transparent 62%),
+        radial-gradient(ellipse 35% 90% at 0% 50%, color-mix(in srgb, var(--neo-cyan) 7%, transparent), transparent 58%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .neo-meta-strip cmx-ui5-form {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+    .neo-lane-accent,
+    .neo-lane-tag { position: relative; z-index: 2; }
+    .neo-lane cmx-ui5-form.neo-trade-form-host {
+      --neo-form-input-h: 1.52rem;
+      --neo-form-font-size: 0.76rem;
+      --neo-form-label-size: 0.76rem;
+      display: block;
+      width: 100%;
+      border-radius: 9px;
+      overflow: hidden;
+      background: transparent;
+      filter: drop-shadow(0 2px 8px color-mix(in srgb, var(--lane-a) 12%, transparent));
+    }
+    .neo-lane--head cmx-ui5-form.neo-trade-form-host {
+      --neo-form-accent: var(--neo-cyan);
+      --neo-form-accent-2: var(--neo-violet);
+    }
+    .neo-lane--foot cmx-ui5-form.neo-trade-form-host {
+      --neo-form-accent: var(--neo-mint);
+      --neo-form-accent-2: var(--neo-cyan);
+    }
+    .neo-grid-cmd-rail {
+      --rail-hue: var(--neo-cyan);
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 2px;
+      border-radius: 8px;
+      border: 1px solid color-mix(in srgb, var(--rail-hue) 24%, var(--neo-border-subtle));
+      background: color-mix(in srgb, var(--sapList_Background, #fff) 55%, transparent);
+      box-shadow:
+        inset 0 0 10px color-mix(in srgb, var(--rail-hue) 6%, transparent),
+        inset 0 1px 0 var(--neo-edge-highlight);
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd-rail {
+      padding: 0;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+    }
+    .neo-grid-cmd-rail[data-tone="cyan"] { --rail-hue: var(--neo-cyan); }
+    .neo-grid-cmd-rail[data-tone="azure"] { --rail-hue: #0284c7; }
+    .neo-grid-cmd {
+      --cmd-hue: var(--rail-hue);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 26px;
+      min-width: 0;
+      margin: 0;
+      padding: 0 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--cmd-hue);
+      font-family: ui-monospace, monospace;
+      transition: transform 0.18s ease, filter 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd {
+      gap: 3px;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 4px;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd::before {
+      display: none;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd + .neo-grid-cmd::after {
+      display: none;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd:hover:not(:disabled):not(.is-disabled) {
+      background: color-mix(in srgb, var(--cmd-hue) 10%, transparent);
+      box-shadow: none;
+    }
+    .neo-grid-cmd::before {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      z-index: 0;
+    }
+    .neo-grid-cmd[data-cmd="swap"] { --cmd-hue: var(--neo-warn); }
+    .neo-grid-cmd[data-cmd="del"] { --cmd-hue: #ef4444; }
+    .neo-grid-cmd-icon {
+      position: relative;
+      z-index: 1;
+      font-size: 0.92rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd-icon {
+      font-size: 0.82rem;
+    }
+    .neo-grid-cmd-glyph {
+      position: relative;
+      z-index: 1;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      font-family: "STKaiti", "KaiTi", "Songti SC", serif;
+      background: linear-gradient(160deg, var(--cmd-hue), color-mix(in srgb, var(--cmd-hue) 48%, var(--sapTextColor, #fff)));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd-glyph {
+      font-size: 0.62rem;
+    }
+    .neo-grid-cmd + .neo-grid-cmd::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 1px;
+      height: 14px;
+      transform: translateY(-50%);
+      background: color-mix(in srgb, var(--rail-hue) 35%, transparent);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd + .neo-grid-cmd::after {
+      height: 12px;
+    }
+    .neo-grid-cmd:hover:not(:disabled):not(.is-disabled) {
+      transform: translateY(-1px);
+    }
+    .neo-grid-cmd:hover:not(:disabled):not(.is-disabled)::before {
+      border-color: color-mix(in srgb, var(--cmd-hue) 45%, transparent);
+      background: color-mix(in srgb, var(--cmd-hue) 10%, transparent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--cmd-hue) 22%, transparent);
+    }
+    .neo-grid-cmd:disabled,
+    .neo-grid-cmd.is-disabled {
+      cursor: not-allowed;
+      opacity: 0.34;
+      filter: grayscale(0.8);
+      transform: none;
+    }
+  </style>
+
+  <div class="neo-hero" data-node-id="vn-hero">
+    <div id="voucherStatusSeal" class="neo-voucher-seal" data-status="draft" aria-label="凭证状态：草稿" data-node-id="vn-status-seal">
+      <span class="neo-seal-text"><span>草</span><span>稿</span></span>
+    </div>
+    <div class="neo-hero-title">
+      <h1><span class="neo-title-text">财务会计凭证</span><span id="neoVoucherTypeText" class="neo-title-text"></span></h1>
+      <span class="neo-hero-sub">GL VOUCHER · <span id="neoVoucherNo">—</span> · <span id="kpiLines">0 条分录</span></span>
+    </div>
+    <div class="neo-kpi-row">
+      <div class="neo-kpi">
+        <div class="neo-kpi-lbl">借方 Debit</div>
+        <div class="neo-kpi-val" id="kpiDebit">0.00</div>
+      </div>
+      <div class="neo-ring-wrap">
+        <div id="txMixRing" title="借贷结构"></div>
+        <span id="voucherFlowBadge" data-state="ok">BAL</span>
+      </div>
+      <div class="neo-kpi">
+        <div class="neo-kpi-lbl">贷方 Credit</div>
+        <div class="neo-kpi-val" id="kpiCredit">0.00</div>
+      </div>
+      <div class="neo-kpi neo-kpi-status">
+        <div class="neo-kpi-lbl">平衡状态</div>
+        <div class="neo-kpi-val neo-ok" id="kpiBalance">—</div>
+      </div>
+    </div>
+    <div class="neo-hero-right" data-node-id="vn-hero-right">
+      <div class="neo-hero-util-rail" data-node-id="vn-hero-utils" role="toolbar" aria-label="辅助操作">
+        <button type="button" id="voucherEditBtn" class="neo-util-chip" data-eventclick="toggleVoucherEdit();" title="进入编辑" aria-label="编辑">
+          <span aria-hidden="true">编</span>
+        </button>
+        <button type="button" id="voucherLoadBtn" class="neo-util-chip" data-eventclick="initVoucher();" title="加载示例" aria-label="加载示例">
+          <span aria-hidden="true">例</span>
+        </button>
+      </div>
+      <div class="neo-hero-act-rail" data-node-id="vn-hero-actions" role="toolbar" aria-label="凭证操作">
+        <button type="button" id="voucherSaveBtn" class="neo-act-chip" data-act="save" data-eventclick="doSaveVoucher();" title="保存（导出 JSON）" aria-label="保存">
+          <span class="neo-act-glyph" aria-hidden="true">存</span>
+        </button>
+        <button type="button" id="voucherAuditBtn" class="neo-act-chip" data-act="audit" data-eventclick="doAuditVoucher();" title="审核（演示）" aria-label="审核">
+          <span class="neo-act-glyph" aria-hidden="true">审</span>
+        </button>
+        <button type="button" id="voucherPostBtn" class="neo-act-chip" data-act="post" data-eventclick="doPostVoucher();" title="过账（演示）" aria-label="过账">
+          <span class="neo-act-glyph" aria-hidden="true">账</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="neo-meta-strip neo-lane neo-lane--head" data-node-id="vn-head-lane">
+    <span class="neo-lane-accent" aria-hidden="true"></span>
+    <span class="neo-lane-tag" aria-hidden="true"><span>单</span><span>头</span></span>
+    <cmx-ui5-form id="headForm" class="neo-trade-form-host" data-neo-form-lane="head" data-cmx-density="compact" data-cmx-master-slave-id="ms" data-cmx-dataset-id="head" data-cmx-layout="S1 M2 L4 XL4" data-cmx-model-id="headFormModel" style="display:block;width:100%;box-sizing:border-box;" data-node-id="vn-head-form"></cmx-ui5-form>
+  </div>
+
+  <div class="neo-panel neo-grid-zone" data-neo-tone="cyan" data-node-id="vn-items-panel" style="flex:1 1 0;min-height:0;">
+    <div class="neo-panel-head">
+      <span class="neo-sec-title"><span class="neo-sec-dot" style="background:var(--neo-cyan);box-shadow:0 0 8px var(--neo-glow);"></span>会计分录</span>
+      <div class="neo-grid-cmd-rail" data-tone="cyan" role="toolbar" aria-label="会计分录操作">
+        <button type="button" class="neo-grid-cmd" data-cmd="add" data-eventclick="addEntry();" title="新增分录" aria-label="新增分录" disabled>
+          <span class="neo-grid-cmd-icon" aria-hidden="true">+</span>
+          <span class="neo-grid-cmd-glyph" aria-hidden="true">增</span>
+        </button>
+        <button type="button" class="neo-grid-cmd" data-cmd="swap" data-eventclick="swapEntryDebitCredit();" title="借贷互换" aria-label="借贷互换" disabled>
+          <span class="neo-grid-cmd-icon" aria-hidden="true">⇄</span>
+          <span class="neo-grid-cmd-glyph" aria-hidden="true">调</span>
+        </button>
+        <button type="button" class="neo-grid-cmd" data-cmd="del" data-eventclick="removeEntry();" title="删除分录" aria-label="删除分录" disabled>
+          <span class="neo-grid-cmd-icon" aria-hidden="true">×</span>
+          <span class="neo-grid-cmd-glyph" aria-hidden="true">删</span>
+        </button>
+      </div>
+    </div>
+    <div class="neo-panel-body">
+      <cmx-revo-grid id="itemGrid" class="neo-voucher-grid-host" data-neo-grid-tone="cyan" data-cmx-master-slave-id="ms" data-cmx-dataset-id="head.items" data-cmx-model-id="itemModel" data-eventcmx-row-selected="onEntrySelected(event);" style="display:block;width:100%;flex:1 1 0%;" data-node-id="vn-item-grid"></cmx-revo-grid>
+    </div>
+  </div>
+
+  <div class="neo-panel neo-grid-zone" data-neo-tone="azure" data-node-id="vn-detail-panel" style="flex:1 1 0;min-height:0;">
+    <div class="neo-panel-head">
+      <span class="neo-sec-title"><span class="neo-sec-dot" style="background:#0284c7;box-shadow:0 0 8px color-mix(in srgb, #0284c7 55%, transparent);"></span>辅助分录</span>
+      <div class="neo-grid-cmd-rail" data-tone="azure" role="toolbar" aria-label="辅助分录操作">
+        <button type="button" class="neo-grid-cmd" data-cmd="add" data-eventclick="addAuxDetail();" title="新增辅助" aria-label="新增辅助" disabled>
+          <span class="neo-grid-cmd-icon" aria-hidden="true">+</span>
+          <span class="neo-grid-cmd-glyph" aria-hidden="true">增</span>
+        </button>
+        <button type="button" class="neo-grid-cmd" data-cmd="del" data-eventclick="removeAuxDetail();" title="删除辅助" aria-label="删除辅助" disabled>
+          <span class="neo-grid-cmd-icon" aria-hidden="true">×</span>
+          <span class="neo-grid-cmd-glyph" aria-hidden="true">删</span>
+        </button>
+      </div>
+    </div>
+    <div class="neo-panel-body">
+      <cmx-revo-grid id="detailGrid" class="neo-voucher-grid-host" data-neo-grid-tone="azure" data-cmx-master-slave-id="ms" data-cmx-dataset-id="head.items.details" data-cmx-model-id="detailModel" style="display:block;width:100%;flex:1 1 0%;min-height:0;" data-node-id="vn-detail-grid"></cmx-revo-grid>
+    </div>
+  </div>
+
+  <div class="neo-meta-strip neo-lane neo-lane--foot" data-node-id="vn-foot-lane">
+    <span class="neo-lane-accent" aria-hidden="true"></span>
+    <span class="neo-lane-tag" aria-hidden="true"><span>单</span><span>尾</span></span>
+    <cmx-ui5-form id="footForm" class="neo-trade-form-host" data-neo-form-lane="foot" data-cmx-density="compact" data-cmx-master-slave-id="ms" data-cmx-dataset-id="head" data-cmx-layout="S1 M3 L3 XL3" data-cmx-model-id="footFormModel" style="display:block;width:100%;box-sizing:border-box;" data-node-id="vn-foot-form"></cmx-ui5-form>
+  </div>
+
+</div>
+<script type="application/json" id="__designer_meta__">{"pageData":[{"name":"entryCounter","type":"number","defaultValue":"4"},{"name":"detailCounter","type":"number","defaultValue":"4"},{"name":"voucherEditing","type":"boolean","defaultValue":"false"},{"name":"voucherStatus","type":"string","defaultValue":"draft"}],"pageFns":[{"name":"applyVoucherFormNeoSkin","params":"formEl,lane","body":"host.__voucherFormNeoSkinCss = `:host(.neo-trade-form) {\n  --neo-form-accent: #00b4d8;\n  --neo-form-accent-2: #7c3aed;\n  --neo-form-input-h: 1.52rem;\n  --neo-form-font-size: 0.76rem;\n  --neo-form-label-size: 0.76rem;\n  --neo-form-base: var(--sapGroup_ContentBackground, var(--sapList_Background, #f4f6f8));\n  display: block;\n  position: relative;\n  border-radius: 9px;\n  overflow: hidden;\n  isolation: isolate;\n  background: transparent;\n}\n:host(.neo-trade-form--foot) {\n  --neo-form-accent: #10b981;\n  --neo-form-accent-2: #00b4d8;\n}\n:host(.neo-trade-form) ui5-form {\n  width: 100%;\n  position: relative;\n  z-index: 1;\n  box-sizing: border-box;\n  border-radius: 9px;\n  overflow: hidden;\n  background: transparent !important;\n  --sapGroup_ContentBackground: transparent;\n  --sapList_Background: transparent;\n  --sapGroup_TitleBorderColor: color-mix(in srgb, var(--neo-form-accent) 24%, transparent);\n  --ui5-v2-form-vertical-spacing: 0.1rem;\n  --ui5-v2-form-item-spacing: 0.32rem;\n}\n:host(.neo-trade-form) ui5-form::part(header) { display: none; }\n:host(.neo-trade-form) ui5-form::part(layout) {\n  padding: 0.32rem 0.42rem;\n  row-gap: 0.32rem;\n  background: transparent;\n}\n:host(.neo-trade-form) ui5-form-item::part(root) {\n  position: relative;\n  padding: 4px 10px 4px 11px;\n  border-radius: 10px;\n  background:\n    linear-gradient(128deg,\n      color-mix(in srgb, var(--neo-form-accent) 18%, var(--neo-form-base)),\n      color-mix(in srgb, var(--neo-form-accent-2) 10%, var(--neo-form-base)) 58%,\n      color-mix(in srgb, var(--neo-form-accent) 6%, var(--neo-form-base)));\n  border: 1px solid color-mix(in srgb, var(--neo-form-accent) 32%, var(--sapField_BorderColor, #89919a));\n  box-shadow:\n    inset 2px 0 0 color-mix(in srgb, var(--neo-form-accent) 72%, transparent),\n    inset 0 0 18px color-mix(in srgb, var(--neo-form-accent) 6%, transparent),\n    0 1px 8px color-mix(in srgb, var(--neo-form-accent) 10%, transparent);\n  backdrop-filter: blur(6px);\n  transition: border-color 0.22s ease, box-shadow 0.22s ease;\n}\n:host(.neo-trade-form) ui5-form-item::part(root):hover {\n  border-color: color-mix(in srgb, var(--neo-form-accent) 48%, transparent);\n  box-shadow:\n    inset 2px 0 0 var(--neo-form-accent),\n    inset 0 0 22px color-mix(in srgb, var(--neo-form-accent) 10%, transparent),\n    0 2px 12px color-mix(in srgb, var(--neo-form-accent) 16%, transparent);\n}\n:host(.neo-trade-form) ui5-form-item::part(layout) {\n  align-items: center;\n  gap: 0.4rem;\n}\n:host(.neo-trade-form) ui5-label {\n  font-size: var(--neo-form-label-size, 0.76rem);\n  font-weight: 800;\n  letter-spacing: 0.06em;\n  font-family: ui-monospace, system-ui, sans-serif;\n  line-height: var(--neo-form-input-h, 1.52rem);\n  color: color-mix(in srgb, var(--neo-form-accent) 82%, var(--sapContent_LabelColor, #6a6d70));\n  white-space: nowrap;\n  text-shadow: 0 0 12px color-mix(in srgb, var(--neo-form-accent) 18%, transparent);\n}\n:host(.neo-trade-form) ui5-form-item ui5-input,\n:host(.neo-trade-form) ui5-form-item ui5-date-picker,\n:host(.neo-trade-form) ui5-form-item ui5-select,\n:host(.neo-trade-form) ui5-form-item ui5-combobox,\n:host(.neo-trade-form) ui5-form-item ui5-textarea {\n  width: 100%;\n  min-width: 0;\n  --_ui5_input_height: var(--neo-form-input-h);\n  --_ui5_input_min_width: 0;\n  --sapField_Background: color-mix(in srgb, var(--neo-form-accent) 22%, var(--neo-form-base));\n  --sapField_BorderColor: color-mix(in srgb, var(--neo-form-accent) 34%, var(--sapField_BorderColor, #89919a));\n  --_ui5-input-border: 1px solid color-mix(in srgb, var(--neo-form-accent) 30%, transparent);\n  --_ui5_input_bottom_border_height: 0;\n  --_ui5_input_bottom_border_color: transparent;\n  --sapField_BorderCornerRadius: 7px;\n  --sapField_Hover_Background: color-mix(in srgb, var(--neo-form-accent) 28%, var(--neo-form-base));\n  --sapField_Focus_Background: color-mix(in srgb, var(--neo-form-accent) 32%, var(--neo-form-base));\n  --_ui5_input_focus_outline_color: color-mix(in srgb, var(--neo-form-accent) 55%, transparent);\n  font-size: var(--neo-form-font-size, 0.76rem);\n  font-weight: 600;\n  font-family: ui-monospace, monospace;\n  border-radius: 7px;\n  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sapTextColor, #32363a) 6%, transparent);\n}\n:host(.neo-trade-form) ui5-form-item ui5-input[focused],\n:host(.neo-trade-form) ui5-form-item ui5-date-picker[focused],\n:host(.neo-trade-form) ui5-form-item ui5-combobox[focused] {\n  --sapField_BorderColor: var(--neo-form-accent);\n  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--neo-form-accent) 32%, transparent));\n}\n:host(.neo-trade-form) ui5-form-item ui5-date-picker {\n  --cmx-form-date-picker-height: var(--neo-form-input-h);\n  min-height: var(--neo-form-input-h);\n  display: block;\n}\n:host(.neo-trade-form) ui5-form-item ui5-input[readonly],\n:host(.neo-trade-form) ui5-form-item ui5-date-picker[readonly],\n:host(.neo-trade-form) ui5-form-item ui5-select[disabled],\n:host(.neo-trade-form) ui5-form-item ui5-combobox[readonly],\n:host(.neo-trade-form) ui5-form-item ui5-textarea[readonly] {\n  --sapField_ReadOnly_Background: transparent;\n  --sapField_Background: transparent;\n  --_ui5-input-border: none;\n  --_ui5_input_readonly_border: none;\n  --_ui5_input_readonly_border_color: transparent;\n  border: none !important;\n  box-shadow: none !important;\n  font-weight: 700;\n  color: var(--sapTitleColor, #223548);\n  text-shadow: 0 0 10px color-mix(in srgb, var(--neo-form-accent) 12%, transparent);\n}\n:host(.neo-trade-form) ui5-form-item ui5-input[readonly]::part(root),\n:host(.neo-trade-form) ui5-form-item ui5-date-picker[readonly]::part(root) {\n  background: transparent !important;\n  border: none !important;\n  box-shadow: none !important;\n}\n:host(.neo-trade-form) ui5-form-item ui5-input[readonly]::part(input),\n:host(.neo-trade-form) ui5-form-item ui5-date-picker[readonly]::part(input) {\n  background: transparent !important;\n}\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+1) { --neo-field-accent: var(--neo-form-accent); }\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+2) { --neo-field-accent: var(--neo-form-accent-2); }\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+3) { --neo-field-accent: #10b981; }\n:host(.neo-trade-form) ui5-form-item:nth-child(4n) { --neo-field-accent: #f59e0b; }\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+1)::part(root),\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+2)::part(root),\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+3)::part(root),\n:host(.neo-trade-form) ui5-form-item:nth-child(4n)::part(root) {\n  background:\n    linear-gradient(128deg,\n      color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 20%, var(--neo-form-base)),\n      color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 8%, var(--neo-form-base)) 55%,\n      color-mix(in srgb, var(--neo-form-accent-2) 6%, var(--neo-form-base)));\n  border-color: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 34%, var(--sapField_BorderColor, #89919a));\n  box-shadow:\n    inset 2px 0 0 color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 75%, transparent),\n    inset 0 0 20px color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 8%, transparent),\n    0 1px 8px color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 11%, transparent);\n}\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+1) ui5-label,\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+2) ui5-label,\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+3) ui5-label,\n:host(.neo-trade-form) ui5-form-item:nth-child(4n) ui5-label {\n  color: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 84%, var(--sapContent_LabelColor, #6a6d70));\n}\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+1) ui5-input,\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+2) ui5-input,\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+3) ui5-input,\n:host(.neo-trade-form) ui5-form-item:nth-child(4n) ui5-input,\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+1) ui5-date-picker,\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+2) ui5-date-picker,\n:host(.neo-trade-form) ui5-form-item:nth-child(4n+3) ui5-date-picker,\n:host(.neo-trade-form) ui5-form-item:nth-child(4n) ui5-date-picker {\n  --sapField_Background: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 24%, var(--neo-form-base));\n  --sapField_BorderColor: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 36%, var(--sapField_BorderColor, #89919a));\n  --sapField_Hover_Background: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 30%, var(--neo-form-base));\n  --sapField_Focus_Background: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 34%, var(--neo-form-base));\n  --_ui5_input_focus_outline_color: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 58%, transparent);\n}\n:host(.neo-trade-form) .readonly-display {\n  font-family: ui-monospace, monospace;\n  font-weight: 700;\n  font-size: var(--neo-form-font-size, 0.76rem);\n  padding: 3px 2px;\n  color: var(--sapTitleColor, #223548);\n  text-shadow: 0 0 10px color-mix(in srgb, var(--neo-form-accent) 14%, transparent);\n}`;\nhost.__voucherUi5FormInnerSkinCss = `.ui5-form-root {\n  background:\n    linear-gradient(118deg,\n      color-mix(in srgb, var(--neo-form-accent, #00b4d8) 26%, var(--neo-form-base, #eef2f6)) 0%,\n      color-mix(in srgb, var(--neo-form-accent-2, #7c3aed) 18%, var(--neo-form-base, #eef2f6)) 54%,\n      color-mix(in srgb, var(--neo-form-accent, #00b4d8) 12%, var(--neo-form-base, #eef2f6)) 100%) !important;\n  background-color: transparent !important;\n  border-radius: 9px;\n  box-shadow:\n    inset 0 0 0 1px color-mix(in srgb, var(--neo-form-accent, #00b4d8) 28%, transparent),\n    inset 0 1px 0 color-mix(in srgb, var(--sapTextColor, #32363a) 8%, transparent),\n    0 2px 14px color-mix(in srgb, var(--neo-form-accent, #00b4d8) 10%, transparent);\n  position: relative;\n  overflow: hidden;\n}\n.ui5-form-root::before {\n  content: '';\n  position: absolute;\n  inset: 0;\n  border-radius: inherit;\n  background-image:\n    linear-gradient(color-mix(in srgb, var(--neo-form-accent, #00b4d8) 10%, transparent) 1px, transparent 1px),\n    linear-gradient(90deg, color-mix(in srgb, var(--neo-form-accent, #00b4d8) 10%, transparent) 1px, transparent 1px);\n  background-size: 16px 16px;\n  mask-image: radial-gradient(ellipse 100% 92% at 50% 0%, #000 14%, transparent 82%);\n  opacity: 0.44;\n  pointer-events: none;\n  z-index: 0;\n}\n.ui5-form-layout {\n  position: relative;\n  z-index: 1;\n  padding: 0.32rem 0.42rem !important;\n  row-gap: 0.32rem !important;\n  background: transparent !important;\n}\n.ui5-form-header {\n  background: transparent !important;\n  border-bottom-color: color-mix(in srgb, var(--neo-form-accent, #00b4d8) 24%, transparent) !important;\n}\n.ui5-form-column {\n  background: transparent !important;\n}`;\nif (!formEl) return;\nlane = lane || (formEl.dataset && formEl.dataset.neoFormLane) || 'head';\nfunction paintInnerUi5Form(ui5form) {\n  if (!ui5form || !ui5form.shadowRoot) return false;\n  var isid = 'neo-voucher-ui5-form-inner';\n  var ist = ui5form.shadowRoot.getElementById(isid);\n  if (!ist) {\n    ist = document.createElement('style');\n    ist.id = isid;\n    ui5form.shadowRoot.appendChild(ist);\n  }\n  ist.textContent = host.__voucherUi5FormInnerSkinCss;\n  ui5form.style.setProperty('--sapGroup_ContentBackground', 'transparent');\n  ui5form.style.setProperty('--sapList_Background', 'transparent');\n  return true;\n}\nfunction paint() {\n  var sr = formEl.shadowRoot;\n  if (!sr) return false;\n  var sid = 'neo-voucher-form-skin';\n  var style = sr.getElementById(sid);\n  if (!style) {\n    style = document.createElement('style');\n    style.id = sid;\n    sr.appendChild(style);\n  }\n  style.textContent = host.__voucherFormNeoSkinCss;\n  formEl.classList.add('neo-trade-form');\n  formEl.classList.remove('neo-trade-form--head', 'neo-trade-form--foot');\n  formEl.classList.add('neo-trade-form--' + lane);\n  var ui5form = sr.querySelector('ui5-form');\n  if (ui5form) paintInnerUi5Form(ui5form);\n  return true;\n}\nfunction retryPaint() {\n  if (paint()) {\n    requestAnimationFrame(function () {\n      var sr = formEl.shadowRoot;\n      var ui5form = sr && sr.querySelector('ui5-form');\n      if (ui5form) paintInnerUi5Form(ui5form);\n    });\n  } else {\n    requestAnimationFrame(retryPaint);\n  }\n}\nretryPaint();","readsVars":[],"writesVars":[]},{"name":"wireVoucherFormNeoSkin","params":"","body":"var root = host.shadowRoot;\nif (!root) return;\nvar head = root.querySelector('#headForm');\nvar foot = root.querySelector('#footForm');\nif (head) host.applyVoucherFormNeoSkin(head, 'head');\nif (foot) host.applyVoucherFormNeoSkin(foot, 'foot');\nif (!host.__voucherFormThemeWired) {\n  host.__voucherFormThemeWired = true;\n  window.addEventListener('cmx-portal-theme-change', function () {\n    host.wireVoucherFormNeoSkin();\n  });\n}","readsVars":[],"writesVars":[]},{"name":"applyVoucherGridNeoSkin","params":"gridEl,tone","body":"host.__neoVoucherGridSkinCss = `\n.host-wrap.neo-voucher-grid-wrap {\n  border-radius: 0;\n  overflow: hidden;\n  border: none !important;\n  background: transparent !important;\n  box-shadow: none !important;\n  margin: 0;\n  padding: 0;\n}\nrevo-grid.neo-voucher-grid {\n  --neo-grid-accent: #00b4d8;\n  --neo-grid-accent-2: #0ea5e9;\n  --neo-grid-accent-3: #0284c7;\n  --neo-grid-accent-4: #38bdf8;\n  --revo-grid-bg: color-mix(in srgb, var(--neo-grid-accent) 4%, var(--sapList_Background, #fff));\n}\nrevo-grid.neo-voucher-grid[theme^=\"dark\"] {\n  --revo-grid-bg: color-mix(in srgb, var(--neo-grid-accent) 10%, var(--sapList_Background, #1a1f26));\n}\nrevo-grid.neo-voucher-grid--azure {\n  --neo-grid-accent: #0284c7;\n  --neo-grid-accent-2: #00b4d8;\n  --neo-grid-accent-3: #0369a1;\n  --neo-grid-accent-4: #7dd3fc;\n}\nrevo-grid.neo-voucher-grid revogr-header .rgHeaderCell .header-content {\n  font-family: ui-monospace, system-ui, sans-serif;\n}\nrevo-grid.neo-voucher-grid revogr-header .group-rgRow > .rgHeaderCell,\nrevo-grid.neo-voucher-grid revogr-header .actual-rgRow > .rgHeaderCell,\nrevo-grid.neo-voucher-grid .rowHeaders revogr-header .actual-rgRow > .rgHeaderCell {\n  font-weight: 800;\n  letter-spacing: 0.04em;\n}\nrevo-grid.neo-voucher-grid revogr-header .group-rgRow > .rgHeaderCell {\n  font-size: 0.72rem;\n  text-transform: none;\n}\nrevo-grid.neo-voucher-grid revogr-header .actual-rgRow > .rgHeaderCell {\n  font-size: 0.68rem;\n  text-transform: uppercase;\n}\nrevo-grid.neo-voucher-grid[theme=\"material\"] revogr-header .group-rgRow > .rgHeaderCell,\nrevo-grid.neo-voucher-grid[theme=\"compact\"] revogr-header .group-rgRow > .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent) 30%, var(--sapList_HeaderBackground, #f5f6f7)),\n    color-mix(in srgb, var(--neo-grid-accent) 14%, var(--sapList_Background, #fff))) !important;\n  color: color-mix(in srgb, var(--neo-grid-accent) 88%, var(--sapList_HeaderTextColor, #32363a));\n}\nrevo-grid.neo-voucher-grid[theme^=\"dark\"] revogr-header .group-rgRow > .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent) 46%, var(--sapList_HeaderBackground, #1d232a)),\n    color-mix(in srgb, var(--neo-grid-accent) 24%, var(--sapList_Background, #12171c))) !important;\n  color: color-mix(in srgb, var(--neo-grid-accent-2) 82%, var(--sapList_HeaderTextColor, #e8eaeb));\n}\nrevo-grid.neo-voucher-grid revogr-header .group-rgRow > .rgHeaderCell {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-voucher-grid revogr-header .group-rgRow > .header-rgRow.group ~ .rgHeaderCell {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-2) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-voucher-grid[theme=\"material\"] revogr-header .group-rgRow > .header-rgRow.group ~ .rgHeaderCell,\nrevo-grid.neo-voucher-grid[theme=\"compact\"] revogr-header .group-rgRow > .header-rgRow.group ~ .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent-2) 26%, var(--sapList_HeaderBackground, #f5f6f7)),\n    color-mix(in srgb, var(--neo-grid-accent-2) 11%, var(--sapList_Background, #fff))) !important;\n  color: color-mix(in srgb, var(--neo-grid-accent-2) 86%, var(--sapList_HeaderTextColor, #32363a));\n}\nrevo-grid.neo-voucher-grid[theme^=\"dark\"] revogr-header .group-rgRow > .header-rgRow.group ~ .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent-2) 40%, var(--sapList_HeaderBackground, #1d232a)),\n    color-mix(in srgb, var(--neo-grid-accent-2) 20%, var(--sapList_Background, #12171c))) !important;\n}\nrevo-grid.neo-voucher-grid revogr-header .group-rgRow > .header-rgRow.group ~ .header-rgRow.group ~ .rgHeaderCell {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-3) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-voucher-grid[theme=\"material\"] revogr-header .group-rgRow > .header-rgRow.group ~ .header-rgRow.group ~ .rgHeaderCell,\nrevo-grid.neo-voucher-grid[theme=\"compact\"] revogr-header .group-rgRow > .header-rgRow.group ~ .header-rgRow.group ~ .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent-3) 24%, var(--sapList_HeaderBackground, #f5f6f7)),\n    color-mix(in srgb, var(--neo-grid-accent-3) 10%, var(--sapList_Background, #fff))) !important;\n  color: color-mix(in srgb, var(--neo-grid-accent-3) 84%, var(--sapList_HeaderTextColor, #32363a));\n}\nrevo-grid.neo-voucher-grid[theme^=\"dark\"] revogr-header .group-rgRow > .header-rgRow.group ~ .header-rgRow.group ~ .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent-3) 38%, var(--sapList_HeaderBackground, #1d232a)),\n    color-mix(in srgb, var(--neo-grid-accent-3) 18%, var(--sapList_Background, #12171c))) !important;\n}\nrevo-grid.neo-voucher-grid revogr-header .group-rgRow > .header-rgRow.group ~ .header-rgRow.group ~ .header-rgRow.group ~ .rgHeaderCell {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-4) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-voucher-grid[theme=\"material\"] revogr-header .actual-rgRow > .rgHeaderCell,\nrevo-grid.neo-voucher-grid[theme=\"compact\"] revogr-header .actual-rgRow > .rgHeaderCell,\nrevo-grid.neo-voucher-grid[theme=\"material\"] .rowHeaders revogr-header .actual-rgRow > .rgHeaderCell,\nrevo-grid.neo-voucher-grid[theme=\"compact\"] .rowHeaders revogr-header .actual-rgRow > .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent) 18%, var(--sapList_HeaderBackground, #f5f6f7)),\n    color-mix(in srgb, var(--neo-grid-accent) 7%, var(--sapList_Background, #fff))) !important;\n  color: var(--sapList_HeaderTextColor, #32363a);\n}\nrevo-grid.neo-voucher-grid[theme^=\"dark\"] revogr-header .actual-rgRow > .rgHeaderCell,\nrevo-grid.neo-voucher-grid[theme^=\"dark\"] .rowHeaders revogr-header .actual-rgRow > .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent) 32%, var(--sapList_HeaderBackground, #1d232a)),\n    color-mix(in srgb, var(--neo-grid-accent) 14%, var(--sapList_Background, #12171c))) !important;\n  color: var(--sapList_HeaderTextColor, #e8eaeb);\n}\nrevo-grid.neo-voucher-grid revogr-header .actual-rgRow > .rgHeaderCell:nth-child(4n+1),\nrevo-grid.neo-voucher-grid .rowHeaders revogr-header .actual-rgRow > .rgHeaderCell {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-voucher-grid revogr-header .actual-rgRow > .rgHeaderCell:nth-child(4n+2) {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-2) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-voucher-grid revogr-header .actual-rgRow > .rgHeaderCell:nth-child(4n+3) {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-3) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-voucher-grid revogr-header .actual-rgRow > .rgHeaderCell:nth-child(4n) {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-4) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-voucher-grid[theme=\"material\"] revogr-data .rgRow:nth-child(even) .rgCell,\nrevo-grid.neo-voucher-grid[theme=\"compact\"] revogr-data .rgRow:nth-child(even) .rgCell {\n  background: color-mix(in srgb, var(--neo-grid-accent) 4%, var(--sapList_Background, #fff)) !important;\n}\nrevo-grid.neo-voucher-grid[theme^=\"dark\"] revogr-data .rgRow:nth-child(even) .rgCell {\n  background: color-mix(in srgb, var(--neo-grid-accent) 9%, var(--sapList_Background, #1a1f26)) !important;\n}\nrevo-grid.neo-voucher-grid revogr-data .rgRow:hover .rgCell {\n  background: color-mix(in srgb, var(--neo-grid-accent) 11%, var(--sapList_Hover_Background, var(--sapList_Background, #eaecee))) !important;\n}\nrevo-grid.neo-voucher-grid .rgRow.cmx-current-row .rgCell {\n  background: color-mix(in srgb, var(--neo-grid-accent) 13%, var(--sapList_SelectionBackgroundColor, #e7f1ff)) !important;\n}\nrevo-grid.neo-voucher-grid .rgRow.cmx-current-row {\n  box-shadow: inset 3px 0 0 0 var(--neo-grid-accent) !important;\n  background: transparent !important;\n}\nrevo-grid.neo-voucher-grid revogr-data .rgCell.cmx-revo-align-right {\n  color: color-mix(in srgb, var(--neo-grid-accent) 72%, var(--sapTextColor, #223548));\n  font-weight: 700;\n}\nrevo-grid.neo-voucher-grid[theme^=\"dark\"] revogr-data .rgCell.cmx-revo-align-right {\n  color: color-mix(in srgb, var(--neo-grid-accent-2) 78%, var(--sapTextColor, #e8eaeb));\n}\nrevo-grid.neo-voucher-grid .footer-wrapper {\n  background: linear-gradient(90deg,\n    color-mix(in srgb, var(--neo-grid-accent) 12%, var(--sapList_FooterBackground, #f5f6f7)),\n    color-mix(in srgb, var(--neo-grid-accent-2) 10%, var(--sapList_FooterBackground, #f5f6f7))) !important;\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent) 45%, var(--revo-grid-cell-border)) !important;\n  font-weight: 800;\n  color: var(--sapList_FooterTextColor, var(--sapTextColor, inherit));\n}\nrevo-grid.neo-voucher-grid[theme^=\"dark\"] .footer-wrapper {\n  background: linear-gradient(90deg,\n    color-mix(in srgb, var(--neo-grid-accent) 18%, var(--sapList_FooterBackground, #1a1f26)),\n    color-mix(in srgb, var(--neo-grid-accent-2) 14%, var(--sapList_FooterBackground, #1a1f26))) !important;\n}\n`;if (!gridEl) return;\ntone = tone || (gridEl.dataset && gridEl.dataset.neoGridTone) || 'cyan';\nfunction paint() {\n  var sr = gridEl.shadowRoot;\n  if (!sr) return false;\n  var sid = 'neo-voucher-grid-skin';\n  var style = sr.getElementById(sid);\n  if (!style) {\n    style = document.createElement('style');\n    style.id = sid;\n    sr.appendChild(style);\n  }\n  style.textContent = host.__neoVoucherGridSkinCss;\n  var wrap = sr.querySelector('.host-wrap');\n  var revo = sr.querySelector('revo-grid');\n  if (wrap) wrap.classList.add('neo-voucher-grid-wrap');\n  if (revo) {\n    revo.classList.add('neo-voucher-grid');\n    revo.classList.remove('neo-voucher-grid--cyan', 'neo-voucher-grid--azure');\n    revo.classList.add('neo-voucher-grid--' + tone);\n  }\n  return true;\n}\nif (!paint()) requestAnimationFrame(function () { paint(); });"},{"name":"wireVoucherGridNeoSkin","params":"","body":"var root = host.shadowRoot;\nif (!root) return;\nvar item = root.querySelector('#itemGrid');\nvar detail = root.querySelector('#detailGrid');\nif (item) host.applyVoucherGridNeoSkin(item, 'cyan');\nif (detail) host.applyVoucherGridNeoSkin(detail, 'azure');\nif (!host.__voucherGridThemeWired) {\n  host.__voucherGridThemeWired = true;\n  window.addEventListener('cmx-portal-theme-change', function () {\n    host.wireVoucherGridNeoSkin();\n  });\n}\n[item, detail].forEach(function (grid) {\n  if (!grid || grid.__neoSkinColsWired) return;\n  grid.__neoSkinColsWired = true;\n  grid.addEventListener('cmx-columns-changed', function () {\n    host.applyVoucherGridNeoSkin(grid, grid.dataset && grid.dataset.neoGridTone);\n  });\n});"},{"name":"refreshVoucherSeal","params":"","body":"host.VOUCHER_STATUS_MAP = host.VOUCHER_STATUS_MAP || {\n  draft: { label: '草稿', status: 'draft' },\n  void: { label: '作废', status: 'void' },\n  saved: { label: '已存', status: 'saved' },\n  audited: { label: '已审', status: 'audited' },\n  posted: { label: '过账', status: 'posted' }\n};\nvar st = ($data.voucherStatus || 'draft').toLowerCase();\nvar meta = host.VOUCHER_STATUS_MAP[st] || host.VOUCHER_STATUS_MAP.draft;\n$data.voucherStatus = meta.status;\nvar el = host.shadowRoot && host.shadowRoot.querySelector('#voucherStatusSeal');\nif (!el) return;\nel.setAttribute('data-status', meta.status);\nel.setAttribute('aria-label', '凭证状态：' + meta.label);\nvar box = el.querySelector('.neo-seal-text');\nif (box) {\n  box.innerHTML = '';\n  meta.label.split('').forEach(function (ch) {\n    var s = document.createElement('span');\n    s.textContent = ch;\n    box.appendChild(s);\n  });\n}\nif (host.syncVoucherActionButtons) host.syncVoucherActionButtons();","readsVars":["voucherStatus"],"writesVars":["voucherStatus"]},{"name":"setVoucherStatus","params":"status","body":"host.VOUCHER_STATUS_MAP = host.VOUCHER_STATUS_MAP || {\n  draft: { label: '草稿', status: 'draft' },\n  void: { label: '作废', status: 'void' },\n  saved: { label: '已存', status: 'saved' },\n  audited: { label: '已审', status: 'audited' },\n  posted: { label: '过账', status: 'posted' }\n};\nvar key = String(status || 'draft').toLowerCase();\nif (!host.VOUCHER_STATUS_MAP[key]) key = 'draft';\n$data.voucherStatus = key;\nvar ms = host.ms;\nif (ms && ms.getFlatData) {\n  var h0 = (ms.getFlatData().head || [])[0];\n  if (h0 && h0.id && ms.getRow) {\n    var row = ms.getRow('head', h0.id);\n    if (row && typeof row.set === 'function') row.set('voucherStatus', key);\n    else if (row) row.voucherStatus = key;\n  }\n}\nhost.refreshVoucherSeal();","readsVars":[],"writesVars":["voucherStatus"]},{"name":"syncVoucherActionButtons","params":"","body":"var root = host.shadowRoot;\nif (!root) return;\nvar st = ($data.voucherStatus || 'draft').toLowerCase();\nvar voided = st === 'void';\nvar posted = st === 'posted';\nvar saveBtn = root.querySelector('#voucherSaveBtn');\nvar auditBtn = root.querySelector('#voucherAuditBtn');\nvar postBtn = root.querySelector('#voucherPostBtn');\nvar editBtn = root.querySelector('#voucherEditBtn');\nfunction dis(el, on) {\n  if (!el) return;\n  if (on) { el.setAttribute('disabled', ''); el.classList.add('is-disabled'); }\n  else { el.removeAttribute('disabled'); el.classList.remove('is-disabled'); }\n}\ndis(editBtn, voided || posted);\ndis(saveBtn, voided);\ndis(auditBtn, voided);\ndis(postBtn, voided);\n[saveBtn, auditBtn, postBtn].forEach(function (el) {\n  if (!el) return;\n  el.removeAttribute('data-done');\n  el.removeAttribute('data-current');\n});\nvar order = ['draft', 'saved', 'audited', 'posted'];\nvar idx = order.indexOf(st);\nif (idx < 0) idx = 0;\nif (saveBtn && idx >= 1) saveBtn.setAttribute('data-done', 'true');\nif (auditBtn && idx >= 2) auditBtn.setAttribute('data-done', 'true');\nif (postBtn && idx >= 3) postBtn.setAttribute('data-done', 'true');\nif (!voided) {\n  if (st === 'draft' && saveBtn) saveBtn.setAttribute('data-current', 'true');\n  else if (st === 'saved' && auditBtn) auditBtn.setAttribute('data-current', 'true');\n  else if (st === 'audited' && postBtn) postBtn.setAttribute('data-current', 'true');\n}","readsVars":["voucherStatus"],"writesVars":[]},{"name":"doSaveVoucher","params":"","body":"if (!host.ms) { alert('请先加载示例'); return; }\nif (host.exportMsJson) host.exportMsJson();\nhost.setVoucherStatus('saved');\nif (host.setVoucherEditMode) host.setVoucherEditMode(false);\nalert('已保存（演示：数据已导出为 JSON）');","readsVars":[],"writesVars":["voucherStatus","voucherEditing"]},{"name":"doAuditVoucher","params":"","body":"if (!host.ms) { alert('请先加载示例'); return; }\nvar flat = host.ms.getFlatData ? host.ms.getFlatData() : {};\nvar items = flat.items || [];\nvar debit = 0, credit = 0;\nitems.forEach(function (r) { debit += Number(r.debit) || 0; credit += Number(r.credit) || 0; });\nif (Math.abs(debit - credit) >= 0.005) { alert('借贷不平衡，无法审核（演示校验）'); return; }\nhost.setVoucherStatus('audited');\nif (host.setVoucherEditMode) host.setVoucherEditMode(false);\nalert('审核完成（演示）');","readsVars":[],"writesVars":["voucherStatus","voucherEditing"]},{"name":"doPostVoucher","params":"","body":"if (!host.ms) { alert('请先加载示例'); return; }\nvar st = ($data.voucherStatus || 'draft').toLowerCase();\nif (st === 'void') { alert('凭证已作废'); return; }\nhost.setVoucherStatus('posted');\nif (host.setVoucherEditMode) host.setVoucherEditMode(false);\nalert('过账完成（演示）');","readsVars":["voucherStatus"],"writesVars":["voucherStatus","voucherEditing"]},{"name":"exportMsJson","params":"","body":"var ms = host.ms;\nif (!ms || typeof ms.exportKeyValue !== 'function') { alert('协调器未初始化或不支持导出'); return; }\nvar data = ms.exportKeyValue();\nvar text = JSON.stringify(data, null, 2);\ntry {\n  var blob = new Blob([text], { type: 'application/json;charset=utf-8' });\n  var url = URL.createObjectURL(blob);\n  var a = document.createElement('a');\n  a.href = url;\n  a.download = (host.__pageId || 'voucher-neo') + '-export.json';\n  document.body.appendChild(a); a.click();\n  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 0);\n} catch (e) { console.log(text); alert('导出数据已打印到控制台（下载失败）'); }","readsVars":[],"writesVars":[]},{"name":"refreshNeoHud","params":"","body":"function fmt(n){ return (Number(n)||0).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2}); }\nvar ms = host.ms, root = host.shadowRoot;\nif (!ms || !root) return;\nvar debit = 0, credit = 0, cnt = 0;\nvar flat = ms.getFlatData ? ms.getFlatData() : {};\n(flat.items || []).forEach(function(r){ debit += Number(r.debit)||0; credit += Number(r.credit)||0; cnt++; });\nvar diff = debit - credit;\nvar balanced = Math.abs(diff) < 0.005;\nvar head = (flat.head && flat.head[0]) || {};\nvar elD = root.querySelector('#kpiDebit'), elC = root.querySelector('#kpiCredit'), elB = root.querySelector('#kpiBalance');\nvar elRing = root.querySelector('#txMixRing'), elBadge = root.querySelector('#voucherFlowBadge');\nvar elNo = root.querySelector('#neoVoucherNo'), elLines = root.querySelector('#kpiLines'), elVt = root.querySelector('#neoVoucherTypeText');\nhost.VOUCHER_TYPE_MAP = host.VOUCHER_TYPE_MAP || { JK: '记账凭证', FK: '付款凭证', SK: '收款凭证', ZK: '转账凭证' };\nvar vtCode = head.voucherType || '';\nvar vtLabel = host.VOUCHER_TYPE_MAP[vtCode] || vtCode || '';\nif (elD) elD.textContent = fmt(debit);\nif (elC) elC.textContent = fmt(credit);\nif (elB) { elB.textContent = balanced ? '平衡 ✓' : ('Δ ' + fmt(Math.abs(diff))); elB.className = 'neo-kpi-val ' + (balanced ? 'neo-ok' : 'neo-warn'); elB.setAttribute('title', balanced ? '借贷平衡' : ('借贷差额 ' + fmt(Math.abs(diff)))); }\nif (elRing) { var pct = (debit + credit) > 0 ? Math.round(debit / (debit + credit) * 100) : 50; elRing.style.background = 'conic-gradient(var(--neo-cyan,#00b4d8) 0% ' + pct + '%, var(--neo-violet,#7c3aed) ' + pct + '% 100%)'; }\nif (elBadge) { elBadge.textContent = balanced ? 'BAL' : 'DIF'; elBadge.setAttribute('data-state', balanced ? 'ok' : 'warn'); elBadge.setAttribute('title', balanced ? '借贷平衡' : '借贷不平衡'); }\nif (elVt) elVt.textContent = vtLabel ? ' - ' + vtLabel : '';\nif (elNo) elNo.textContent = head.voucherNo || '—';\nif (elLines) elLines.textContent = cnt + ' 条分录';\nif (host.refreshVoucherSeal) host.refreshVoucherSeal();","readsVars":["voucherStatus"],"writesVars":[]},{"name":"initVoucher","params":"","body":"var ms = host.ms;\nif (!ms) { alert('协调器尚未初始化'); return; }\nhost.__flexibleCombinationCache = {};\nhost.setupVoucherDictColumns();\n$data.voucherStatus = 'draft';\nvar demoHeads = [{ id:'h1', period:'2026-05', orgUnit:'总部财务部', voucherDate:'2026-05-28', voucherType:'ZK', voucherNo:'ZK-202605-0001', preparer:'李会计', auditor:'王主管', payerInfo:'出纳：张三 / 现金支付', voucherStatus:'draft' }];\nvar demoItems = [\n  { id:'i1', headId:'h1', acctCode:'1001', acctName:'库存现金', summary:'收到客户回款', debit:50000, credit:0 },\n  { id:'i2', headId:'h1', acctCode:'1122', acctName:'应收账款', summary:'冲销应收', debit:0, credit:50000 },\n  { id:'i3', headId:'h1', acctCode:'6601', acctName:'管理费用', summary:'差旅报销', debit:1200, credit:0 },\n  { id:'i4', headId:'h1', acctCode:'1002', acctName:'银行存款', summary:'现金转入', debit:0, credit:1200 }\n];\nvar demoDetails = [\n  { id:'d1', itemId:'i1', amount:50000, remark:'5 月预付' },\n  { id:'d2', itemId:'i2', amount:50000, customer:'C-001', project:'P-2026-001', remark:'冲销应收' },\n  { id:'d3', itemId:'i3', amount:1200, department:'D-100', project:'P-2026-002', remark:'上海差旅' },\n  { id:'d4', itemId:'i4', amount:1200, bankAccount:'BOC-6228', remark:'ATM 取现' }\n];\nms.setFlatData({ head:demoHeads, items:demoItems, details:demoDetails });\nvar root = host.shadowRoot;\nvar itemGrid = root.querySelector('#itemGrid');\nvar detailGrid = root.querySelector('#detailGrid');\nitemGrid.setOptions({ selectionMode:'single', fillHeight:true, showRowIndex:true });\ndetailGrid.setOptions({ selectionMode:'single', fillHeight:true, showRowIndex:true });\nhost.itemGrid = itemGrid; host.detailGrid = detailGrid;\n$data.entryCounter = 4; $data.detailCounter = 4;\nif (!host.__detailColumnsWired) {\n  host.__detailColumnsWired = true;\n  detailGrid.addEventListener('cmx-columns-changed', function(){ host.onDetailColumnsChanged(); });\n}\nif (!itemGrid.__neoHudWired) {\n  itemGrid.__neoHudWired = true;\n  itemGrid.addEventListener('cmx-cell-changed', function(){ host.refreshNeoHud(); });\n}\nhost.applyDetailSchema(demoItems[0] && demoItems[0].acctCode);\nhost.refreshNeoHud();\nhost.setVoucherEditMode(false);\nhost.refreshVoucherSeal();\nif (host.syncVoucherActionButtons) host.syncVoucherActionButtons();\nif (!host.__neoHudTimer) host.__neoHudTimer = setInterval(function(){ host.refreshNeoHud(); }, 800);\nif (host.wireVoucherFormNeoSkin) host.wireVoucherFormNeoSkin();\nif (host.wireVoucherGridNeoSkin) host.wireVoucherGridNeoSkin();","readsVars":[],"writesVars":["entryCounter","detailCounter","voucherEditing","voucherStatus"]},{"name":"onEntrySelected","params":"e","body":"var rowId = e && e.detail && e.detail.id;\nif (!rowId || !host.ms) return;\nvar row = host.ms.getRow ? host.ms.getRow('head.items', rowId) : null;\nhost.applyDetailSchema(row && row.acctCode);","readsVars":[],"writesVars":[]},{"name":"applyDetailSchema","params":"acctCode","body":"if (!host.detailFlexibleCombination) return;\nhost.detailFlexibleCombination.loadByAnchor({ account: acctCode || '' });","readsVars":[],"writesVars":[]},{"name":"addEntry","params":"","body":"if (!$data.voucherEditing) { alert('请先进入编辑状态'); return; }\nif (!host.ms) { alert('请先加载示例'); return; }\n$data.entryCounter = ($data.entryCounter || 4) + 1;\nvar n = $data.entryCounter;\nhost.itemGrid.addRow({ id:'i'+n, headId:'h1', acctCode:'', acctName:'', summary:'', debit:0, credit:0 });\nhost.refreshNeoHud();","readsVars":["entryCounter","voucherEditing"],"writesVars":["entryCounter"]},{"name":"removeEntry","params":"","body":"if (!$data.voucherEditing) { alert('请先进入编辑状态'); return; }\nif (!host.ms) { alert('请先加载示例'); return; }\nvar selectedId = host.itemGrid && host.itemGrid._selectedId;\nif (!selectedId) { alert('请先选择一条会计分录'); return; }\nhost.itemGrid.removeRows([selectedId]);\nhost.refreshNeoHud();","readsVars":["voucherEditing"],"writesVars":[]},{"name":"swapEntryDebitCredit","params":"","body":"if (!$data.voucherEditing) { alert('请先进入编辑状态'); return; }\nif (!host.ms) { alert('请先加载示例'); return; }\nvar selectedId = host.itemGrid && host.itemGrid._selectedId;\nif (!selectedId) { alert('请先选择一条会计分录'); return; }\nvar row = host.ms.getRow ? host.ms.getRow('head.items', selectedId) : null;\nif (!row) { alert('未找到所选分录'); return; }\nvar debit = Number(row.debit) || 0;\nvar credit = Number(row.credit) || 0;\nif (debit === credit) return;\nif (typeof row.setValues === 'function') row.setValues({ debit: credit, credit: debit });\nelse if (typeof row.set === 'function') { row.set('debit', credit); row.set('credit', debit); }\nelse { row.debit = credit; row.credit = debit; }\nif (host.ms.refresh) host.ms.refresh('head.items');\nif (host.refreshNeoHud) host.refreshNeoHud();","readsVars":["voucherEditing"],"writesVars":[]},{"name":"addAuxDetail","params":"","body":"if (!$data.voucherEditing) { alert('请先进入编辑状态'); return; }\nif (!host.ms) { alert('请先加载示例'); return; }\nvar selectedId = host.itemGrid && host.itemGrid._selectedId;\nif (!selectedId) { alert('请先选择一条会计分录'); return; }\n$data.detailCounter = ($data.detailCounter || 4) + 1;\nvar n = $data.detailCounter;\nhost.detailGrid.addRow({ id:'d'+n, itemId:selectedId, amount:0 });","readsVars":["detailCounter","voucherEditing"],"writesVars":["detailCounter"]},{"name":"removeAuxDetail","params":"","body":"if (!$data.voucherEditing) { alert('请先进入编辑状态'); return; }\nif (!host.ms) { alert('请先加载示例'); return; }\nvar selectedId = host.detailGrid && host.detailGrid._selectedId;\nif (!selectedId) { alert('请先选择一条辅助分录'); return; }\nhost.detailGrid.removeRows([selectedId]);","readsVars":["voucherEditing"],"writesVars":[]},{"name":"onDetailColumnsChanged","params":"","body":"if (!host.detailGrid) return;\nhost.normalizeDetailDictColumns();\nif (typeof host.setVoucherEditMode === 'function') host.setVoucherEditMode($data.voucherEditing);","readsVars":["voucherEditing"],"writesVars":[]},{"name":"setupVoucherDictColumns","params":"","body":"var C = (typeof globalThis !== 'undefined' && globalThis.__cmxDataComp) || host.__cmxClasses;\nif (!C) return;\nfunction stdCols() {\n  return [\n    new C.CmxColumn({ id: 'item_code', caption: '编码', type: 'text', width: '110px', editMode: 'readonly' }),\n    new C.CmxColumn({ id: 'item_name', caption: '名称', type: 'text', width: '160px', editMode: 'readonly' }),\n    new C.CmxColumn({ id: 'status', caption: '状态', type: 'number', width: '70px', editMode: 'readonly' })\n  ];\n}\nhost.makeGlAccountSource = function () {\n  if (typeof C.createDictDataSource === 'function') {\n    return C.createDictDataSource(host, {\n      id: 'gl_account', service: 'searchDictGlAccount', keyField: 'item_code', labelField: 'item_name', pageSize: 50\n    });\n  }\n  return {\n    keyField: 'item_code', labelField: 'item_name', pageSize: 50,\n    search: function (q, o) {\n      o = o || {};\n      return host.searchDictGlAccount({ q: q || '', page: o.page || 1, pageSize: o.pageSize || 50 }, { signal: o.signal })\n        .then(function (res) { return (res && res.rows) ? res.rows : []; });\n    },\n    loadByKeys: function (keys) {\n      keys = (keys || []).filter(function (x) { return x != null && String(x) !== ''; });\n      if (!keys.length) return Promise.resolve([]);\n      return host.searchDictGlAccount({ filters: { item_code: keys }, page: 1, pageSize: Math.max(20, keys.length) })\n        .then(function (res) { return (res && res.rows) ? res.rows : []; });\n    }\n  };\n};\nvar acctCol = host.itemModel && host.itemModel.findById && host.itemModel.findById('acctCode');\nif (acctCol) {\n  acctCol.type = 'dict-select';\n  acctCol.width = acctCol.width || '130px';\n  acctCol.editSettings = Object.assign({}, acctCol.editSettings || {}, {\n    dictCode: 'gl_account', idCol: 'id', codeCol: 'item_code', labelCol: 'item_name', parentCol: 'parent_id',\n    hierarchical: true, helpLayout: 'grid', valueField: 'item_code', displayMode: 'code',\n    writeBack: { acctCode: 'item_code', acctName: 'item_name', acctId: 'id' },\n    columns: stdCols(), dataSource: host.makeGlAccountSource(), dictTitle: '选择会计科目'\n  });\n}\nvar nameCol = host.itemModel && host.itemModel.findById && host.itemModel.findById('acctName');\nif (nameCol) nameCol.editMode = 'readonly';","readsVars":[],"writesVars":[]},{"name":"normalizeDetailDictColumns","params":"","body":"var C = (typeof globalThis !== 'undefined' && globalThis.__cmxDataComp) || host.__cmxClasses;\nfunction localSource(options) {\n  if (C && typeof C.createLocalDictDataSource === 'function') return C.createLocalDictDataSource(options, { keyField: 'code', labelField: 'name' });\n  var rows = (options || []).map(function (o) {\n    var code = o && o.value != null ? o.value : (o && o.code != null ? o.code : '');\n    var name = o && o.label != null ? o.label : (o && o.name != null ? o.name : code);\n    return Object.assign({}, o || {}, { id: code, code: code, name: name });\n  });\n  return {\n    keyField: 'code', labelField: 'name', pageSize: 50,\n    search: function (q) {\n      q = String(q || '').trim().toLowerCase();\n      return Promise.resolve(!q ? rows.slice() : rows.filter(function (r) {\n        return String(r.code || '').toLowerCase().indexOf(q) >= 0 || String(r.name || '').toLowerCase().indexOf(q) >= 0;\n      }));\n    },\n    loadByKeys: function (keys) {\n      var set = {};\n      (keys || []).forEach(function (k) { set[String(k)] = true; });\n      return Promise.resolve(rows.filter(function (r) { return set[String(r.code)]; }));\n    }\n  };\n}\nfunction walk(members) {\n  (members || []).forEach(function (m) {\n    if (!m) return;\n    if (Array.isArray(m.members)) { walk(m.members); return; }\n    var es = m.editSettings || {};\n    var options = es.options || m.options;\n    if (!options || !options.length) return;\n    if (m.type !== 'dict-select') m.type = 'dict-select';\n    m.editMode = 'cmx-text-input';\n    m.editSettings = Object.assign({}, es, {\n      dictCode: es.dictCode || m.id, idCol: 'code', codeCol: 'code', labelCol: 'name',\n      valueField: 'code', displayMode: 'code-label', helpLayout: es.helpLayout || 'grid',\n      dataSource: es.dataSource || localSource(options)\n    });\n  });\n}\nif (host.detailModel && Array.isArray(host.detailModel.members)) walk(host.detailModel.members);","readsVars":[],"writesVars":[]},{"name":"setVoucherEditMode","params":"flag","body":"var editing = !!flag;\n$data.voucherEditing = editing;\nhost.__voucherEditing = editing;\nif (host.ms && typeof host.ms.setEditable === 'function') {\n  host.ms.setEditable(editing);\n} else {\n  [host.itemGrid, host.detailGrid].forEach(function (grid) {\n    if (!grid) return;\n    if (typeof grid.setEditable === 'function') grid.setEditable(editing);\n    else if (typeof grid.setOptions === 'function') grid.setOptions({ editable: editing, readonly: !editing });\n  });\n}\nvar root = host.shadowRoot;\nif (!root) return;\nvar btn = root.querySelector('#voucherEditBtn');\nif (btn) {\n  var sp = btn.querySelector('span');\n  if (sp) sp.textContent = editing ? '退' : '编';\n  btn.setAttribute('title', editing ? '退出编辑' : '进入编辑');\n  if (editing) btn.classList.add('is-active'); else btn.classList.remove('is-active');\n}\n['addEntry', 'removeEntry', 'swapEntryDebitCredit', 'addAuxDetail', 'removeAuxDetail'].forEach(function (fnName) {\n  root.querySelectorAll('[data-eventclick=\"' + fnName + '();\"]').forEach(function (el) {\n    if (editing) { el.removeAttribute('disabled'); el.classList.remove('is-disabled'); }\n    else { el.setAttribute('disabled', ''); el.classList.add('is-disabled'); }\n  });\n});\n['#headForm','#footForm'].forEach(function(sel){ var form=root.querySelector(sel); var sr=form&&form.shadowRoot; if(!sr)return; sr.querySelectorAll('ui5-input,ui5-date-picker,ui5-textarea').forEach(function(el){ if(editing) el.removeAttribute('readonly'); else el.setAttribute('readonly',''); }); sr.querySelectorAll('ui5-select,ui5-checkbox,ui5-combobox').forEach(function(el){ if(editing) el.removeAttribute('disabled'); else el.setAttribute('disabled',''); }); });\nif (host.syncVoucherActionButtons) host.syncVoucherActionButtons();\nif (host.wireVoucherFormNeoSkin) host.wireVoucherFormNeoSkin();\nif (host.wireVoucherGridNeoSkin) host.wireVoucherGridNeoSkin();","readsVars":[],"writesVars":["voucherEditing"]},{"name":"toggleVoucherEdit","params":"","body":"var st = ($data.voucherStatus || 'draft').toLowerCase();\nif (st === 'posted' || st === 'void') { alert('当前状态不可编辑'); return; }\nhost.setVoucherEditMode(!$data.voucherEditing);","readsVars":["voucherEditing","voucherStatus"],"writesVars":[]}],"pageServices":[{"name":"resolveFlexibleCombination","type":"rest","url":"/api/flexible-combination/rule","method":"GET","rpcMethod":"","gqlOperationName":"","gqlQuery":"","headers":"","bodyTemplate":"","responseTo":"","responseTransform":""},{"type":"rest","rpcMethod":"","gqlOperationName":"","gqlQuery":"","headers":"","bodyTemplate":"","responseTo":"","responseTransform":"","name":"searchDictGlAccount","url":"/api/dct/data/search?domain=fi&application=cmxfico&module=gl&dict=gl_account&file=cmxfico_dct_meta_v3.json","method":"POST"}],"pageDeps":[],"pageInterfaces":[{"name":"isDirty","enabled":true,"body":"return host.__cmxDirty === true;"},{"name":"getState","enabled":true,"body":"return Object.assign({}, $data);"},{"name":"validate","enabled":true,"body":"return { valid: true };"},{"name":"initPage","enabled":true,"body":"/* 字典检索迁移适配（旧 dict 服务已下线 → dct 数据服务）：新接口返回 ApiResp 信封\n   （data.rows）且行列名为 code/name；这里统一解包、补 item_code/item_name 别名，\n   并把旧 item_code 过滤键映射到 code 列，页面其余逻辑按旧行结构照常工作。 */\n(function () {\n  if (host.__glAccountSvcAdapted) return;\n  host.__glAccountSvcAdapted = 1;\n  var rawSearch = host.searchDictGlAccount;\n  if (typeof rawSearch !== 'function') return;\n  host.searchDictGlAccount = function (params, opts) {\n    var p = params || {};\n    if (p.filters && p.filters.item_code != null) {\n      var f = {};\n      for (var k in p.filters) f[k] = p.filters[k];\n      f.code = f.item_code;\n      delete f.item_code;\n      p = Object.assign({}, p, { filters: f });\n    }\n    return rawSearch(p, opts).then(function (res) {\n      var rows = (res && ((res.data && res.data.rows) || res.rows)) || [];\n      return {\n        rows: rows.map(function (r) {\n          r = Object.assign({}, r);\n          if (r.item_code == null && r.code != null) r.item_code = r.code;\n          if (r.item_name == null && r.name != null) r.item_name = r.name;\n          return r;\n        })\n      };\n    });\n  };\n})();\nif (!$data.voucherStatus) $data.voucherStatus = 'draft';\nif (host.refreshVoucherSeal) host.refreshVoucherSeal();\nif (host.syncVoucherActionButtons) host.syncVoucherActionButtons();\nif (host.initVoucher) host.initVoucher();\nif (host.wireVoucherFormNeoSkin) host.wireVoucherFormNeoSkin();\nif (host.wireVoucherGridNeoSkin) host.wireVoucherGridNeoSkin();"},{"name":"onActivate","enabled":true,"body":"if (host.refreshNeoHud) host.refreshNeoHud();\nif (host.refreshVoucherSeal) host.refreshVoucherSeal();\nif (host.syncVoucherActionButtons) host.syncVoucherActionButtons();\nif (host.wireVoucherFormNeoSkin) host.wireVoucherFormNeoSkin();\nif (host.wireVoucherGridNeoSkin) host.wireVoucherGridNeoSkin();"}],"dataSources":[],"dataFlow":{"schema":[{"id":"head","kind":"list","children":[{"id":"items","kind":"list","children":[{"id":"details","kind":"list","children":[]}]}]}],"aggregations":[{"from":"head.items.details","to":"head.items","field":"amount","toField":"amount","agg":"sum"},{"from":"head.items","to":"head","field":"debit","toField":"totalDebit","agg":"sum"},{"from":"head.items","to":"head","field":"credit","toField":"totalCredit","agg":"sum"}],"relations":[{"parent":"head","child":"items","parentKey":"id","childKey":"headId"},{"parent":"items","child":"details","parentKey":"id","childKey":"itemId"}]},"models":[{"id":"m1","modelType":"CmxDataSet","instanceId":"headDataSet","props":{"dataSource":"","dataSourceEvent":"onInit","children":[{"childId":"items","instanceId":"itemDataSet"}]},"events":{}},{"id":"m2","modelType":"CmxDataSet","instanceId":"itemDataSet","props":{"dataSource":"","dataSourceEvent":"onInit","children":[{"childId":"details","instanceId":"detailsDataSet"}]},"events":{}},{"id":"m3","modelType":"CmxDataSet","instanceId":"detailsDataSet","props":{"dataSource":"","dataSourceEvent":"onInit","children":[]},"events":{}},{"id":"m4","modelType":"CmxMasterSlave","instanceId":"ms","props":{"schema":[{"id":"head","children":[{"id":"items","children":[{"id":"details"}]}]}],"aggregations":[{"from":"head.items.details","to":"head.items","field":"amount","toField":"amount","agg":"sum"},{"from":"head.items","to":"head","field":"debit","toField":"totalDebit","agg":"sum"},{"from":"head.items","to":"head","field":"credit","toField":"totalCredit","agg":"sum"}]},"events":{}},{"id":"m5","modelType":"CmxColumnModel","instanceId":"itemModel","props":{"datasetId":"head.items","columns":[{"id":"acctCode","caption":"科目编号","type":"dict-select","width":"110px","editSettings":{"dictCode":"gl_account","idCol":"id","codeCol":"item_code","labelCol":"item_name","parentCol":"parent_id","hierarchical":true,"helpLayout":"grid","valueField":"item_code","displayMode":"code","writeBack":{"acctCode":"item_code","acctName":"item_name","acctId":"id"}}},{"id":"acctName","caption":"科目名称","type":"text","width":"140px","editMode":"readonly"},{"id":"summary","caption":"业务摘要","type":"text","width":"220px"},{"id":"debit","caption":"借方金额","type":"number","width":"130px","align":"right","agg":"sum"},{"id":"credit","caption":"贷方金额","type":"number","width":"130px","align":"right","agg":"sum"}]},"events":{}},{"id":"m6","modelType":"CmxColumnModel","instanceId":"detailModel","props":{"datasetId":"head.items.details","columns":[{"id":"remark","caption":"备注","type":"text","width":"240px"},{"id":"amount","caption":"金额","type":"number","width":"120px","align":"right","agg":"sum"}]},"events":{}},{"id":"m7","modelType":"FlexibleCombination","instanceId":"detailFlexibleCombination","props":{"domain":"fi","app":"cmxfico","module":"gl","scenario":"account","columnModelId":"detailModel","serviceFn":"resolveFlexibleCombination","apiPath":"/api/flexible-combination/rule"},"events":{}},{"id":"fm8","modelType":"CmxColumnModel","instanceId":"headFormModel","props":{"datasetId":"head","columns":[{"id":"period","caption":"会计期间","type":"text","editSettings":{"placeholder":"2026-05"}},{"id":"orgUnit","caption":"组织机构","type":"text"},{"id":"voucherDate","caption":"凭证日期","type":"date"},{"id":"voucherNo","caption":"凭证编号","type":"text"}]},"events":{}},{"id":"fm9","modelType":"CmxColumnModel","instanceId":"footFormModel","props":{"datasetId":"head","columns":[{"id":"preparer","caption":"制证人","type":"text"},{"id":"auditor","caption":"审核人","type":"text"},{"id":"payerInfo","caption":"付款人信息","type":"text"}]},"events":{}}]}</script>

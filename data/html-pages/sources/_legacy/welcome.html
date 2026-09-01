@@ -1,0 +1,758 @@
+<div class="welcome-neo-root" data-node-id="n-1" style="width:100%;height:100%;min-height:100%;box-sizing:border-box;position:relative;overflow:auto;">
+  <style data-node-id="n-style">
+  .welcome-neo-root {
+    --neo-cyan: #00b4d8;
+    --neo-violet: #7c3aed;
+    --neo-mint: #10b981;
+    --neo-warn: #f59e0b;
+    --neo-glass: color-mix(in srgb, var(--sapList_Background, #fff) 88%, transparent);
+    --neo-border: color-mix(in srgb, var(--neo-cyan) 28%, var(--sapGroup_ContentBorderColor, #d9d9d9));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+    position: relative;
+    padding: 28px 24px 32px;
+    box-sizing: border-box;
+    background:
+      radial-gradient(ellipse 120% 70% at 0% 0%, color-mix(in srgb, var(--neo-violet) 10%, transparent), transparent 52%),
+      radial-gradient(ellipse 90% 60% at 100% 100%, color-mix(in srgb, var(--neo-cyan) 8%, transparent), transparent 48%),
+      var(--sapBackgroundColor, #f5f6f7);
+  }
+  .welcome-neo-root::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--neo-cyan) 5%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--neo-cyan) 5%, transparent) 1px, transparent 1px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 20%, #000 15%, transparent 72%);
+    opacity: 0.45;
+  }
+  .welcome-neo-root > * { position: relative; z-index: 1; }
+  @keyframes welcome-aurora {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.85; transform: scale(1.03); }
+  }
+  @keyframes welcome-shimmer {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+  .welcome-wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+  }
+  /* 覆盖设计器画布对 data-design-node 注入的 margin/padding/min-height */
+  .welcome-neo-root .welcome-wrap,
+  .welcome-neo-root .welcome-hero,
+  .welcome-neo-root .welcome-hero-main,
+  .welcome-neo-root .welcome-hero-top,
+  .welcome-neo-root .welcome-title-block,
+  .welcome-neo-root .welcome-badges,
+  .welcome-neo-root .welcome-badge,
+  .welcome-neo-root .welcome-hero-aside,
+  .welcome-neo-root .welcome-kpi-row,
+  .welcome-neo-root .welcome-kpi,
+  .welcome-neo-root .welcome-panel,
+  .welcome-neo-root .welcome-panel-head,
+  .welcome-neo-root .welcome-actions-grid,
+  .welcome-neo-root .welcome-action,
+  .welcome-neo-root .welcome-chips,
+  .welcome-neo-root .welcome-chip,
+  .welcome-neo-root .welcome-feature-list,
+  .welcome-neo-root .welcome-feature,
+  .welcome-neo-root .welcome-feature-ic,
+  .welcome-neo-root .welcome-feature-body {
+    margin: 0;
+    min-height: 0;
+  }
+  .welcome-neo-root .welcome-main-grid {
+    margin: 0;
+    flex-shrink: 0;
+    min-height: min-content;
+  }
+  .welcome-neo-root .welcome-footer {
+    margin: 0;
+    flex-shrink: 0;
+    min-height: auto;
+    position: relative;
+    z-index: 2;
+  }
+  .welcome-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: stretch;
+    padding: 20px 22px;
+    border-radius: 16px;
+    overflow: hidden;
+    isolation: isolate;
+    position: relative;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    background:
+      linear-gradient(135deg,
+        color-mix(in srgb, var(--neo-violet) 12%, var(--sapList_Background, #fff)),
+        color-mix(in srgb, var(--neo-cyan) 8%, var(--sapList_Background, #fff)) 45%,
+        color-mix(in srgb, var(--neo-mint) 6%, var(--sapList_Background, #fff)));
+    border: 1px solid color-mix(in srgb, var(--neo-cyan) 30%, var(--neo-violet) 16%);
+    box-shadow:
+      0 8px 32px color-mix(in srgb, var(--neo-violet) 10%, transparent),
+      inset 0 1px 0 color-mix(in srgb, #fff 50%, transparent);
+    backdrop-filter: blur(12px);
+  }
+  .welcome-hero::before {
+    content: '';
+    position: absolute;
+    inset: -30% -10%;
+    background: conic-gradient(from 200deg,
+      color-mix(in srgb, var(--neo-violet) 20%, transparent),
+      color-mix(in srgb, var(--neo-cyan) 16%, transparent),
+      color-mix(in srgb, var(--neo-mint) 12%, transparent),
+      color-mix(in srgb, var(--neo-violet) 20%, transparent));
+    filter: blur(32px);
+    animation: welcome-aurora 14s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .welcome-hero::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neo-violet), var(--neo-cyan), var(--neo-mint), transparent);
+    background-size: 200% 100%;
+    animation: welcome-shimmer 8s linear infinite;
+    opacity: 0.8;
+    pointer-events: none;
+  }
+  .welcome-hero-main { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0; width: 100%; overflow: hidden; box-sizing: border-box; }
+  .welcome-hero-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; min-width: 0; width: 100%; }
+  .welcome-logo-ring {
+    width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--neo-violet), var(--neo-cyan));
+    box-shadow: 0 4px 18px color-mix(in srgb, var(--neo-cyan) 30%, transparent);
+  }
+  .welcome-logo-ring ui5-icon { width: 30px; height: 30px; color: #fff; filter: drop-shadow(0 0 6px rgba(255,255,255,0.4)); }
+  .welcome-title-block { min-width: 0; }
+  .welcome-title {
+    margin: 0;
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    background: linear-gradient(92deg, var(--sapTitleColor, #223548), var(--neo-cyan) 55%, var(--neo-violet));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .welcome-tagline {
+    margin: 4px 0 0;
+    font-size: 0.82rem;
+    color: var(--sapContent_LabelColor, #6a6d70);
+    letter-spacing: 0.04em;
+  }
+  .welcome-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0;
+  }
+  .welcome-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    flex: 0 1 auto;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 4px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.02em; text-transform: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: color-mix(in srgb, var(--neo-cyan) 10%, var(--sapList_Background, #fff));
+    border: 1px solid color-mix(in srgb, var(--neo-cyan) 28%, transparent);
+    color: var(--neo-cyan);
+  }
+  .welcome-badge--violet { color: var(--neo-violet); border-color: color-mix(in srgb, var(--neo-violet) 28%, transparent); background: color-mix(in srgb, var(--neo-violet) 10%, var(--sapList_Background, #fff)); }
+  .welcome-badge--mint { color: var(--neo-mint); border-color: color-mix(in srgb, var(--neo-mint) 28%, transparent); background: color-mix(in srgb, var(--neo-mint) 10%, var(--sapList_Background, #fff)); }
+  .welcome-badge ui5-icon { width: 12px; height: 12px; }
+  .welcome-hero-aside {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; justify-content: center; gap: 8px;
+    min-width: 0; max-width: 100%; padding-left: 16px;
+    border-left: 1px solid color-mix(in srgb, var(--neo-cyan) 18%, transparent);
+    box-sizing: border-box;
+  }
+  .welcome-clock-label { font-size: 0.65rem; color: var(--sapContent_LabelColor); letter-spacing: 0.08em; text-transform: uppercase; }
+  .welcome-clock { font-size: 0.9rem; font-weight: 700; font-family: ui-monospace, monospace; color: var(--sapTextColor); }
+  .welcome-version { font-size: 0.72rem; color: var(--sapContent_LabelColor); font-family: ui-monospace, monospace; }
+  .welcome-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+  @media (max-width: 900px) {
+    .welcome-hero { grid-template-columns: 1fr; }
+    .welcome-hero-aside {
+      border-left: none;
+      border-top: 1px solid color-mix(in srgb, var(--neo-cyan) 18%, transparent);
+      padding-left: 0;
+      padding-top: 12px;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 16px;
+    }
+  }
+  @media (max-width: 720px) {
+    .welcome-kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .welcome-kpi {
+    padding: 14px 16px; border-radius: 12px;
+    background: var(--neo-glass);
+    border: 1px solid var(--neo-border);
+    backdrop-filter: blur(8px);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .welcome-kpi:hover { transform: translateY(-2px); box-shadow: 0 6px 20px color-mix(in srgb, var(--neo-cyan) 12%, transparent); }
+  .welcome-kpi-val { font-size: 1.35rem; font-weight: 800; font-family: ui-monospace, monospace; color: var(--neo-cyan); line-height: 1.1; }
+  .welcome-kpi:nth-child(2) .welcome-kpi-val { color: var(--neo-violet); }
+  .welcome-kpi:nth-child(3) .welcome-kpi-val { color: var(--neo-mint); }
+  .welcome-kpi:nth-child(4) .welcome-kpi-val { color: var(--neo-warn); }
+  .welcome-kpi-label { margin-top: 4px; font-size: 0.72rem; color: var(--sapContent_LabelColor); }
+  .welcome-main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    grid-template-rows: auto auto;
+    gap: 16px;
+    row-gap: 20px;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: stretch;
+  }
+  .welcome-main-grid > section:first-child {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+  }
+  .welcome-main-grid > section:first-child .welcome-actions-grid {
+    flex: 1 1 auto;
+    min-height: 0;
+    align-content: space-evenly;
+  }
+  .welcome-main-grid > section:first-child .welcome-action {
+    height: auto;
+    align-self: start;
+  }
+  .welcome-main-grid > .welcome-panel--intel {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: stretch;
+  }
+  .welcome-main-grid > .welcome-panel--stack {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 4px;
+    min-height: min-content;
+  }
+  @media (max-width: 860px) {
+    .welcome-main-grid { grid-template-columns: minmax(0, 1fr); }
+    .welcome-main-grid > section:first-child {
+      grid-column: 1;
+      grid-row: 1;
+      display: block;
+    }
+    .welcome-main-grid > section:first-child .welcome-actions-grid {
+      flex: none;
+      align-content: start;
+    }
+    .welcome-main-grid > section:first-child .welcome-action {
+      height: auto;
+    }
+    .welcome-main-grid > .welcome-panel--intel { grid-column: 1; grid-row: 2; }
+    .welcome-main-grid > .welcome-panel--stack { grid-column: 1; grid-row: 3; margin-top: 0; }
+  }
+  .welcome-panel {
+    border-radius: 14px;
+    background: var(--neo-glass);
+    border: 1px solid var(--neo-border);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .welcome-panel--stack {
+    overflow: hidden;
+  }
+  .welcome-panel--intel {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .welcome-panel--intel .welcome-panel-body {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .welcome-neo-root .welcome-panel--intel .welcome-panel-head {
+    margin: 0;
+    padding: 12px 16px;
+    min-height: 0;
+  }
+  .welcome-neo-root .welcome-panel--intel .welcome-panel-body,
+  .welcome-neo-root .welcome-panel--intel .welcome-ai-banner,
+  .welcome-neo-root .welcome-panel--intel .welcome-feature-list,
+  .welcome-neo-root .welcome-panel--intel .welcome-feature,
+  .welcome-neo-root .welcome-panel--intel .welcome-feature-body {
+    margin: 0;
+    min-height: 0;
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+  .welcome-neo-root .welcome-panel--intel .welcome-panel-body {
+    padding: 14px;
+    overflow: hidden;
+  }
+  .welcome-neo-root .welcome-panel--intel .welcome-ai-banner {
+    width: auto;
+    margin: 0 0 14px 0;
+    padding: 14px 16px;
+    overflow: hidden;
+  }
+  .welcome-neo-root .welcome-panel--intel .welcome-feature-list {
+    width: auto;
+    padding: 0;
+    gap: 8px;
+    overflow: hidden;
+  }
+  .welcome-neo-root .welcome-panel--intel .welcome-feature {
+    width: auto;
+    padding: 10px 12px;
+  }
+  .welcome-panel-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid color-mix(in srgb, var(--neo-cyan) 14%, transparent);
+    background: color-mix(in srgb, var(--neo-violet) 4%, var(--sapObjectHeader_Background, #fff));
+  }
+  .welcome-panel-title {
+    margin: 0; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--sapTextColor);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .welcome-panel-title ui5-icon { width: 16px; height: 16px; color: var(--neo-cyan); }
+  .welcome-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 14px;
+  }
+  @media (max-width: 520px) {
+    .welcome-actions-grid { grid-template-columns: 1fr; }
+    .welcome-main-grid > section:first-child .welcome-actions-grid { align-content: start; }
+  }
+  .welcome-action {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px; border-radius: 12px; cursor: pointer; text-align: left;
+    background: color-mix(in srgb, var(--sapList_Background, #fff) 92%, transparent);
+    border: 1px solid color-mix(in srgb, var(--neo-cyan) 16%, var(--sapGroup_TitleBorderColor, #ddd));
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.15s;
+  }
+  .welcome-action:hover {
+    transform: translateY(-2px);
+    border-color: var(--neo-cyan);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--neo-cyan) 14%, transparent);
+  }
+  .welcome-action--violet { border-color: color-mix(in srgb, var(--neo-violet) 18%, var(--sapGroup_TitleBorderColor, #ddd)); }
+  .welcome-action--violet:hover { border-color: var(--neo-violet); box-shadow: 0 8px 24px color-mix(in srgb, var(--neo-violet) 14%, transparent); }
+  .welcome-action--mint { border-color: color-mix(in srgb, var(--neo-mint) 18%, var(--sapGroup_TitleBorderColor, #ddd)); }
+  .welcome-action--mint:hover { border-color: var(--neo-mint); box-shadow: 0 8px 24px color-mix(in srgb, var(--neo-mint) 14%, transparent); }
+  .welcome-action--warn { border-color: color-mix(in srgb, var(--neo-warn) 18%, var(--sapGroup_TitleBorderColor, #ddd)); }
+  .welcome-action--warn:hover { border-color: var(--neo-warn); box-shadow: 0 8px 24px color-mix(in srgb, var(--neo-warn) 14%, transparent); }
+  .welcome-action-ic {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--neo-cyan) 12%, transparent);
+    color: var(--neo-cyan);
+  }
+  .welcome-action--violet .welcome-action-ic { background: color-mix(in srgb, var(--neo-violet) 12%, transparent); color: var(--neo-violet); }
+  .welcome-action--mint .welcome-action-ic { background: color-mix(in srgb, var(--neo-mint) 12%, transparent); color: var(--neo-mint); }
+  .welcome-action--warn .welcome-action-ic { background: color-mix(in srgb, var(--neo-warn) 12%, transparent); color: var(--neo-warn); }
+  .welcome-action-ic ui5-icon { width: 18px; height: 18px; }
+  .welcome-action-body { min-width: 0; }
+  .welcome-action-label { font-size: 0.82rem; font-weight: 700; color: var(--sapTextColor); margin-bottom: 2px; }
+  .welcome-action-desc { font-size: 0.72rem; color: var(--sapContent_LabelColor); line-height: 1.45; }
+  .welcome-ai-banner {
+    padding: 14px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    min-width: 0;
+    box-sizing: border-box;
+    background:
+      linear-gradient(105deg,
+        color-mix(in srgb, var(--neo-violet) 14%, var(--sapList_Background, #fff)),
+        color-mix(in srgb, var(--neo-cyan) 12%, var(--sapList_Background, #fff)));
+    border: 1px solid color-mix(in srgb, var(--neo-violet) 30%, var(--neo-cyan) 20%);
+    transition: box-shadow 0.18s, transform 0.15s;
+  }
+  .welcome-ai-banner:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px color-mix(in srgb, var(--neo-violet) 18%, transparent);
+  }
+  .welcome-ai-orb {
+    width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: conic-gradient(from 210deg, var(--neo-violet), var(--neo-cyan), var(--neo-mint), var(--neo-violet));
+    box-shadow: 0 0 16px color-mix(in srgb, var(--neo-cyan) 35%, transparent);
+  }
+  .welcome-ai-orb ui5-icon { width: 22px; height: 22px; color: #fff; }
+  .welcome-ai-text { flex: 1 1 auto; min-width: 0; overflow: hidden; }
+  .welcome-ai-title {
+    font-size: 0.88rem; font-weight: 800; color: var(--sapTextColor); margin-bottom: 2px;
+    overflow-wrap: anywhere;
+  }
+  .welcome-ai-sub {
+    font-size: 0.72rem; color: var(--sapContent_LabelColor);
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+  .welcome-ai-arrow {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    color: var(--neo-cyan);
+  }
+  .welcome-feature-list {
+    padding: 0 14px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .welcome-feature {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px; border-radius: 12px;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    cursor: default;
+    background: color-mix(in srgb, var(--sapList_Background, #fff) 92%, transparent);
+    border: 1px solid color-mix(in srgb, var(--neo-cyan) 16%, var(--sapGroup_TitleBorderColor, #ddd));
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.15s;
+  }
+  .welcome-feature:hover {
+    transform: translateY(-2px);
+    border-color: var(--neo-cyan);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--neo-cyan) 14%, transparent);
+  }
+  .welcome-feature--violet { border-color: color-mix(in srgb, var(--neo-violet) 18%, var(--sapGroup_TitleBorderColor, #ddd)); }
+  .welcome-feature--violet:hover { border-color: var(--neo-violet); box-shadow: 0 8px 24px color-mix(in srgb, var(--neo-violet) 14%, transparent); }
+  .welcome-feature--mint { border-color: color-mix(in srgb, var(--neo-mint) 18%, var(--sapGroup_TitleBorderColor, #ddd)); }
+  .welcome-feature--mint:hover { border-color: var(--neo-mint); box-shadow: 0 8px 24px color-mix(in srgb, var(--neo-mint) 14%, transparent); }
+  .welcome-feature--warn { border-color: color-mix(in srgb, var(--neo-warn) 18%, var(--sapGroup_TitleBorderColor, #ddd)); }
+  .welcome-feature--warn:hover { border-color: var(--neo-warn); box-shadow: 0 8px 24px color-mix(in srgb, var(--neo-warn) 14%, transparent); }
+  .welcome-feature-ic {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--neo-cyan) 12%, transparent);
+    color: var(--neo-cyan);
+    transition: background 0.18s, box-shadow 0.18s;
+  }
+  .welcome-feature-ic ui5-icon { width: 18px; height: 18px; color: inherit; }
+  .welcome-feature:hover .welcome-feature-ic { box-shadow: 0 4px 12px color-mix(in srgb, var(--neo-cyan) 18%, transparent); }
+  .welcome-feature--violet .welcome-feature-ic { background: color-mix(in srgb, var(--neo-violet) 12%, transparent); color: var(--neo-violet); }
+  .welcome-feature--violet:hover .welcome-feature-ic { box-shadow: 0 4px 12px color-mix(in srgb, var(--neo-violet) 18%, transparent); }
+  .welcome-feature--mint .welcome-feature-ic { background: color-mix(in srgb, var(--neo-mint) 12%, transparent); color: var(--neo-mint); }
+  .welcome-feature--mint:hover .welcome-feature-ic { box-shadow: 0 4px 12px color-mix(in srgb, var(--neo-mint) 18%, transparent); }
+  .welcome-feature--warn .welcome-feature-ic { background: color-mix(in srgb, var(--neo-warn) 12%, transparent); color: var(--neo-warn); }
+  .welcome-feature--warn:hover .welcome-feature-ic { box-shadow: 0 4px 12px color-mix(in srgb, var(--neo-warn) 18%, transparent); }
+  .welcome-feature-body { min-width: 0; flex: 1 1 auto; overflow: hidden; }
+  .welcome-feature-title {
+    font-size: 0.78rem; font-weight: 700; color: var(--sapTextColor);
+    overflow-wrap: anywhere;
+  }
+  .welcome-feature-desc {
+    font-size: 0.68rem; color: var(--sapContent_LabelColor); margin-top: 2px; line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+  .welcome-chips {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+    gap: 8px;
+    padding: 14px;
+    box-sizing: border-box;
+    min-width: 0;
+    width: 100%;
+  }
+  .welcome-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.25;
+    cursor: default;
+    background: color-mix(in srgb, var(--neo-cyan) 8%, var(--sapList_Background, #fff));
+    border: 1px solid color-mix(in srgb, var(--neo-cyan) 22%, transparent);
+    color: var(--sapTextColor);
+    overflow: hidden;
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.15s, background 0.18s;
+  }
+  .welcome-chip:hover {
+    transform: translateY(-2px);
+    border-color: var(--neo-cyan);
+    background: color-mix(in srgb, var(--neo-cyan) 12%, var(--sapList_Background, #fff));
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--neo-cyan) 14%, transparent);
+  }
+  .welcome-chip:nth-child(3n+2) {
+    border-color: color-mix(in srgb, var(--neo-violet) 22%, transparent);
+    background: color-mix(in srgb, var(--neo-violet) 8%, var(--sapList_Background, #fff));
+  }
+  .welcome-chip:nth-child(3n+2):hover {
+    border-color: var(--neo-violet);
+    background: color-mix(in srgb, var(--neo-violet) 12%, var(--sapList_Background, #fff));
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--neo-violet) 14%, transparent);
+  }
+  .welcome-chip:nth-child(3n) {
+    border-color: color-mix(in srgb, var(--neo-mint) 22%, transparent);
+    background: color-mix(in srgb, var(--neo-mint) 8%, var(--sapList_Background, #fff));
+  }
+  .welcome-chip:nth-child(3n):hover {
+    border-color: var(--neo-mint);
+    background: color-mix(in srgb, var(--neo-mint) 12%, var(--sapList_Background, #fff));
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--neo-mint) 14%, transparent);
+  }
+  .welcome-chip ui5-icon { width: 14px; height: 14px; color: var(--neo-cyan); flex-shrink: 0; }
+  .welcome-chip-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.15s ease;
+  }
+  .welcome-chip:hover .welcome-chip-icon { transform: scale(1.08); }
+  .welcome-chip-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .welcome-footer {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 16px; border-radius: 12px;
+    margin-top: 4px;
+    background: color-mix(in srgb, var(--sapList_Background, #fff) 90%, transparent);
+    border: 1px solid var(--neo-border);
+  }
+  .welcome-show-cb-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.78rem; color: var(--sapContent_LabelColor);
+    cursor: pointer; user-select: none;
+  }
+  .welcome-show-cb { cursor: pointer; accent-color: var(--neo-cyan); }
+  .welcome-footer-hint { font-size: 0.68rem; color: var(--sapContent_LabelColor); opacity: 0.85; }
+  </style>
+
+  <div class="welcome-wrap" data-node-id="n-wrap" style="width:100%;box-sizing:border-box;">
+    <header class="welcome-hero" data-node-id="n-hero">
+      <div class="welcome-hero-main" data-node-id="n-hero-main">
+        <div class="welcome-hero-top" data-node-id="n-hero-top">
+          <div class="welcome-logo-ring" data-node-id="n-2">
+            <ui5-icon name="grid" data-node-id="n-2a" design="Default" mode="Decorative"></ui5-icon>
+          </div>
+          <div class="welcome-title-block" data-node-id="n-3-block">
+            <h1 class="welcome-title" data-node-id="n-3">CMX Enterprise Portal</h1>
+            <p class="welcome-tagline" data-node-id="n-4">智能企业门户 · 多协议服务 · 可视化编排 · AI 协同</p>
+          </div>
+        </div>
+        <div class="welcome-badges" data-node-id="n-badges">
+          <span class="welcome-chip" data-node-id="n-b1"><ui5-icon name="ai" design="Default" mode="Decorative" data-node-id="n-1"></ui5-icon>AI 助手就绪</span>
+          <span class="welcome-chip" data-node-id="n-b2"><ui5-icon name="connected" design="Default" mode="Decorative" data-node-id="n-2"></ui5-icon>多协议 API</span>
+          <span class="welcome-chip" data-node-id="n-b3"><ui5-icon name="accept" design="Default" mode="Decorative" data-node-id="n-3"></ui5-icon>实时协同</span>
+        </div>
+      </div>
+      <aside class="welcome-hero-aside" data-node-id="n-aside">
+        <span class="welcome-clock-label" data-node-id="n-clock-l">系统时间</span>
+        <span class="welcome-clock" id="welcome-clock" data-node-id="n-clock">—</span>
+        <span class="welcome-version" data-node-id="n-ver">CMX Portal · Horizon</span>
+      </aside>
+    </header>
+
+    <div class="welcome-kpi-row" data-node-id="n-kpi">
+      <div class="welcome-kpi" data-node-id="n-k1">
+        <div class="welcome-kpi-val" data-node-id="n-k1v">12+</div>
+        <div class="welcome-kpi-label" data-node-id="n-k1l">业务域模块</div>
+      </div>
+      <div class="welcome-kpi" data-node-id="n-k2">
+        <div class="welcome-kpi-val" data-node-id="n-k2v">REST · gRPC</div>
+        <div class="welcome-kpi-label" data-node-id="n-k2l">GraphQL · tRPC · SSE</div>
+      </div>
+      <div class="welcome-kpi" data-node-id="n-k3">
+        <div class="welcome-kpi-val" data-node-id="n-k3v">Neo UI</div>
+        <div class="welcome-kpi-label" data-node-id="n-k3l">亮/暗主题自适应</div>
+      </div>
+      <div class="welcome-kpi" data-node-id="n-k4">
+        <div class="welcome-kpi-val" data-node-id="n-k4v">Float AI</div>
+        <div class="welcome-kpi-label" data-node-id="n-k4l">浮动智能助手窗口</div>
+      </div>
+    </div>
+
+    <div class="welcome-main-grid" data-node-id="n-grid">
+      <section class="welcome-panel" data-node-id="n-actions-panel">
+        <div class="welcome-panel-head" data-node-id="n-actions-head">
+          <h2 class="welcome-panel-title" data-node-id="n-actions-title"><ui5-icon name="home" design="Default" mode="Decorative" data-node-id="n-4"></ui5-icon>快速开始</h2>
+        </div>
+        <div class="welcome-actions-grid" data-node-id="n-5">
+          <div class="welcome-action" data-eventclick="newPage();" data-node-id="n-6">
+            <div class="welcome-action-ic" data-node-id="n-5"><ui5-icon name="add" design="Default" mode="Decorative" data-node-id="n-6"></ui5-icon></div>
+            <div class="welcome-action-body" data-node-id="n-7">
+              <div class="welcome-action-label" data-node-id="n-8">新建页面</div>
+              <div class="welcome-action-desc" data-node-id="n-9">从 HTML 页面库创建或打开业务视图</div>
+            </div>
+          </div>
+          <div class="welcome-action welcome-action--violet" data-eventclick="openDesigner();" data-node-id="n-10">
+            <div class="welcome-action-ic" data-node-id="n-11"><ui5-icon name="edit" design="Default" mode="Decorative" data-node-id="n-12"></ui5-icon></div>
+            <div class="welcome-action-body" data-node-id="n-13">
+              <div class="welcome-action-label" data-node-id="n-14">HTML 设计器</div>
+              <div class="welcome-action-desc" data-node-id="n-15">可视化编排页面、组件与 pageFns</div>
+            </div>
+          </div>
+          <div class="welcome-action welcome-action--mint" data-eventclick="openAssistant();" data-node-id="n-7a">
+            <div class="welcome-action-ic" data-node-id="n-16"><ui5-icon name="ai" design="Default" mode="Decorative" data-node-id="n-17"></ui5-icon></div>
+            <div class="welcome-action-body" data-node-id="n-18">
+              <div class="welcome-action-label" data-node-id="n-19">AI 智能助手</div>
+              <div class="welcome-action-desc" data-node-id="n-20">打开浮动助手，对话式辅助开发与运维</div>
+            </div>
+          </div>
+          <div class="welcome-action" data-eventclick="openService();" data-node-id="n-21">
+            <div class="welcome-action-ic" data-node-id="n-22"><ui5-icon name="connected" design="Default" mode="Decorative" data-node-id="n-23"></ui5-icon></div>
+            <div class="welcome-action-body" data-node-id="n-24">
+              <div class="welcome-action-label" data-node-id="n-25">连接服务</div>
+              <div class="welcome-action-desc" data-node-id="n-26">配置 Node / Rust 后端与 Mock 环境</div>
+            </div>
+          </div>
+          <div class="welcome-action welcome-action--warn" data-eventclick="openTradeDemo();" data-node-id="n-8a">
+            <div class="welcome-action-ic" data-node-id="n-27"><ui5-icon name="money-bills" design="Default" mode="Decorative" data-node-id="n-28"></ui5-icon></div>
+            <div class="welcome-action-body" data-node-id="n-29">
+              <div class="welcome-action-label" data-node-id="n-30">Neo 交易演示</div>
+              <div class="welcome-action-desc" data-node-id="n-31">体验 trade-neo 高科技单据与 Grid 皮肤</div>
+            </div>
+          </div>
+          <div class="welcome-action welcome-action--violet" data-eventclick="openDocs();" data-node-id="n-32">
+            <div class="welcome-action-ic" data-node-id="n-33"><ui5-icon name="documents" design="Default" mode="Decorative" data-node-id="n-34"></ui5-icon></div>
+            <div class="welcome-action-body" data-node-id="n-35">
+              <div class="welcome-action-label" data-node-id="n-36">开发文档</div>
+              <div class="welcome-action-desc" data-node-id="n-37">API、pageFns 与门户扩展指南</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="welcome-panel welcome-panel--intel" data-node-id="n-intel-panel">
+        <div class="welcome-panel-head" data-node-id="n-intel-head">
+          <h2 class="welcome-panel-title" data-node-id="n-intel-title"><ui5-icon name="lightbulb" design="Default" mode="Decorative" data-node-id="n-38"></ui5-icon>平台能力</h2>
+        </div>
+        <div class="welcome-panel-body" data-node-id="n-intel-body">
+        <div class="welcome-ai-banner" data-eventclick="openAssistant();" data-node-id="n-ai">
+          <div class="welcome-ai-orb" data-node-id="n-39"><ui5-icon name="ai" design="Default" mode="Decorative" data-node-id="n-40"></ui5-icon></div>
+          <div class="welcome-ai-text" data-node-id="n-41">
+            <div class="welcome-ai-title" data-node-id="n-42">CMX 智能助手</div>
+            <div class="welcome-ai-sub" data-node-id="n-43">拖拽视图到浮动球 · 多 Tab 工作区 · 上下文感知对话</div>
+          </div>
+          <ui5-icon class="welcome-ai-arrow" name="slim-arrow-right" design="Default" mode="Decorative" data-node-id="n-44"></ui5-icon>
+        </div>
+        <div class="welcome-feature-list" data-node-id="n-features">
+          <div class="welcome-feature" data-node-id="n-f1">
+            <div class="welcome-feature-ic" data-node-id="n-45"><ui5-icon name="grid" design="Default" mode="Decorative" data-node-id="n-46"></ui5-icon></div>
+            <div class="welcome-feature-body" data-node-id="n-47">
+              <div class="welcome-feature-title" data-node-id="n-48">Workspace 多区域 Dock</div>
+              <div class="welcome-feature-desc" data-node-id="n-49">侧栏、内容、属性、日志、浮动窗 — 拖拽编排工作区布局</div>
+            </div>
+          </div>
+          <div class="welcome-feature welcome-feature--violet" data-node-id="n-f2">
+            <div class="welcome-feature-ic" data-node-id="n-50"><ui5-icon name="palette" design="Default" mode="Decorative" data-node-id="n-51"></ui5-icon></div>
+            <div class="welcome-feature-body" data-node-id="n-52">
+              <div class="welcome-feature-title" data-node-id="n-53">Neo 视觉体系</div>
+              <div class="welcome-feature-desc" data-node-id="n-54">极光渐变、玻璃质感与 SAP UI5 亮暗主题无缝融合</div>
+            </div>
+          </div>
+          <div class="welcome-feature welcome-feature--mint" data-node-id="n-f3">
+            <div class="welcome-feature-ic" data-node-id="n-55"><ui5-icon name="database" design="Default" mode="Decorative" data-node-id="n-56"></ui5-icon></div>
+            <div class="welcome-feature-body" data-node-id="n-57">
+              <div class="welcome-feature-title" data-node-id="n-58">cmx-data-comp 组件库</div>
+              <div class="welcome-feature-desc" data-node-id="n-59">Grid、Tree、Form、Dialog — 跨 Portal 与设计器复用</div>
+            </div>
+          </div>
+          <div class="welcome-feature welcome-feature--warn" data-node-id="n-f4">
+            <div class="welcome-feature-ic" data-node-id="n-60"><ui5-icon name="world" design="Default" mode="Decorative" data-node-id="n-61"></ui5-icon></div>
+            <div class="welcome-feature-body" data-node-id="n-62">
+              <div class="welcome-feature-title" data-node-id="n-63">活动域与菜单驱动</div>
+              <div class="welcome-feature-desc" data-node-id="n-64">多域切换、explorer-menu 与 html_pages 流水线统一加载</div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </section>
+
+      <section class="welcome-panel welcome-panel--stack" data-node-id="n-stack-panel">
+        <div class="welcome-panel-head" data-node-id="n-stack-head">
+          <h2 class="welcome-panel-title" data-node-id="n-stack-title"><ui5-icon name="it-host" design="Default" mode="Decorative" data-node-id="n-65"></ui5-icon>技术栈</h2>
+        </div>
+        <div class="welcome-chips" data-node-id="n-chips">
+          <span class="welcome-chip" data-node-id="n-66"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/webcomponentsdotorg?viewbox=auto&amp;size=14" alt="" data-node-id="n-67">Web Component</span>
+          <span class="welcome-chip" data-node-id="n-68"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/nodedotjs?viewbox=auto&amp;size=14" alt="" data-node-id="n-69">Node.js</span>
+          <span class="welcome-chip" data-node-id="n-70"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/rust?viewbox=auto&amp;size=14" alt="" data-node-id="n-71">Rust</span>
+          <span class="welcome-chip" data-node-id="n-72"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/webassembly?viewbox=auto&amp;size=14" alt="" data-node-id="n-73">Wasm</span>
+          <span class="welcome-chip" data-node-id="n-74"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/vscodium?viewbox=auto&amp;size=14" alt="" data-node-id="n-75">Code Server</span>
+          <span class="welcome-chip" data-node-id="n-76"><span class="welcome-chip-icons" data-node-id="n-77"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/docker?viewbox=auto&amp;size=14" alt="" data-node-id="n-78"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/kubernetes?viewbox=auto&amp;size=14" alt="" data-node-id="n-79"></span>Docker/K8S</span>
+          <span class="welcome-chip" data-node-id="n-80"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/postgresql?viewbox=auto&amp;size=14" alt="" data-node-id="n-81">PostgreSQL</span>
+          <span class="welcome-chip" data-node-id="n-82"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/mysql?viewbox=auto&amp;size=14" alt="" data-node-id="n-83">MySQL</span>
+          <span class="welcome-chip" data-node-id="n-84"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/redis?viewbox=auto&amp;size=14" alt="" data-node-id="n-85">Redis</span>
+          <span class="welcome-chip" data-node-id="n-86"><span class="welcome-chip-icons" data-node-id="n-87"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/cloudflare?viewbox=auto&amp;size=14" alt="" data-node-id="n-88"><img class="welcome-chip-icon" src="https://cdn.simpleicons.org/rust?viewbox=auto&amp;size=14" alt="" data-node-id="n-89"></span>Pingora</span>
+          <span class="welcome-chip" data-node-id="n-90"><img class="welcome-chip-icon" src="https://quickwit.io/favicons/favicon-32x32.png" alt="" data-node-id="n-91">Quickwit</span>
+          <span class="welcome-chip" data-node-id="n-92"><img class="welcome-chip-icon" src="https://cdn.jsdelivr.net/gh/log-z/logos@main/website-logos/nacos.svg" alt="" data-node-id="n-93">Nacos</span>
+        </div>
+      </section>
+    </div>
+
+    <footer class="welcome-footer" data-node-id="n-94">
+      <label class="welcome-show-cb-label" data-node-id="n-10a">
+        <input type="checkbox" id="welcome-show-cb" class="welcome-show-cb" data-eventchange="toggleStartupShow(event);" data-node-id="n-10b">
+        启动时显示欢迎页面
+      </label>
+      <span class="welcome-footer-hint" data-node-id="n-10c">提示：ShellBar「欢迎页面」可随时返回此页</span>
+    </footer>
+  </div>
+</div>
+<script type="application/json" id="__designer_meta__">{"pageData":[],"pageFns":[{"name":"initWelcome","params":"","body":"try {\n  var sr = host.shadowRoot;\n  var cb = sr && sr.querySelector('#welcome-show-cb');\n  if (cb) {\n    var v = (typeof localStorage !== 'undefined') ? localStorage.getItem('cmx_portal_show_welcome') : null;\n    cb.checked = (v !== 'false');\n  }\n  if (host.startWelcomeClock) host.startWelcomeClock();\n} catch (e) { /* ignore */ }","readsVars":[],"writesVars":[]},{"name":"refreshWelcomeClock","params":"","body":"try {\n  var el = host.shadowRoot && host.shadowRoot.querySelector('#welcome-clock');\n  if (!el) return;\n  var now = new Date();\n  el.textContent = now.toLocaleString('zh-CN', {\n    weekday: 'short', month: 'short', day: 'numeric',\n    hour: '2-digit', minute: '2-digit', second: '2-digit'\n  });\n} catch (e) { /* ignore */ }","readsVars":[],"writesVars":[]},{"name":"startWelcomeClock","params":"","body":"try {\n  if (host.__welcomeClockTimer) {\n    clearInterval(host.__welcomeClockTimer);\n    host.__welcomeClockTimer = null;\n  }\n  if (host.refreshWelcomeClock) host.refreshWelcomeClock();\n  host.__welcomeClockTimer = setInterval(function () {\n    if (!host.isConnected) {\n      clearInterval(host.__welcomeClockTimer);\n      host.__welcomeClockTimer = null;\n      return;\n    }\n    if (host.refreshWelcomeClock) host.refreshWelcomeClock();\n  }, 1000);\n} catch (e) { /* ignore */ }","readsVars":[],"writesVars":[]},{"name":"toggleStartupShow","params":"event","body":"try {\n  var cb = event && event.target;\n  if (cb && typeof localStorage !== 'undefined') {\n    localStorage.setItem('cmx_portal_show_welcome', cb.checked ? 'true' : 'false');\n  }\n} catch (e) { /* ignore */ }","readsVars":[],"writesVars":[]},{"name":"dispatchWelcomeAction","params":"action, label","body":"try {\n  console.info('[welcome] action:', action);\n  host.dispatchEvent(new CustomEvent('portal-welcome-action', {\n    detail: { action: action, label: label || action },\n    bubbles: true, composed: true\n  }));\n} catch (e) { console.warn('[welcome] action dispatch failed', e); }","readsVars":[],"writesVars":[]},{"name":"newPage","params":"","body":"if (host.dispatchWelcomeAction) host.dispatchWelcomeAction('new-page', '新建页面');","readsVars":[],"writesVars":[]},{"name":"openDesigner","params":"","body":"if (host.dispatchWelcomeAction) host.dispatchWelcomeAction('open-designer', 'HTML 设计器');","readsVars":[],"writesVars":[]},{"name":"openAssistant","params":"","body":"try {\n  var app = document.querySelector('cmx-portal-app');\n  var fw = app && app.shadowRoot && app.shadowRoot.getElementById('workspace-float-window');\n  if (fw && typeof fw.activateView === 'function') {\n    fw.activateView('ai');\n    return;\n  }\n  var sb = app && app.shadowRoot && app.shadowRoot.querySelector('portal-shellbar');\n  if (sb) sb.dispatchEvent(new CustomEvent('shellbar-assistant-click', { bubbles: true, composed: true }));\n} catch (e) { /* ignore */ }","readsVars":[],"writesVars":[]},{"name":"openService","params":"","body":"if (host.dispatchWelcomeAction) host.dispatchWelcomeAction('open-service', '连接服务');","readsVars":[],"writesVars":[]},{"name":"openTradeDemo","params":"","body":"if (host.dispatchWelcomeAction) host.dispatchWelcomeAction('open-trade-demo', 'Neo 交易演示');","readsVars":[],"writesVars":[]},{"name":"openDocs","params":"","body":"if (host.dispatchWelcomeAction) host.dispatchWelcomeAction('open-docs', '开发文档');","readsVars":[],"writesVars":[]}],"pageServices":[],"pageDeps":[],"pageInterfaces":[{"name":"isDirty","enabled":true,"body":"return false;"},{"name":"getState","enabled":true,"body":"return {};"},{"name":"validate","enabled":true,"body":"return { valid: true };"},{"name":"initPage","enabled":true,"body":"if (host.initWelcome) host.initWelcome();"},{"name":"onActivate","enabled":true,"body":"if (host.startWelcomeClock) host.startWelcomeClock();"}],"dataSources":[],"dataFlow":{"schema":[],"aggregations":[],"relations":[]},"models":[]}</script>

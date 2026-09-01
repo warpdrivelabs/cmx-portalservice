@@ -1,0 +1,84 @@
+<div class="docbx-list" style="display:flex;flex-direction:column;height:100%;font:13px/1.45 -apple-system,'Segoe UI','PingFang SC',sans-serif;color:var(--sapTextColor,#1d2d3e);background:var(--sapList_Background,#fff);box-sizing:border-box">
+  <div style="padding:9px 12px;border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);font-weight:700;display:flex;align-items:center;gap:6px;flex:0 0 auto">
+    <span>📄</span> 业务单据定义 · 单据
+  </div>
+  <div id="filelist" style="flex:0 0 auto;display:flex;flex-direction:column;gap:6px;padding:8px;overflow:auto;max-height:42%"></div>
+  <div style="padding:6px 12px;font-weight:700;border-top:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);flex:0 0 auto">表 / 层级</div>
+  <div id="tablelist" style="flex:1 1 auto;display:flex;flex-direction:column;gap:6px;padding:8px;overflow:auto"></div>
+
+  <style>
+    .docbx-list .dx-item{border:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);background:var(--sapList_Background,#fff);text-align:left;padding:8px;border-radius:6px;cursor:pointer;color:inherit;font:inherit}
+    .docbx-list .dx-item:hover{background:var(--sapList_Hover_Background,#f0f5fb)}
+    .docbx-list .dx-item.active{border-color:var(--sapHighlightColor,#0070f2);box-shadow:inset 3px 0 0 var(--sapHighlightColor,#0070f2)}
+    .docbx-list .dx-sub{font-size:12px;color:var(--sapContent_LabelColor,#6a6d70);margin-top:2px}
+    .docbx-list .dx-lvl{display:inline-block;font-size:11px;font-weight:700;background:var(--sapInformationBackground,#eaf4ff);color:var(--sapInformationColor,#0a6ed1);border-radius:10px;padding:1px 7px;margin-right:6px}
+    .docbx-list .dx-empty{padding:12px;color:var(--sapContent_LabelColor,#6a6d70)}
+  </style>
+
+  <script>
+    /* 业务单据定义 · 列表页（explorer 区，native_pages 新模式）。
+       展示单据文件 + 多层表（L1/L2/L3），选择经 workspace.context 通知 content/property 区。
+       doc 数据由 content 区 manager 页加载并广播 docDoc。 */
+    var root = host.renderRoot;
+    var ctx = workspace && workspace.context;
+    var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+    function get (k) { return ctx ? ctx.get(k) : null; }
+    function set (k, v) { if (ctx) ctx.set(k, v); }
+
+    async function apiJson (url) {
+      var res = await fetch(url, { headers: { Accept: 'application/json' }, credentials: 'same-origin' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }
+
+    function renderFiles (items, curFile) {
+      var box = root.querySelector('#filelist');
+      box.innerHTML = '';
+      if (!items.length) { box.innerHTML = '<div class="dx-empty">无 DOC 单据文件</div>'; return; }
+      items.forEach(function (it) {
+        var b = document.createElement('button');
+        b.className = 'dx-item' + (curFile === it.file ? ' active' : '');
+        b.innerHTML = '<strong>' + esc(it.title || it.file) + '</strong><div class="dx-sub">' + esc(it.file) + ' · ' + esc(it.tableCount || 0) + ' 表</div>';
+        b.addEventListener('click', function () {
+          set('docSelectedFile', { domain: it.domain || '', module: it.module || '', file: it.file });
+        });
+        box.appendChild(b);
+      });
+    }
+
+    function renderTables (doc, curTable) {
+      var box = root.querySelector('#tablelist');
+      box.innerHTML = '';
+      var tables = (doc && Array.isArray(doc.voucherTables)) ? doc.voucherTables : [];
+      if (!tables.length) { box.innerHTML = '<div class="dx-empty">请选择上方单据加载表结构</div>'; return; }
+      tables.forEach(function (t) {
+        var b = document.createElement('button');
+        b.className = 'dx-item' + (curTable === t.tableName ? ' active' : '');
+        b.innerHTML = '<span class="dx-lvl">' + esc(t.level || '') + '</span><strong>' + esc(t.tableAlias || t.tableName) + '</strong>'
+          + '<div class="dx-sub">' + esc(t.tableName) + ' · ' + ((t.fields || []).length) + ' 字段</div>';
+        b.addEventListener('click', function () { set('docSelectedTable', t.tableName); set('docSelectedFieldIndex', -1); });
+        box.appendChild(b);
+      });
+    }
+
+    apiJson('/api/definitions/list?kind=DOC').then(function (data) {
+      var items = Array.isArray(data.items) ? data.items : [];
+      host.__files = items;
+      var cur = get('docSelectedFile');
+      renderFiles(items, cur && cur.file);
+      if (!cur && items[0]) set('docSelectedFile', { domain: items[0].domain || '', module: items[0].module || '', file: items[0].file });
+      renderTables(get('docDoc'), get('docSelectedTable'));
+    }).catch(function (e) {
+      root.querySelector('#filelist').innerHTML = '<div class="dx-empty">加载失败：' + esc(e.message) + '</div>';
+    });
+
+    if (ctx) {
+      var onChange = function (ev) {
+        if (ev.key === 'docSelectedFile') renderFiles(host.__files || [], ev.value && ev.value.file);
+        if (ev.key === 'docDoc' || ev.key === 'docSelectedTable') renderTables(get('docDoc'), get('docSelectedTable'));
+      };
+      ctx.on('change', onChange);
+      host.onDispose = function () { try { ctx.off('change', onChange); } catch (e) {} };
+    }
+  </script>
+</div>

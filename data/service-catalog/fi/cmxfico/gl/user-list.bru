@@ -1,0 +1,24 @@
+meta {
+  name: 用户列表查询
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/users
+  body: none
+  auth: none
+}
+
+params:query {
+  page: 1
+  size: 20
+}
+
+headers {
+  Accept: application/json
+}
+
+docs {
+  分页查询用户列表，返回 { items, total }。
+}

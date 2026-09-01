@@ -1,0 +1,27 @@
+{
+  "domain": "fi",
+  "app": "cmxfico",
+  "module": "gl",
+  "file": "master-account.json",
+  "id": "master-account",
+  "path": "主数据",
+  "title": "会计科目",
+  "summary": "会计科目表的层级结构、科目类型与启用/停用维护。",
+  "keywords": [
+    "会计科目",
+    "科目表",
+    "主数据",
+    "account",
+    "末级科目"
+  ],
+  "order": 1,
+  "content": "# 会计科目\n\n会计科目表(Chart of Accounts)是总账的基础主数据，按 **资产 / 负债 / 权益 / 成本 / 损益** 分类，呈树形层级。它是 [录入凭证](help:voucher-entry) 时分录行可选科目的来源。\n\n## 要点\n\n- 仅 **末级科目** 可用于凭证分录。\n- 科目类型决定其在报表中的归属与余额方向。\n- 会计等式恒成立：`资产 = 负债 + 权益`。\n\n## 维护\n\n在 **会计核算管理工作台** 左侧科目树中新增/编辑科目，按 `account_type_code` 派生 6 类过滤视图。\n\n相关：[总账模块概述](help:gl-overview) · [过账与冲销](help:voucher-post)。",
+  "examples": [
+    {
+      "title": "科目节点结构",
+      "lang": "json",
+      "code": "{\n  \"code\": \"1001\",\n  \"name\": \"库存现金\",\n  \"account_type_code\": \"ASSET\",\n  \"parent\": \"10\",\n  \"is_leaf\": true,\n  \"status\": \"active\"\n}"
+    }
+  ],
+  "updatedAt": 0
+}

@@ -1,0 +1,19 @@
+<ui5-bar design="Header" accessible-role="Toolbar" class="" data-node-id="n-5">Bottom1<ui5-button design="Positive" slot="startContent" accessible-role="Button" loading-delay="1000" data-eventclick="testClick(&quot;Hello Jeff1&quot;);" data-node-id="n-6" data-bind-title="var1" title="{{var1}}">按钮1</ui5-button><ui5-button design="Positive" slot="endContent" accessible-role="Button" loading-delay="1000" data-node-id="n-7">按钮</ui5-button></ui5-bar>
+<script>
+/* 设计时脚本预览：以下为直接函数/说明；导出/预览/运行时会由设计器注入 Web Component 封装。 */
+/* pageId: ctn_view2 */
+
+// --- 页面数据（运行时在组件内注入 $data，见「数据」面板）---
+// $data.var1  (string)  默认: 
+// $data.var2  (string)  默认: 
+
+// --- 页面函数 ---
+function testClick(str) {
+            alert(str);
+            this._inspector.log('设计器已初始化。'+str);
+}
+
+// --- 页面服务（导出时自动生成 host.服务名 与请求逻辑，见「服务」面板）---
+// tstService: rest · /api/getxml · GET
+</script>
+<script type="application/json" id="__designer_meta__">{"pageData":[{"name":"var1","type":"string","defaultValue":""},{"name":"var2","type":"string","defaultValue":""}],"pageFns":[{"name":"testClick","params":"str","body":"          alert(str);\n          this._inspector.log('设计器已初始化。'+str);","readsVars":[],"writesVars":[]}],"pageServices":[{"name":"tstService","type":"rest","url":"/api/getxml","method":"GET","rpcMethod":"","headers":"","bodyTemplate":"","responseTo":"","responseTransform":""}],"pageDeps":[]}</script>

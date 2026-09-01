@@ -1,0 +1,171 @@
+<div class="dictbx-mgr" style="display:flex;flex-direction:column;height:100%;font:13px/1.45 -apple-system,'Segoe UI','PingFang SC',sans-serif;color:var(--sapTextColor,#1d2d3e);background:var(--sapBackgroundColor,#fff);box-sizing:border-box">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);flex:0 0 auto">
+    <div><div style="font-size:14px;font-weight:700">字典基础元数据 · 设计</div><div id="sub" style="font-size:12px;color:var(--sapContent_LabelColor,#6a6d70)"></div></div>
+    <div style="display:flex;gap:6px">
+      <button class="dx-btn primary" data-act="save">保存</button>
+      <button class="dx-btn" data-act="reload">刷新</button>
+      <button class="dx-btn" data-act="add">新增字段</button>
+      <button class="dx-btn danger" data-act="del">删除字段</button>
+    </div>
+  </div>
+  <div style="padding:6px 12px;border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);flex:0 0 auto;font-weight:700"><span id="fsname">字段集：—</span></div>
+  <div id="tablewrap" style="flex:1 1 auto;overflow:auto;padding:8px"></div>
+
+  <style>
+    .dictbx-mgr .dx-btn{border:1px solid var(--sapButton_BorderColor,#8a8f94);border-radius:4px;background:var(--sapButton_Background,#fff);color:var(--sapButton_TextColor,#0064d9);padding:5px 9px;cursor:pointer;font:inherit}
+    .dictbx-mgr .dx-btn.primary{background:var(--sapButton_Emphasized_Background,#0070f2);border-color:#0070f2;color:#fff}
+    .dictbx-mgr .dx-btn.danger{color:var(--sapNegativeTextColor,#b00)}
+    .dictbx-mgr table{width:100%;border-collapse:collapse;font-size:12px}
+    .dictbx-mgr th,.dictbx-mgr td{border-bottom:1px solid var(--sapList_BorderColor,#eee);padding:5px;text-align:left;vertical-align:top}
+    .dictbx-mgr tr.active{background:var(--sapList_SelectionBackgroundColor,#e5f2ff)}
+    .dictbx-mgr input,.dictbx-mgr select{width:100%;box-sizing:border-box;border:1px solid var(--sapField_BorderColor,#89919a);border-radius:4px;padding:4px 6px;background:var(--sapField_Background,#fff);color:inherit;font:inherit}
+    .dictbx-mgr .dx-empty{padding:12px;color:var(--sapContent_LabelColor,#6a6d70)}
+  </style>
+
+  <script>
+    /* 字典基础元数据 · 设计页（content 区，核心）：加载/保存 doc，字段表格编辑。
+       数据单一来源放 workspace.context（dictDoc / dictSelectedFieldSet / dictSelectedFieldIndex / dictDirty），
+       list/inspector 页订阅同一 context 联动。本页是 doc 的加载者与保存者。 */
+    var root = host.renderRoot;
+    var ctx = workspace && workspace.context;
+    var DATA_TYPES = ['VARCHAR', 'BIGINT', 'INT', 'TINYINT', 'DECIMAL', 'DATE', 'DATETIME', 'TEXT'];
+    var EDIT_MODES = ['', 'cmx-text-input', 'cmx-textarea-input', 'cmx-richtext-input', 'cmx-number-input', 'cmx-date-input', 'cmx-datetime-input', 'cmx-dict-select', 'checkbox'];
+    var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+
+    function get (k) { return ctx ? ctx.get(k) : null; }
+    function set (k, v) { if (ctx) ctx.set(k, v); }
+
+    async function apiJson (url, options) {
+      var res = await fetch(url, Object.assign({ headers: { Accept: 'application/json' }, credentials: 'same-origin' }, options || {}));
+      if (!res.ok) { var m = 'HTTP ' + res.status; try { var j = await res.json(); if (j && j.error) m = j.error; } catch (e) {} throw new Error(m); }
+      return res.json();
+    }
+
+    function fsKeys (doc) { return (doc && doc.fieldSets && typeof doc.fieldSets === 'object') ? Object.keys(doc.fieldSets) : []; }
+    function curFields () { var doc = get('dictDoc'); var fsn = get('dictSelectedFieldSet'); var fs = doc && doc.fieldSets && doc.fieldSets[fsn]; return (fs && Array.isArray(fs.fields)) ? fs.fields : []; }
+
+    async function loadDoc (sel) {
+      if (!sel || !sel.file) return;
+      var q = new URLSearchParams({ domain: sel.domain || 'base', module: sel.module || '', file: sel.file });
+      var doc = await apiJson('/api/definitions/config?' + q);
+      if (!doc.fieldSets) doc.fieldSets = {};
+      set('dictDoc', doc);
+      var keys = fsKeys(doc);
+      var curFs = get('dictSelectedFieldSet');
+      if (!curFs || !doc.fieldSets[curFs]) set('dictSelectedFieldSet', keys[0] || '');
+      set('dictSelectedFieldIndex', curFields()[0] ? 0 : -1);
+      set('dictDirty', false);
+    }
+
+    function optionHtml (items, value) {
+      return items.map(function (it) { return '<option value="' + esc(it) + '"' + (String(value || '') === it ? ' selected' : '') + '>' + esc(it || '无') + '</option>'; }).join('');
+    }
+
+    function render () {
+      var doc = get('dictDoc');
+      var fsn = get('dictSelectedFieldSet') || '';
+      var idx = get('dictSelectedFieldIndex');
+      var dirty = get('dictDirty');
+      var sel = get('dictSelectedFile');
+      root.querySelector('#sub').textContent = (sel ? sel.file : '') + (dirty ? ' · 未保存' : '');
+      root.querySelector('#fsname').textContent = '字段集：' + (fsn || '—');
+      var fields = curFields();
+      var wrap = root.querySelector('#tablewrap');
+      if (!doc) { wrap.innerHTML = '<div class="dx-empty">请在左侧选择文件</div>'; return; }
+      if (!fields.length) { wrap.innerHTML = '<div class="dx-empty">当前字段集暂无字段</div>'; return; }
+      var rows = fields.map(function (f, i) {
+        return '<tr class="' + (i === idx ? 'active' : '') + '" data-i="' + i + '">'
+          + '<td><input data-i="' + i + '" data-p="id" value="' + esc(f.id || '') + '"></td>'
+          + '<td><input data-i="' + i + '" data-p="name" value="' + esc(f.name || '') + '"></td>'
+          + '<td><input data-i="' + i + '" data-p="caption.zh_CN" value="' + esc(f.caption && f.caption.zh_CN || '') + '"></td>'
+          + '<td><select data-i="' + i + '" data-p="dataType">' + optionHtml(DATA_TYPES, f.dataType) + '</select></td>'
+          + '<td><input data-i="' + i + '" data-p="fieldLength" data-t="number" type="number" value="' + esc(f.fieldLength == null ? '' : f.fieldLength) + '"></td>'
+          + '<td style="text-align:center"><input data-i="' + i + '" data-p="nullable" data-t="boolean" type="checkbox"' + (f.nullable === false ? '' : ' checked') + '></td>'
+          + '<td><select data-i="' + i + '" data-p="edit.mode">' + optionHtml(EDIT_MODES, f.edit && f.edit.mode) + '</select></td>'
+          + '</tr>';
+      }).join('');
+      wrap.innerHTML = '<table><thead><tr><th>ID</th><th>名称</th><th>标题</th><th>类型</th><th>长度</th><th>必填</th><th>录入控件</th></tr></thead><tbody>' + rows + '</tbody></table>';
+      bind(wrap);
+    }
+
+    function setPath (obj, path, value, type) {
+      var segs = path.split('.'); var leaf = segs.pop(); var node = obj;
+      segs.forEach(function (s) { if (!node[s] || typeof node[s] !== 'object') node[s] = {}; node = node[s]; });
+      if (type === 'boolean') node[leaf] = !!value;
+      else if (type === 'number') { if (value === '') delete node[leaf]; else { var n = Number(value); node[leaf] = Number.isFinite(n) ? n : value; } }
+      else if (value === '') delete node[leaf]; else node[leaf] = value;
+    }
+
+    function bind (wrap) {
+      wrap.querySelectorAll('input[data-p],select[data-p]').forEach(function (el) {
+        var evt = el.type === 'checkbox' ? 'change' : 'input';
+        el.addEventListener('focus', function () { set('dictSelectedFieldIndex', Number(el.getAttribute('data-i'))); });
+        el.addEventListener(evt, function () {
+          var i = Number(el.getAttribute('data-i'));
+          var fields = curFields(); var f = fields[i]; if (!f) return;
+          var p = el.getAttribute('data-p');
+          setPath(f, p, el.type === 'checkbox' ? el.checked : el.value, el.getAttribute('data-t') || '');
+          if (p === 'id' && !f.name) f.name = el.value;
+          if (p === 'name' && !f.id) f.id = el.value;
+          set('dictDirty', true);
+          set('dictSelectedFieldIndex', i);   // 广播给 inspector
+          set('dictDoc', get('dictDoc'));      // 触发 doc 变更广播（同引用，靠 dictFieldTick 区分）
+          set('dictFieldTick', Date.now());
+        });
+      });
+      wrap.querySelectorAll('tr[data-i]').forEach(function (tr) {
+        tr.addEventListener('click', function (e) {
+          if (e.target instanceof Element && e.target.closest('input,select')) return;
+          set('dictSelectedFieldIndex', Number(tr.getAttribute('data-i')));
+        });
+      });
+    }
+
+    // 顶部按钮
+    root.querySelector('[data-act="save"]').addEventListener('click', async function () {
+      var doc = get('dictDoc'); var sel = get('dictSelectedFile');
+      if (!doc || !sel) return;
+      try {
+        var q = new URLSearchParams({ domain: sel.domain || 'base', module: sel.module || '', file: sel.file });
+        var res = await apiJson('/api/definitions/config?' + q, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(doc) });
+        set('dictDoc', res.saved || doc);
+        set('dictDirty', false);
+        render();
+      } catch (e) { root.querySelector('#sub').textContent = '保存失败：' + e.message; }
+    });
+    root.querySelector('[data-act="reload"]').addEventListener('click', async function () {
+      try { await loadDoc(get('dictSelectedFile')); } catch (e) { root.querySelector('#sub').textContent = '刷新失败：' + e.message; }
+    });
+    root.querySelector('[data-act="add"]').addEventListener('click', function () {
+      var fields = curFields();
+      var id = 'new_field', i = 2;
+      while (fields.some(function (f) { return f.id === id || f.name === id; })) id = 'new_field_' + (i++);
+      fields.push({ id: id, name: id, dataType: 'VARCHAR', fieldLength: 64, nullable: true, caption: { zh_CN: '新字段' }, edit: { mode: 'cmx-text-input' } });
+      set('dictSelectedFieldIndex', fields.length - 1);
+      set('dictDirty', true); set('dictDoc', get('dictDoc')); set('dictFieldTick', Date.now());
+    });
+    root.querySelector('[data-act="del"]').addEventListener('click', function () {
+      var fields = curFields(); var idx = get('dictSelectedFieldIndex');
+      if (!fields[idx]) return;
+      fields.splice(idx, 1);
+      set('dictSelectedFieldIndex', fields[idx] ? idx : fields.length - 1);
+      set('dictDirty', true); set('dictDoc', get('dictDoc')); set('dictFieldTick', Date.now());
+    });
+
+    // 订阅 context：文件切换→加载 doc；字段集/字段/doc 变更→重渲
+    if (ctx) {
+      var onChange = function (ev) {
+        if (ev.key === 'dictSelectedFile') { loadDoc(ev.value).catch(function (e) { root.querySelector('#sub').textContent = '加载失败：' + e.message; }); return; }
+        if (ev.key === 'dictDoc' || ev.key === 'dictSelectedFieldSet' || ev.key === 'dictSelectedFieldIndex' || ev.key === 'dictDirty' || ev.key === 'dictFieldTick') render();
+      };
+      ctx.on('change', onChange);
+      host.onDispose = function () { try { ctx.off('change', onChange); } catch (e) {} };
+      // 初始：若已有选中文件且未加载 doc，则加载；否则直接渲染
+      var sel0 = get('dictSelectedFile');
+      if (sel0 && !get('dictDoc')) loadDoc(sel0).catch(function () { render(); });
+      else render();
+    } else {
+      root.querySelector('#tablewrap').innerHTML = '<div class="dx-empty">workspace.context 不可用</div>';
+    }
+  </script>
+</div>

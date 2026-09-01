@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "domain": "cr",
+  "pages": [
+    {
+      "id": "cr.explorer.explorer-menu.testdlg",
+      "name": "inner_page2",
+      "details": "inner_page2",
+      "domain": "cr",
+      "app": "explorer",
+      "module": "explorer-menu",
+      "page": "testdlg",
+      "relPath": "cr/explorer/explorer-menu/testdlg.html",
+      "latestHtmlFile": "testdlg.html"
+    }
+  ]
+}

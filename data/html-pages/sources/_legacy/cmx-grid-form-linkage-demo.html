@@ -1,0 +1,39 @@
+<div data-node-id="n-root" style="display:flex;flex-direction:column;width:100%;height:100%;min-height:680px;gap:8px;padding:8px;box-sizing:border-box;background:var(--sapBackgroundColor,#fafafa);overflow:auto;">
+
+  <ui5-bar design="Header" accessible-role="Toolbar" data-node-id="n-hdr">
+    <ui5-label slot="startContent" data-node-id="n-hdr-t" wrapping-type="Normal" style="font-weight:800;font-size:1.05rem;color:var(--sapShellTitleColor,var(--sapTitleColor));">grid ↔ form 联动 · 四录入组件（模型面板驱动）</ui5-label>
+    <ui5-label slot="endContent" data-node-id="n-hdr-s" wrapping-type="Normal" style="color:var(--sapContent_LabelColor);font-size:0.8rem;">列模型 + 数据集在模型面板定义，grid 与 form 共用</ui5-label>
+    <ui5-button design="Emphasized" slot="endContent" icon="show" data-node-id="n-hdr-b" data-eventclick="dumpData();" accessible-role="Button" loading-delay="1000">读取数据集</ui5-button>
+  </ui5-bar>
+
+  <!-- 说明条 -->
+  <div data-node-id="n-tip" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 12px;background:var(--sapInformationBackground,#eaf4ff);border:1px solid var(--sapInformationBorderColor,#b3d4ff);border-radius:4px;font-size:0.78rem;color:var(--sapTextColor,#32363a);">
+    <span style="font-weight:700;" data-node-id="n-1">联动说明：</span>
+    <span data-node-id="n-2">① 点击 grid 任一行 → 下方 form 显示该行；</span>
+    <span data-node-id="n-3">② 在 form 里改值（或 grid 单元格双击编辑）→ 另一侧同步；</span>
+    <span style="padding:1px 8px;background:var(--sapButton_Background,#fff);color:var(--sapButton_TextColor,#0a6ed1);border-radius:10px;border:1px solid var(--sapButton_BorderColor,#cfe2ff);" data-node-id="n-4">4 列分别用 input / number / date / datetime 四组件</span>
+  </div>
+
+  <!-- 上区：grid（列表，所有行）。data-cmx-model-id 取列模型，master-slave 'rows' 路径绑为列表 -->
+  <div data-node-id="n-grid-box" style="display:flex;flex-direction:column;gap:6px;padding:10px;background:var(--sapList_Background,#fff);border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:6px;">
+    <div style="display:flex;align-items:center;gap:6px;" data-node-id="n-5">
+      <ui5-icon name="table-view" style="color:var(--sapHighlightColor);" design="Default" mode="Decorative" data-node-id="n-6"></ui5-icon>
+      <ui5-title level="H6" size="H6" style="margin:0;font-weight:800;color:var(--sapTitleColor);" wrapping-type="Normal" data-node-id="n-7">表格 · cmx-revo-grid（单元格编辑器）</ui5-title>
+    </div>
+    <cmx-revo-grid id="grid" data-cmx-model-id="rowsModel" data-cmx-master-slave-id="ms" data-cmx-dataset-id="rows" style="display: block; width: 100%; height: 240px;" data-node-id="n-8"></cmx-revo-grid>
+  </div>
+
+  <!-- 下区：form（单行，跟随 grid 选中行）。共用同一 rowsModel 生成字段，绑 master-slave 'rows' 路径为单行 -->
+  <div data-node-id="n-form-box" style="display:flex;flex-direction:column;gap:6px;padding:10px;background:var(--sapList_Background,#fff);border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:6px;">
+    <div style="display:flex;align-items:center;gap:6px;" data-node-id="n-9">
+      <ui5-icon name="edit" style="color:var(--sapHighlightColor);" design="Default" mode="Decorative" data-node-id="n-10"></ui5-icon>
+      <ui5-title level="H6" size="H6" style="margin:0;font-weight:800;color:var(--sapTitleColor);" wrapping-type="Normal" data-node-id="n-11">表单 · cmx-ui5-form（字段编辑器，跟随选中行）</ui5-title>
+    </div>
+    <cmx-ui5-form id="form" data-cmx-model-id="rowsModel" data-cmx-master-slave-id="ms" data-cmx-dataset-id="rows" style="display:block;width:100%;" data-node-id="n-12"></cmx-ui5-form>
+  </div>
+
+  <!-- 读取数据集回显 -->
+  <ui5-label id="echo" style="font-size:0.72rem;color:var(--sapContent_LabelColor);white-space:pre-wrap;min-height:1rem;padding:0 4px;" wrapping-type="Normal" data-node-id="n-13">点「读取数据集」查看当前共享数据 →</ui5-label>
+
+</div>
+<script type="application/json" id="__designer_meta__">{"pageData":[],"pageFns":[{"name":"setupViews","params":"","body":"/* 列模型(rowsModel)与主从协调器(ms)已由 init-page-models 依据视图上的\n   data-cmx-model-id / data-cmx-master-slave-id / data-cmx-dataset-id 自动创建并绑定。\n   grid 与 form 共用同一 rowsModel（列定义）与同一 ms 的 'rows' 路径（同一数据），\n   故 grid 选中行移动游标 → form 自动显示该行；form 改值 → grid 同步。\n   此处只做两件框架不替你做的事：① 开启 grid 编辑；② 灌初始数据。 */\nvar root = host.shadowRoot;\nvar grid = root.querySelector('#grid');\nif (grid) {\n  if (typeof grid.setEditable === 'function') grid.setEditable(true);\n  if (typeof grid.setOptions === 'function') grid.setOptions({ editable:true, selectionMode:'single', showRowIndex:true, fillHeight:true });\n}\nif (host.ms && typeof host.ms.setFlatData === 'function') {\n  host.ms.setFlatData({ rows: [\n    { id:'r1', name:'示例一', amount:1234.5,  day:'2026-06-01', ts:'2026-06-01 08:00:00' },\n    { id:'r2', name:'示例二', amount:9999.99, day:'2026-06-12', ts:'2026-06-12 09:30:00' },\n    { id:'r3', name:'示例三', amount:0,       day:'2026-12-31', ts:'2026-12-31 23:59:59' }\n  ] });\n}","readsVars":[],"writesVars":[]},{"name":"dumpData","params":"","body":"if (!host.ms) { alert('协调器 ms 尚未初始化'); return; }\nvar ds = host.ms.exportKeyValue ? host.ms.exportKeyValue() : null;\nvar rows = (ds && ds.rows) ? ds.rows : (host.rowsDs && host.rowsDs.rows ? host.rowsDs.rows : []);\nvar text = JSON.stringify(ds || rows, null, 2);\nvar echo = host.shadowRoot.querySelector('#echo');\nif (echo) echo.textContent = '当前数据集：' + text;\nconsole.log('[grid-form-linkage] 当前数据：', text);","readsVars":[],"writesVars":[]}],"pageServices":[],"pageDeps":[],"pageInterfaces":[{"name":"initPage","enabled":true,"body":"if (host.setupViews) host.setupViews();"},{"name":"onActivate","enabled":true,"body":""},{"name":"isDirty","enabled":true,"body":"return false;"},{"name":"getState","enabled":true,"body":"return {};"},{"name":"validate","enabled":true,"body":"return { valid: true };"}],"dataSources":[],"dataFlow":{"schema":[{"id":"rows","kind":"list","selector":"#grid"}],"aggregations":[],"relations":[]},"models":[{"id":"ms","modelType":"CmxMasterSlave","instanceId":"ms","props":{"schema":[{"id":"rows","children":[]}],"aggregations":[]},"events":{}},{"id":"rowsModel","modelType":"CmxColumnModel","instanceId":"rowsModel","props":{"datasetId":"rows","columns":[{"id":"name","caption":{"zh_CN":"文本(input)","en_US":"Text (input)"},"dataType":"VARCHAR","width":"160px","edit":{"mode":"cmx-text-input"},"display":{},"name":"文本(input)"},{"id":"amount","caption":{"zh_CN":"数字(number)","en_US":"Number (number)"},"dataType":"DECIMAL","width":"150px","edit":{"mode":"cmx-number-input"},"display":{"decimalDigits":2,"thousandSeparator":true},"decimalDigits":2,"name":"数字(number)"},{"id":"day","caption":{"zh_CN":"日期(date)","en_US":"Date (date)"},"dataType":"DATE","width":"150px","edit":{"mode":"cmx-date-input"},"display":{},"name":"日期(date)"},{"id":"ts","caption":{"zh_CN":"日期时间(datetime)","en_US":"DateTime (datetime)"},"dataType":"DATETIME","width":"190px","edit":{"mode":"cmx-datetime-input"},"display":{},"name":"日期时间(datetime)"},{"id":"dict","caption":{"zh_CN":"数据字典"},"dataType":"VARCHAR","edit":{"mode":"cmx-dict-select","dictCode":"DCT","valueField":"code","displayField":"name"},"display":{"mode":"text"},"name":"数据字典","dimType":"dimension","refDict":"dct"}],"columnGroups":[]},"events":{}}]}</script>

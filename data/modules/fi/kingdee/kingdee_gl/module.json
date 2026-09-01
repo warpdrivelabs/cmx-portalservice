@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "domain": "fi",
+  "application": "kingdee",
+  "module": "kingdee_gl",
+  "title": "金蝶总账样例",
+  "status": "active",
+  "resources": {
+    "metaDefinitions": [
+      {
+        "path": "meta/definitions/fi/kingdee/kingdee_gl"
+      }
+    ],
+    "dictEntries": [
+      {
+        "path": "dict/entries/fi/kingdee/kingdee_gl"
+      }
+    ],
+    "facts": [
+      {
+        "path": "fact/fi/kingdee/kingdee_gl"
+      }
+    ]
+  }
+}

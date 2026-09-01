@@ -1,0 +1,51 @@
+<div class="docbx-src" style="display:flex;flex-direction:column;height:100%;font:13px/1.45 -apple-system,'Segoe UI','PingFang SC',sans-serif;color:var(--sapTextColor,#1d2d3e);background:var(--sapBackgroundColor,#fff);box-sizing:border-box">
+  <div style="padding:9px 12px;border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);font-weight:700;flex:0 0 auto;display:flex;justify-content:space-between;align-items:center">
+    <span>业务单据定义 · 源码</span>
+    <span id="state" style="font-size:12px;font-weight:400;color:var(--sapContent_LabelColor,#6a6d70)"></span>
+  </div>
+  <textarea id="src" spellcheck="false" style="flex:1 1 auto;width:100%;box-sizing:border-box;border:0;padding:10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--sapShell_Background,#f7f7f7);color:inherit;resize:none;outline:none"></textarea>
+
+  <script>
+    /* 业务单据定义 · 源码页（content 区第二 tab）：展示/编辑 docDoc 的 JSON，与 manager/inspector 同步。 */
+    var root = host.renderRoot;
+    var ctx = workspace && workspace.context;
+    var ta = root.querySelector('#src');
+    var stateEl = root.querySelector('#state');
+    var editing = false;
+    function get (k) { return ctx ? ctx.get(k) : null; }
+    function set (k, v) { if (ctx) ctx.set(k, v); }
+
+    function render () {
+      if (editing) return;
+      var doc = get('docDoc');
+      ta.value = doc ? JSON.stringify(doc, null, 2) : '';
+      stateEl.textContent = doc ? (get('docDirty') ? '未保存' : '已保存') : '（未加载，请在左侧选择单据）';
+    }
+
+    ta.addEventListener('focus', function () { editing = true; });
+    ta.addEventListener('blur', function () { editing = false; render(); });
+    ta.addEventListener('input', function () {
+      var txt = ta.value.trim();
+      if (!txt) { stateEl.textContent = '空'; return; }
+      try {
+        var doc = JSON.parse(txt);
+        if (!Array.isArray(doc.voucherTables)) doc.voucherTables = doc.voucherTables || [];
+        set('docDoc', doc); set('docDirty', true); set('docFieldTick', Date.now());
+        stateEl.textContent = '源码已修改 · 未保存';
+        stateEl.style.color = 'var(--sapContent_LabelColor,#6a6d70)';
+      } catch (e) {
+        stateEl.textContent = 'JSON 错误：' + e.message;
+        stateEl.style.color = 'var(--sapNegativeTextColor,#b00)';
+      }
+    });
+
+    if (ctx) {
+      var onChange = function (ev) { if (['docDoc', 'docDirty', 'docFieldTick'].indexOf(ev.key) >= 0) render(); };
+      ctx.on('change', onChange);
+      host.onDispose = function () { try { ctx.off('change', onChange); } catch (e) {} };
+      render();
+    } else {
+      stateEl.textContent = 'workspace.context 不可用';
+    }
+  </script>
+</div>

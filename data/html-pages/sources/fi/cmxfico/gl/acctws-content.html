@@ -1,0 +1,295 @@
+<div class="acct-ws-root" style="display:flex;flex-direction:column;height:100%;box-sizing:border-box;gap:3px;padding:3px;background:var(--sapBackgroundColor,#f7f7f7);">
+  <style>
+    .acct-ws-root {
+      --acct-cyan: #00b4d8; --acct-violet: #7c3aed; --acct-mint: #10b981; --acct-warn: #f59e0b;
+      --acct-asset: #0ea5e9; --acct-liab: #8b5cf6; --acct-equity: #6366f1;
+      --acct-rev: #10b981; --acct-exp: #f43f5e; --acct-cost: #f59e0b;
+      --aux-profit: #7c3aed; --aux-project: #00b4d8; --aux-partner: #6366f1;
+      --aux-customer: #10b981; --aux-vendor: #ef4444; --aux-dept: #0ea5e9;
+      --aux-employee: #14b8a6; --aux-bank: #0284c7;
+      --acct-border: color-mix(in srgb, var(--acct-cyan) 14%, var(--sapGroup_ContentBorderColor, #e0e0e0));
+      --acct-edge: color-mix(in srgb, var(--sapTextColor, #32363a) 10%, transparent);
+      /* 左侧科目 Tab 栏宽度 */
+      --acct-side-tab-width: 48px;
+    }
+    .acct-main-panel {
+      height: 100%; min-height: 140px; display: flex; flex-direction: column;
+      background: color-mix(in srgb, var(--sapList_Background,#fff) 94%, var(--acct-violet) 6%);
+      border: 1px solid var(--acct-border); border-radius: 12px; overflow: hidden;
+      box-shadow: 0 4px 18px color-mix(in srgb, var(--acct-cyan) 8%, transparent);
+    }
+    .acct-hero {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px;
+      padding: 8px 12px; border-bottom: 1px solid var(--acct-border);
+      background: linear-gradient(105deg, color-mix(in srgb, var(--acct-cyan) 7%, var(--sapList_Background,#fff)), color-mix(in srgb, var(--acct-violet) 5%, transparent) 55%, transparent);
+      position: relative; overflow: hidden;
+    }
+    .acct-hero::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(90deg, transparent, transparent 4px, color-mix(in srgb, var(--acct-cyan) 3%, transparent) 4px, color-mix(in srgb, var(--acct-cyan) 3%, transparent) 5px);
+      opacity: 0.22; mix-blend-mode: overlay;
+    }
+    .acct-org-block {
+      flex: 0 1 auto; min-width: 100px; max-width: 28%; position: relative; z-index: 1;
+    }
+    .acct-org-core { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .acct-company-logo {
+      height: 28px; width: auto; max-width: 36px; flex-shrink: 0; object-fit: contain;
+      filter: drop-shadow(0 0 6px color-mix(in srgb, var(--acct-cyan) 35%, transparent));
+    }
+    .acct-org-name { font-size: 0.95rem; font-weight: 800; color: var(--sapTitleColor,#223548); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.25; min-width: 0; }
+    .acct-hud-panel {
+      flex: 1 1 360px; display: flex; flex-direction: row; align-items: center; justify-content: flex-end; gap: 5px;
+      min-width: 0; position: relative; z-index: 1; padding: 1px 0;
+    }
+    .acct-hud-unit {
+      flex-shrink: 0; align-self: stretch; display: flex; align-items: center; justify-content: center;
+      writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 0.14em;
+      font-size: 0.56rem; font-weight: 700; line-height: 1; padding: 0 3px 0 0;
+      color: color-mix(in srgb, var(--acct-cyan) 50%, var(--sapContent_LabelColor,#6a6d70));
+      border-right: 1px solid color-mix(in srgb, var(--acct-cyan) 16%, var(--acct-border));
+      opacity: 0.85; cursor: help;
+      transition: color 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
+    }
+    .acct-hud-unit:hover {
+      opacity: 1; color: var(--acct-cyan);
+      border-right-color: color-mix(in srgb, var(--acct-cyan) 35%, var(--acct-border));
+    }
+    .acct-hud-console {
+      flex: 0 1 auto; min-width: 0;
+      display: flex; flex-direction: column; gap: 2px;
+      padding: 0; background: none; border: none; box-shadow: none;
+    }
+    .acct-hud-row {
+      display: flex; align-items: baseline; justify-content: flex-end; flex-wrap: wrap;
+      gap: 2px 4px; line-height: 1.2;
+    }
+    .acct-kpi {
+      --kpi-hue: var(--acct-cyan);
+      position: relative;
+      display: inline-flex; align-items: baseline; white-space: nowrap; gap: 1px;
+      padding: 1px 5px 1px 7px; border-radius: 4px;
+      background: transparent; border: 1px solid transparent;
+      box-shadow: none; cursor: pointer;
+      transition: transform 0.22s cubic-bezier(0.34, 1.2, 0.64, 1), background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+    .acct-kpi::before {
+      content: ''; position: absolute; left: 0; top: 12%; bottom: 12%; width: 2px; border-radius: 2px;
+      background: var(--kpi-hue);
+      opacity: 0; transform: scaleY(0.35);
+      transition: opacity 0.2s ease, transform 0.28s cubic-bezier(0.34, 1.4, 0.64, 1);
+      box-shadow: 0 0 6px color-mix(in srgb, var(--kpi-hue) 50%, transparent);
+    }
+    .acct-kpi:hover {
+      transform: translateY(-1px);
+      background: color-mix(in srgb, var(--kpi-hue) 7%, transparent);
+      border-color: color-mix(in srgb, var(--kpi-hue) 20%, transparent);
+      box-shadow: 0 3px 14px color-mix(in srgb, var(--kpi-hue) 16%, transparent);
+    }
+    .acct-kpi:hover::before { opacity: 1; transform: scaleY(1); }
+    .acct-kpi[data-kind="A"] { --kpi-hue: var(--acct-asset); }
+    .acct-kpi[data-kind="L"] { --kpi-hue: var(--acct-liab); }
+    .acct-kpi[data-kind="E"] { --kpi-hue: var(--acct-equity); }
+    .acct-kpi[data-kind="R"] { --kpi-hue: var(--acct-rev); }
+    .acct-kpi[data-kind="X"] { --kpi-hue: var(--acct-exp); }
+    .acct-kpi[data-kind="C"] { --kpi-hue: var(--acct-cost); }
+    .acct-kpi[data-kind="in"] { --kpi-hue: var(--acct-mint); }
+    .acct-kpi[data-kind="out"] { --kpi-hue: var(--acct-warn); }
+    .acct-kpi-lbl {
+      flex-shrink: 0; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.02em;
+      color: var(--sapContent_LabelColor,#6a6d70);
+      transition: color 0.2s ease, letter-spacing 0.2s ease, text-decoration-color 0.2s ease;
+    }
+    .acct-kpi:hover .acct-kpi-lbl {
+      color: var(--kpi-hue); letter-spacing: 0.04em;
+      text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--kpi-hue) 45%, transparent);
+      text-underline-offset: 2px; text-decoration-thickness: 1px;
+    }
+    .acct-kpi-sep { flex-shrink: 0; opacity: 0.7; margin: 0 1px; font-size: 0.68rem; color: var(--sapContent_LabelColor,#6a6d70); transition: opacity 0.2s ease; }
+    .acct-kpi:hover .acct-kpi-sep { opacity: 1; color: var(--kpi-hue); }
+    .acct-kpi-val {
+      display: inline-block;
+      font-size: 0.74rem; font-weight: 800; font-variant-numeric: tabular-nums;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: var(--kpi-hue); text-shadow: 0 0 6px color-mix(in srgb, var(--kpi-hue) 18%, transparent);
+      transition: transform 0.22s cubic-bezier(0.34, 1.3, 0.64, 1), text-shadow 0.22s ease, color 0.2s ease, text-decoration-color 0.2s ease;
+    }
+    .acct-kpi:hover .acct-kpi-val {
+      transform: scale(1.06);
+      text-decoration: underline; text-decoration-color: var(--kpi-hue);
+      text-underline-offset: 2px; text-decoration-thickness: 1px;
+      text-shadow: 0 0 16px color-mix(in srgb, var(--kpi-hue) 55%, transparent), 0 0 4px color-mix(in srgb, var(--kpi-hue) 30%, transparent);
+    }
+    .acct-kpi:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--kpi-hue) 55%, transparent);
+      outline-offset: 1px;
+    }
+    .acct-hud-row:hover .acct-kpi:not(:hover) { opacity: 0.72; transition: opacity 0.25s ease; }
+    .acct-hud-row:hover .acct-kpi:hover { opacity: 1; }
+    .acct-eq {
+      flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+      width: 11px; height: 11px; margin: 0 -1px;
+      font-size: 0.5rem; font-weight: 900; line-height: 1;
+      color: var(--acct-cyan); font-family: ui-monospace, monospace;
+      text-shadow: 0 0 6px color-mix(in srgb, var(--acct-cyan) 40%, transparent);
+      opacity: 0.9;
+    }
+    .acct-hud-dot {
+      flex-shrink: 0; width: 3px; height: 3px; border-radius: 50%; margin: 0 1px; align-self: center;
+      background: linear-gradient(135deg, var(--acct-cyan), var(--acct-violet));
+      box-shadow: 0 0 4px color-mix(in srgb, var(--acct-cyan) 35%, transparent);
+      opacity: 0.6;
+    }
+    .acct-cash-arrow {
+      flex-shrink: 0; display: inline-flex; align-items: center; width: 10px; margin: 0 -2px; align-self: center;
+      color: var(--acct-cyan); opacity: 0.75;
+    }
+    .acct-cash-arrow ui5-icon { width: 0.65rem; height: 0.65rem; }
+    .acct-body { flex: 1; min-height: 0; display: flex; overflow: hidden; background: var(--sapList_Background,#fff); }
+    .acct-tabstrip {
+      flex: 0 0 var(--acct-side-tab-width); width: var(--acct-side-tab-width);
+      min-width: var(--acct-side-tab-width); max-width: var(--acct-side-tab-width);
+      display: flex; flex-direction: column;
+      border-right: 1px solid color-mix(in srgb, var(--acct-cyan) 18%, var(--acct-border));
+      background: linear-gradient(180deg, color-mix(in srgb, var(--acct-cyan) 4%, var(--sapList_Background,#fbfbfb)), var(--sapList_Background,#fbfbfb));
+      overflow: auto; box-sizing: border-box;
+    }
+    .acct-tab {
+      --tab-hue: var(--acct-cyan);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+      padding: 6px 2px; cursor: pointer; font-size: 0.64rem; line-height: 1.1;
+      color: var(--sapContent_LabelColor,#6a6d70); border-left: 3px solid transparent;
+      user-select: none; white-space: nowrap; box-sizing: border-box;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .acct-tab[data-type="A"] { --tab-hue: var(--acct-asset); }
+    .acct-tab[data-type="D"] { --tab-hue: var(--acct-liab); }
+    .acct-tab[data-type="K"] { --tab-hue: var(--acct-equity); }
+    .acct-tab[data-type="S"] { --tab-hue: var(--acct-rev); }
+    .acct-tab[data-type="P"] { --tab-hue: var(--acct-exp); }
+    .acct-tab[data-type="M"] { --tab-hue: var(--acct-cost); }
+    .acct-tab ui5-icon { width: 1.1rem; height: 1.1rem; color: inherit; flex-shrink: 0; transition: filter 0.15s ease; }
+    .acct-tab:hover {
+      color: color-mix(in srgb, var(--tab-hue) 72%, var(--sapContent_LabelColor,#6a6d70));
+      background: color-mix(in srgb, var(--tab-hue) 8%, transparent);
+    }
+    .acct-tab.active {
+      color: var(--tab-hue); font-weight: 700;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--tab-hue) 14%, transparent), color-mix(in srgb, var(--tab-hue) 7%, transparent));
+      border-left-color: var(--tab-hue);
+      box-shadow: inset 0 0 12px color-mix(in srgb, var(--tab-hue) 10%, transparent);
+    }
+    .acct-tab.active ui5-icon { filter: drop-shadow(0 0 5px color-mix(in srgb, var(--tab-hue) 42%, transparent)); }
+    .acct-panels {
+      flex: 1; min-width: 0; position: relative; box-sizing: border-box;
+      padding: 0; background: var(--sapList_Background,#fff);
+    }
+    .acct-grid { position: absolute; inset: 0; border-radius: 0; overflow: hidden; }
+    .acct-bottom {
+      height: 100%; min-height: 120px; display: flex; flex-direction: column;
+      background: var(--sapList_Background,#fff); border: 1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);
+      border-radius: 8px; overflow: hidden;
+    }
+    .aux-cloud-head {
+      flex: 0 0 auto; display: flex; align-items: center; gap: 10px; min-height: 34px;
+      padding: 4px 8px; border-bottom: 1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);
+      background: var(--sapList_Background,#fbfbfb); box-sizing: border-box;
+    }
+    .aux-cloud-title {
+      flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.82rem; font-weight: 800; color: var(--sapTitleColor,#223548); white-space: nowrap;
+    }
+    .aux-cloud-title ui5-icon { width: 1rem; height: 1rem; color: var(--acct-cyan); }
+    .aux-cloud {
+      flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 6px;
+      overflow-x: auto; scrollbar-width: thin;
+    }
+    .aux-chip {
+      --chip-hue: var(--acct-cyan);
+      flex: 0 0 auto; display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border: 1px solid transparent; border-radius: 14px;
+      background: transparent; color: var(--sapContent_LabelColor,#6a6d70);
+      font-size: 0.78rem; line-height: 1.2; cursor: pointer; user-select: none; white-space: nowrap;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .aux-chip[data-aux="profit"] { --chip-hue: var(--aux-profit); }
+    .aux-chip[data-aux="cost"] { --chip-hue: var(--acct-cost); }
+    .aux-chip[data-aux="project"] { --chip-hue: var(--aux-project); }
+    .aux-chip[data-aux="partner"] { --chip-hue: var(--aux-partner); }
+    .aux-chip[data-aux="customer"] { --chip-hue: var(--aux-customer); }
+    .aux-chip[data-aux="vendor"] { --chip-hue: var(--aux-vendor); }
+    .aux-chip[data-aux="dept"] { --chip-hue: var(--aux-dept); }
+    .aux-chip[data-aux="employee"] { --chip-hue: var(--aux-employee); }
+    .aux-chip[data-aux="bank"] { --chip-hue: var(--aux-bank); }
+    .aux-chip ui5-icon { width: 0.9rem; height: 0.9rem; color: inherit; transition: filter 0.15s ease; }
+    .aux-chip:hover {
+      color: color-mix(in srgb, var(--chip-hue) 75%, var(--sapContent_LabelColor,#6a6d70));
+      background: color-mix(in srgb, var(--chip-hue) 8%, var(--sapList_Hover_Background,#f0f0f0));
+    }
+    .aux-chip.active {
+      color: var(--chip-hue); font-weight: 700;
+      background: color-mix(in srgb, var(--chip-hue) 12%, var(--sapList_SelectionBackgroundColor,#e5f0fa));
+      border-color: color-mix(in srgb, var(--chip-hue) 30%, transparent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--chip-hue) 14%, transparent);
+    }
+    .aux-chip.active ui5-icon { filter: drop-shadow(0 0 4px color-mix(in srgb, var(--chip-hue) 40%, transparent)); }
+    .aux-balance-area { flex: 1; min-height: 0; position: relative; background: var(--sapList_Background,#fff); border: 0; border-radius: 0; overflow: hidden; }
+    .aux-balance-grid { position: absolute; inset: 0; border: 0; border-radius: 0; overflow: hidden; box-shadow: none; }
+    @media (max-width: 900px) {
+      .acct-org-block { max-width: 100%; }
+      .acct-hud-panel { width: 100%; }
+      .acct-hud-row { justify-content: flex-start; }
+    }
+  </style>
+  <cmx-split-pane id="acctSplit" orientation="horizontal" size="40%" min-first="140" min-second="120" splitter-size="3" style="display:block;flex:1;min-height:0;">
+  <!-- 上区:标题 hero + 科目 treegrid 一体面板 -->
+  <div slot="first" class="acct-main-panel">
+    <div class="acct-hero" aria-label="组织与科目汇总">
+      <div class="acct-org-block">
+        <div class="acct-org-core">
+          <img id="companyLogo" class="acct-company-logo" src="/portal/assets/cmx.png" alt="CMX" />
+          <span id="curOrg" class="acct-org-name">(全部组织)</span>
+        </div>
+      </div>
+      <div class="acct-hud-panel" aria-label="科目类型汇总，金额单位万元">
+        <span class="acct-hud-unit" title="以下汇总金额均以万元为单位">万元</span>
+        <div class="acct-hud-console">
+          <div class="acct-hud-row">
+            <span class="acct-kpi" data-kind="A" role="link" tabindex="0"><span class="acct-kpi-lbl">资产</span><span class="acct-kpi-sep">:</span><b id="sumA" class="acct-kpi-val">0.00</b></span>
+            <span class="acct-eq" aria-hidden="true">=</span>
+            <span class="acct-kpi" data-kind="L" role="link" tabindex="0"><span class="acct-kpi-lbl">负债</span><span class="acct-kpi-sep">:</span><b id="sumL" class="acct-kpi-val">0.00</b></span>
+            <span class="acct-eq" aria-hidden="true">+</span>
+            <span class="acct-kpi" data-kind="E" role="link" tabindex="0"><span class="acct-kpi-lbl">权益</span><span class="acct-kpi-sep">:</span><b id="sumE" class="acct-kpi-val">0.00</b></span>
+          </div>
+          <div class="acct-hud-row">
+            <span class="acct-kpi" data-kind="R" role="link" tabindex="0"><span class="acct-kpi-lbl">收入</span><span class="acct-kpi-sep">:</span><b id="sumR" class="acct-kpi-val">0.00</b></span>
+            <span class="acct-hud-dot" aria-hidden="true"></span>
+            <span class="acct-kpi" data-kind="X" role="link" tabindex="0"><span class="acct-kpi-lbl">费用</span><span class="acct-kpi-sep">:</span><b id="sumX" class="acct-kpi-val">0.00</b></span>
+            <span class="acct-hud-dot" aria-hidden="true"></span>
+            <span class="acct-kpi" data-kind="C" role="link" tabindex="0"><span class="acct-kpi-lbl">成本</span><span class="acct-kpi-sep">:</span><b id="sumC" class="acct-kpi-val">0.00</b></span>
+            <span class="acct-hud-dot" aria-hidden="true"></span>
+            <span class="acct-kpi" data-kind="in" role="link" tabindex="0"><span class="acct-kpi-lbl">现金流入</span><span class="acct-kpi-sep">:</span><b id="cashIn" class="acct-kpi-val">0.00</b></span>
+            <span class="acct-cash-arrow" aria-hidden="true"><ui5-icon name="arrow-right"></ui5-icon></span>
+            <span class="acct-kpi" data-kind="out" role="link" tabindex="0"><span class="acct-kpi-lbl">现金流出</span><span class="acct-kpi-sep">:</span><b id="cashOut" class="acct-kpi-val">0.00</b></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="acct-body">
+      <cmx-view-tabs id="acctTypeTabs" active="A" data-cmx-fill>
+        <div slot="tabs" class="acct-tabstrip"><div class="acct-tab active" data-type="A" data-view="A"><ui5-icon name="money-bills"></ui5-icon><span>资产</span></div><div class="acct-tab" data-type="D" data-view="D"><ui5-icon name="credit-card"></ui5-icon><span>负债</span></div><div class="acct-tab" data-type="K" data-view="K"><ui5-icon name="capital-projects"></ui5-icon><span>权益</span></div><div class="acct-tab" data-type="S" data-view="S"><ui5-icon name="sales-order"></ui5-icon><span>收入</span></div><div class="acct-tab" data-type="P" data-view="P"><ui5-icon name="receipt"></ui5-icon><span>支出</span></div><div class="acct-tab" data-type="M" data-view="M"><ui5-icon name="supplier"></ui5-icon><span>物料</span></div></div>
+        <div class="acct-panels"><cmx-tabulator id="grid_A" class="acct-grid" data-cmx-icon-field="icon" data-type="A" data-view-panel="A" data-cmx-height="100%" data-cmx-skin="flat" style="width:100%;height:100%;"></cmx-tabulator><cmx-tabulator id="grid_D" class="acct-grid" data-cmx-icon-field="icon" data-type="D" data-view-panel="D" data-cmx-height="100%" data-cmx-skin="flat" style="width:100%;height:100%;"></cmx-tabulator><cmx-tabulator id="grid_K" class="acct-grid" data-cmx-icon-field="icon" data-type="K" data-view-panel="K" data-cmx-height="100%" data-cmx-skin="flat" style="width:100%;height:100%;"></cmx-tabulator><cmx-tabulator id="grid_S" class="acct-grid" data-cmx-icon-field="icon" data-type="S" data-view-panel="S" data-cmx-height="100%" data-cmx-skin="flat" style="width:100%;height:100%;"></cmx-tabulator><cmx-tabulator id="grid_P" class="acct-grid" data-cmx-icon-field="icon" data-type="P" data-view-panel="P" data-cmx-height="100%" data-cmx-skin="flat" style="width:100%;height:100%;"></cmx-tabulator><cmx-tabulator id="grid_M" class="acct-grid" data-cmx-icon-field="icon" data-type="M" data-view-panel="M" data-cmx-height="100%" data-cmx-skin="flat" style="width:100%;height:100%;"></cmx-tabulator></div>
+      </cmx-view-tabs>
+    </div>
+  </div>
+  <!-- 下区:辅助核算 -->
+  <div slot="second" class="acct-bottom">
+    <div class="aux-cloud-head">
+      <span class="aux-cloud-title"><ui5-icon name="dimension"></ui5-icon><span>核算星云</span></span>
+      <div class="aux-cloud"><div class="aux-chip active" data-aux="profit" data-eventclick="selectAux('profit');"><ui5-icon name="business-objects-experience"></ui5-icon><span>利润中心</span></div><div class="aux-chip active" data-aux="cost" data-eventclick="selectAux('cost');"><ui5-icon name="supplier"></ui5-icon><span>成本中心</span></div><div class="aux-chip" data-aux="project" data-eventclick="selectAux('project');"><ui5-icon name="project-definition-triangle-2"></ui5-icon><span>项目</span></div><div class="aux-chip" data-aux="partner" data-eventclick="selectAux('partner');"><ui5-icon name="customer"></ui5-icon><span>往来单位</span></div><div class="aux-chip" data-aux="customer" data-eventclick="selectAux('customer');"><ui5-icon name="customer-and-supplier"></ui5-icon><span>客户</span></div><div class="aux-chip" data-aux="vendor" data-eventclick="selectAux('vendor');"><ui5-icon name="supplier"></ui5-icon><span>供应商</span></div><div class="aux-chip" data-aux="dept" data-eventclick="selectAux('dept');"><ui5-icon name="org-chart"></ui5-icon><span>部门</span></div><div class="aux-chip" data-aux="employee" data-eventclick="selectAux('employee');"><ui5-icon name="employee"></ui5-icon><span>员工</span></div><div class="aux-chip" data-aux="bank" data-eventclick="selectAux('bank');"><ui5-icon name="official-service"></ui5-icon><span>银行账户</span></div></div>
+    </div>
+    <div class="aux-balance-area"><cmx-revo-grid id="auxBalanceGrid" class="aux-balance-grid" data-cmx-skin="flat" style="display:block;width:100%;height:100%;"></cmx-revo-grid></div>
+  </div>
+  </cmx-split-pane>
+</div>
+<script type="application/json" id="__designer_meta__">{"pageData":[],"pageFns":[{"name":"selectType","params":"typeCode","body":"\nvar root=host.shadowRoot;\nvar lib=globalThis.__cmxDataComp||host.__cmxClasses;\nvar bridge=(lib&&lib.createPageModelBridge)?lib.createPageModelBridge(host,{pageId:'acctws-model',eventName:'cmx-acctws-model',root:root}):null;\nfunction $(s){return bridge?bridge.$(s):root.querySelector(s);}\nfunction $all(s){return bridge?bridge.$all(s):Array.prototype.slice.call(root.querySelectorAll(s));}\nfunction setText(id,v){if(bridge){bridge.setText(id,v);return;} var e=$('#'+id); if(e)e.textContent=(v==null?'':String(v));}\nfunction fmtAmt(x){var n=+x||0;return n.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});}\nfunction modelHost(){return bridge?bridge.modelHost():(host.workspace&&host.workspace.pageview&&host.workspace.pageview['acctws-model']||null);}\nfunction ctx(){return bridge?bridge.ctx():(host.workspace&&host.workspace.context||null);}\nfunction fireModelReady(kind){ if(bridge){bridge.fireModelReady(kind);return;} window.dispatchEvent(new CustomEvent('cmx-acctws-model',{detail:{kind:kind}})); }\nfunction fireModelEvent(kind, extra){ if(bridge){bridge.fireModelEvent(kind,extra);return;} var d={kind:kind}; extra=extra||{}; for(var k in extra)d[k]=extra[k]; window.dispatchEvent(new CustomEvent('cmx-acctws-model',{detail:d})); }\nfunction onModelReady(kind, cb){ return bridge?bridge.ready(kind,cb):(function(){var m=modelHost(); if(m&&(kind==='meta'?m.__metaReady:m.__ready)){cb(m);return function(){};} var h=function(){var mm=modelHost(); if(mm&&(kind==='meta'?mm.__metaReady:mm.__ready)){window.removeEventListener('cmx-acctws-model',h);cb(mm);}}; window.addEventListener('cmx-acctws-model',h); return function(){window.removeEventListener('cmx-acctws-model',h);};})(); }\nfunction onModelEvent(kind, cb){ return bridge?bridge.on(kind,cb):(function(){var h=function(ev){if(ev&&ev.detail&&ev.detail.kind===kind)cb(modelHost(),ev.detail);}; window.addEventListener('cmx-acctws-model',h); return function(){window.removeEventListener('cmx-acctws-model',h);};})(); }\n\nvar tabs=$('#acctTypeTabs');\nif(tabs&&typeof tabs.select==='function'){ tabs.select(typeCode); }\nelse {\n  $all('.acct-tab').forEach(function(el){ el.classList.toggle('active', el.getAttribute('data-type')===typeCode); });\n  $all('.acct-grid').forEach(function(g){ g.style.display=(g.getAttribute('data-type')===typeCode)?'block':'none'; });\n}\nhost.__curType=typeCode;\nvar g=$('#grid_'+typeCode); if(g){ setTimeout(function(){ try{ if(g.refreshLayout)g.refreshLayout(); else if(g.redraw)g.redraw(); }catch(e){} },0); }\n","readsVars":[],"writesVars":[]},{"name":"selectAux","params":"auxKey","body":"\nvar root=host.shadowRoot;\nvar lib=globalThis.__cmxDataComp||host.__cmxClasses;\nvar bridge=(lib&&lib.createPageModelBridge)?lib.createPageModelBridge(host,{pageId:'acctws-model',eventName:'cmx-acctws-model',root:root}):null;\nfunction $(s){return bridge?bridge.$(s):root.querySelector(s);}\nfunction $all(s){return bridge?bridge.$all(s):Array.prototype.slice.call(root.querySelectorAll(s));}\nfunction setText(id,v){if(bridge){bridge.setText(id,v);return;} var e=$('#'+id); if(e)e.textContent=(v==null?'':String(v));}\nfunction fmtAmt(x){var n=+x||0;return n.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});}\nfunction modelHost(){return bridge?bridge.modelHost():(host.workspace&&host.workspace.pageview&&host.workspace.pageview['acctws-model']||null);}\nfunction ctx(){return bridge?bridge.ctx():(host.workspace&&host.workspace.context||null);}\nfunction fireModelReady(kind){ if(bridge){bridge.fireModelReady(kind);return;} window.dispatchEvent(new CustomEvent('cmx-acctws-model',{detail:{kind:kind}})); }\nfunction fireModelEvent(kind, extra){ if(bridge){bridge.fireModelEvent(kind,extra);return;} var d={kind:kind}; extra=extra||{}; for(var k in extra)d[k]=extra[k]; window.dispatchEvent(new CustomEvent('cmx-acctws-model',{detail:d})); }\nfunction onModelReady(kind, cb){ return bridge?bridge.ready(kind,cb):(function(){var m=modelHost(); if(m&&(kind==='meta'?m.__metaReady:m.__ready)){cb(m);return function(){};} var h=function(){var mm=modelHost(); if(mm&&(kind==='meta'?mm.__metaReady:mm.__ready)){window.removeEventListener('cmx-acctws-model',h);cb(mm);}}; window.addEventListener('cmx-acctws-model',h); return function(){window.removeEventListener('cmx-acctws-model',h);};})(); }\nfunction onModelEvent(kind, cb){ return bridge?bridge.on(kind,cb):(function(){var h=function(ev){if(ev&&ev.detail&&ev.detail.kind===kind)cb(modelHost(),ev.detail);}; window.addEventListener('cmx-acctws-model',h); return function(){window.removeEventListener('cmx-acctws-model',h);};})(); }\n\nvar chip=$all('.aux-chip').filter(function(el){ return el.getAttribute('data-aux')===auxKey; })[0];\nif(chip) chip.classList.toggle('active');\nvar keys=$all('.aux-chip.active').map(function(el){ return el.getAttribute('data-aux'); }).filter(Boolean);\nif(!keys.length&&chip){ chip.classList.add('active'); keys=[auxKey]; }\nhost.__curAuxList=keys;\nhost.__curAux=keys[0]||auxKey;\nif(host.refreshAuxBalance) host.refreshAuxBalance(keys);\n","readsVars":[],"writesVars":[]}],"pageServices":[],"pageDeps":[],"pageInterfaces":[{"name":"initPage","enabled":true,"body":"\nvar root=host.shadowRoot;\nvar lib=globalThis.__cmxDataComp||host.__cmxClasses;\nvar bridge=(lib&&lib.createPageModelBridge)?lib.createPageModelBridge(host,{pageId:'acctws-model',eventName:'cmx-acctws-model',root:root}):null;\nfunction $(s){return bridge?bridge.$(s):root.querySelector(s);}\nfunction $all(s){return bridge?bridge.$all(s):Array.prototype.slice.call(root.querySelectorAll(s));}\nfunction setText(id,v){if(bridge){bridge.setText(id,v);return;} var e=$('#'+id); if(e)e.textContent=(v==null?'':String(v));}\nfunction fmtAmt(x){var n=+x||0;return n.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});}\nfunction modelHost(){return bridge?bridge.modelHost():(host.workspace&&host.workspace.pageview&&host.workspace.pageview['acctws-model']||null);}\nfunction ctx(){return bridge?bridge.ctx():(host.workspace&&host.workspace.context||null);}\nfunction fireModelReady(kind){ if(bridge){bridge.fireModelReady(kind);return;} window.dispatchEvent(new CustomEvent('cmx-acctws-model',{detail:{kind:kind}})); }\nfunction fireModelEvent(kind, extra){ if(bridge){bridge.fireModelEvent(kind,extra);return;} var d={kind:kind}; extra=extra||{}; for(var k in extra)d[k]=extra[k]; window.dispatchEvent(new CustomEvent('cmx-acctws-model',{detail:d})); }\nfunction onModelReady(kind, cb){ return bridge?bridge.ready(kind,cb):(function(){var m=modelHost(); if(m&&(kind==='meta'?m.__metaReady:m.__ready)){cb(m);return function(){};} var h=function(){var mm=modelHost(); if(mm&&(kind==='meta'?mm.__metaReady:mm.__ready)){window.removeEventListener('cmx-acctws-model',h);cb(mm);}}; window.addEventListener('cmx-acctws-model',h); return function(){window.removeEventListener('cmx-acctws-model',h);};})(); }\nfunction onModelEvent(kind, cb){ return bridge?bridge.on(kind,cb):(function(){var h=function(ev){if(ev&&ev.detail&&ev.detail.kind===kind)cb(modelHost(),ev.detail);}; window.addEventListener('cmx-acctws-model',h); return function(){window.removeEventListener('cmx-acctws-model',h);};})(); }\n\nvar ACCT_TYPES=[{\"code\":\"A\",\"label\":\"资产\",\"icon\":\"money-bills\",\"role\":\"asset\"},{\"code\":\"D\",\"label\":\"负债\",\"icon\":\"credit-card\",\"role\":\"liability\"},{\"code\":\"K\",\"label\":\"权益\",\"icon\":\"capital-projects\",\"role\":\"equity\"},{\"code\":\"S\",\"label\":\"收入\",\"icon\":\"sales-order\",\"role\":\"revenue\"},{\"code\":\"P\",\"label\":\"支出\",\"icon\":\"receipt\",\"role\":\"expense\"},{\"code\":\"M\",\"label\":\"物料\",\"icon\":\"supplier\",\"role\":\"material\"}];\nsetText('statusText','等待模型...');\nhost.__curType='A';\nhost.__curAux='profit';\nhost.__curAuxList=['profit','cost'];\nfunction refreshAcctView(typeCode){\n  host.__curType=typeCode||host.__curType||'A';\n  var g=$('#grid_'+host.__curType);\n  if(g){ setTimeout(function(){ try{ if(g.refreshLayout)g.refreshLayout(); else if(g.redraw)g.redraw(); }catch(e){} },0); }\n}\nfunction initAcctTypeTabs(){\n  var tabs=$('#acctTypeTabs'); if(!tabs||tabs.__wired)return; tabs.__wired=true;\n  tabs.addEventListener('cmx-view-change', function(ev){ refreshAcctView(ev&&ev.detail&&ev.detail.view); });\n}\ninitAcctTypeTabs();\n\n\nvar AUX_DICTS={\n  profit:{key:'profit',label:'利润中心',prefix:'PC',names:['总部利润中心','华东利润中心','华南利润中心','创新业务利润中心']},\n  cost:{key:'cost',label:'成本中心',prefix:'CC',names:['财务共享中心','制造成本中心','营销成本中心','研发成本中心']},\n  project:{key:'project',label:'项目',prefix:'PRJ',names:['ERP升级项目','数据治理项目','智能制造项目','费用管控项目']},\n  partner:{key:'partner',label:'往来单位',prefix:'BP',names:['华东客户','集团内部单位','长期供应商','战略合作伙伴']},\n  customer:{key:'customer',label:'客户',prefix:'CUST',names:['华东客户','零售客户','重点客户','海外客户']},\n  vendor:{key:'vendor',label:'供应商',prefix:'VEND',names:['原材料供应商','服务供应商','设备供应商','长期供应商']},\n  dept:{key:'dept',label:'部门',prefix:'DEPT',names:['财务部','采购部','销售部','研发部']},\n  employee:{key:'employee',label:'员工',prefix:'EMP',names:['张三','李四','王五','赵六']},\n  bank:{key:'bank',label:'银行账户',prefix:'BANK',names:['基本户','一般户','外币户','保证金户']}\n};\nfunction getCurrentAcctInfo(){ var c=ctx(); var v=c&&c.get&&c.get('currentAcct'); return (v&&typeof v==='object')?v:null; }\nfunction getCurrentOrgInfo(){ var c=ctx(); var v=c&&c.get&&c.get('currentOrg'); return (v&&typeof v==='object')?v:null; }\nfunction buildAuxColumns(){\n  lib=globalThis.__cmxDataComp||host.__cmxClasses||lib;\n  function C(p){ return new lib.CmxColumn(p); }\n  return [\n    C({id:'auxType',caption:'辅助类型',dataType:'VARCHAR',width:'100px'}),\n    C({id:'auxCode',caption:'辅助编码',dataType:'VARCHAR',width:'120px'}),\n    C({id:'auxName',caption:'辅助名称',dataType:'VARCHAR',width:'180px'}),\n    C({id:'acctCode',caption:'科目',dataType:'VARCHAR',width:'130px'}),\n    C({id:'orgName',caption:'组织',dataType:'VARCHAR',width:'150px'}),\n    C({id:'beginDebit',caption:'期初借方',dataType:'DECIMAL',width:'120px',display:{align:'right'}}),\n    C({id:'beginCredit',caption:'期初贷方',dataType:'DECIMAL',width:'120px',display:{align:'right'}}),\n    C({id:'periodDebit',caption:'本期借方',dataType:'DECIMAL',width:'120px',display:{align:'right'}}),\n    C({id:'periodCredit',caption:'本期贷方',dataType:'DECIMAL',width:'120px',display:{align:'right'}}),\n    C({id:'endBalance',caption:'期末余额',dataType:'DECIMAL',width:'120px',display:{align:'right'}})\n  ];\n}\nfunction makeAuxRows(auxKeys){\n  var keys=Array.isArray(auxKeys)?auxKeys:[auxKeys||'profit'];\n  var acct=getCurrentAcctInfo(); var org=getCurrentOrgInfo();\n  var acctCode=(acct&&(acct.acct_code||acct.code||acct.id))||'全部科目';\n  var orgName=(org&&(org.name||org.title))||'全部组织';\n  var rows=[];\n  keys.forEach(function(auxKey){\n    var def=AUX_DICTS[auxKey]||AUX_DICTS.profit;\n    def.names.forEach(function(name,i){\n      var seed=(auxKey.length*97)+(i+1)*113+String(acctCode).length*29+String(orgName).length*17;\n      var bd=seed*31, bc=seed*13, pd=seed*19, pc=seed*11;\n      rows.push({ id:def.key+'_'+(i+1), auxType:def.label, auxCode:def.prefix+'-'+String(i+1).padStart(3,'0'), auxName:name, acctCode:acctCode, orgName:orgName,\n        beginDebit:bd, beginCredit:bc, periodDebit:pd, periodCredit:pc, endBalance:bd-bc+pd-pc });\n    });\n  });\n  return rows;\n}\nfunction skinAuxGrid(g){ if(g)g.setAttribute('data-cmx-skin','flat'); }\nfunction initAuxBalanceGrid(){\n  var g=$('#auxBalanceGrid'); if(!g)return false;\n  if(host.__auxReady)return true;\n  lib=globalThis.__cmxDataComp||host.__cmxClasses||lib;\n  if(!lib||!lib.CmxColumn||!lib.CmxColumnModel||!lib.CmxDataSet)return false;\n  if(!g.setColumnModel||!g.setDataSet)return false;\n  host.__auxColModel=new lib.CmxColumnModel({datasetId:'auxBalance',caption:'辅助核算余额表'});\n  host.__auxColModel.setMembers(buildAuxColumns());\n  host.__auxDs=new lib.CmxDataSet({datasetId:'auxBalance'});\n  g.setColumnModel(host.__auxColModel);\n  if(g.setOptions) g.setOptions({ selectionMode:'none', readonly:true, editable:false, fillHeight:true, showRowIndex:true, showTotals:true, stretch:true });\n  g.setDataSet(host.__auxDs);\n  skinAuxGrid(g);\n  host.__auxReady=true;\n  return true;\n}\nhost.refreshAuxBalance=function(auxKeys){\n  var keys=Array.isArray(auxKeys)?auxKeys:(host.__curAuxList&&host.__curAuxList.length?host.__curAuxList:[auxKeys||host.__curAux||'profit']);\n  host.__curAuxList=keys; host.__curAux=keys[0]||'profit';\n  if(!initAuxBalanceGrid()){\n    clearTimeout(host.__auxInitRetryTimer);\n    host.__auxInitRetryTimer=setTimeout(function(){ host.refreshAuxBalance(keys); },120);\n    return;\n  }\n  var rows=makeAuxRows(keys);\n  if(host.__auxDs) host.__auxDs.setRows(rows);\n  var labels=keys.map(function(k){ return (AUX_DICTS[k]&&AUX_DICTS[k].label)||k; }).join('+');\n  setText('statusText','辅助核算余额表: '+labels+' / '+rows.length+' 行');\n  var g=$('#auxBalanceGrid'); if(g){ setTimeout(function(){ try{ if(g.refreshLayout)g.refreshLayout(); else if(g.redraw)g.redraw(); }catch(e){} },0); }\n};\n\nvar ACCT_HUE={A:'#0ea5e9',D:'#8b5cf6',K:'#6366f1',S:'#10b981',P:'#f43f5e',M:'#f59e0b'};\nfunction beautifyAcctGrid(grid){\n  if(!grid)return;\n  var hue=ACCT_HUE[grid.getAttribute('data-type')]||'#00b4d8';\n  function inject(){\n    var sr=grid.shadowRoot;\n    if(!sr||sr.getElementById('acctws-grid-skin'))return;\n    var st=document.createElement('style');\n    st.id='acctws-grid-skin';\n    st.textContent=':host{background:color-mix(in srgb,'+hue+' 3%,var(--sapList_Background,#fff));}.tabulator{border:0!important;border-radius:0;overflow:hidden;box-shadow:none!important;}.tabulator .tabulator-header{background:linear-gradient(105deg,color-mix(in srgb,'+hue+' 9%,var(--sapList_HeaderBackground,#f7f7f7)),color-mix(in srgb,#7c3aed 4%,transparent) 58%,transparent);border-bottom-color:color-mix(in srgb,'+hue+' 18%,var(--sapList_BorderColor,#d9d9d9));}.tabulator .tabulator-header .tabulator-col{background:transparent;border-right-color:color-mix(in srgb,'+hue+' 12%,var(--sapList_BorderColor,#d9d9d9));font-weight:700;font-size:.78rem;}.tabulator .tabulator-row{transition:background .18s ease,box-shadow .18s ease;}.tabulator .tabulator-row:hover{background:color-mix(in srgb,'+hue+' 7%,var(--sapList_Hover_Background,#f5f5f5))!important;}.tabulator .tabulator-row.tabulator-selected,.tabulator .tabulator-row.cmx-current-row{background:linear-gradient(90deg,color-mix(in srgb,'+hue+' 14%,transparent),color-mix(in srgb,#7c3aed 7%,transparent))!important;box-shadow:inset 3px 0 0 '+hue+';}.tabulator .tabulator-row.tabulator-selected .tabulator-cell,.tabulator .tabulator-row.cmx-current-row .tabulator-cell{color:color-mix(in srgb,'+hue+' 85%,var(--sapTextColor,#32363a));font-weight:600;}.tabulator .tabulator-row .tabulator-cell .tabulator-data-tree-control{border-color:color-mix(in srgb,'+hue+' 35%,var(--sapContent_IconColor,#6a6d70));border-radius:2px;background:var(--sapList_Background,#fff);}.tabulator .tabulator-row:hover .tabulator-cell .tabulator-data-tree-control{border-color:'+hue+';background:color-mix(in srgb,'+hue+' 8%,var(--sapList_Background,#fff));}.tabulator .tabulator-row .tabulator-cell .tabulator-data-tree-control .tabulator-data-tree-control-expand,.tabulator .tabulator-row .tabulator-cell .tabulator-data-tree-control .tabulator-data-tree-control-expand:after,.tabulator .tabulator-row .tabulator-cell .tabulator-data-tree-control .tabulator-data-tree-control-collapse:after{background:color-mix(in srgb,'+hue+' 80%,var(--sapContent_IconColor,#6a6d70));}.cmx-tree-cell-icon{color:color-mix(in srgb,'+hue+' 75%,var(--sapHighlightColor,#0070f2));transition:transform .2s ease,filter .2s ease;}.tabulator .tabulator-row:hover .cmx-tree-cell-icon{transform:scale(1.08);filter:drop-shadow(0 0 5px color-mix(in srgb,'+hue+' 45%,transparent));}.tabulator .tabulator-row.tabulator-selected .cmx-tree-cell-icon,.tabulator .tabulator-row.cmx-current-row .cmx-tree-cell-icon{color:'+hue+';}';\n    sr.appendChild(st);\n  }\n  inject(); requestAnimationFrame(inject); setTimeout(inject,150);\n}\nfunction refreshGridSoon(g){\n  if(!g)return;\n  setTimeout(function(){ try{ if(g.refreshData)g.refreshData(); if(g.refreshLayout)g.refreshLayout(); else if(g.redraw)g.redraw(); }catch(e){} },0);\n}\nfunction bindGrids(m){\n  if(!m)return;\n  var pending=false;\n  ACCT_TYPES.forEach(function(t){\n    var g=$('#grid_'+t.code); if(!g){ pending=true; return; }\n    if(!g.setColumnModel||!g.setDataSet){ pending=true; return; }\n    if(m.colAcct&&g.__acctColModel!==m.colAcct){ g.setColumnModel(m.colAcct); g.__acctColModel=m.colAcct; }\n    if(g.setOptions&&!g.__acctOptionsReady){ g.setOptions({ dataTree:true, parentField:'parent_id', treeColumn:'name', treeStartExpanded:false, selectionMode:'manual', selectableRows:false, selectionCheckbox:true, selectionCheckboxWidth:34, movableColumns:true, layout:'fitDataFill' }); g.__acctOptionsReady=true; }\n    var v=m.acctView&&m.acctView(t.code);\n    if(v&&g.__acctDs!==v){ g.setDataSet(v); g.__acctDs=v; refreshGridSoon(g); }\n    else if(!v){ pending=true; }\n    beautifyAcctGrid(g);\n    if(!g.__wired){ g.__wired=true; g.addEventListener('cmx-row-selected', function(ev){ var id=ev&&ev.detail&&ev.detail.id; var row=null; try{ var ds=g._ds||g.__ds; row=ds&&ds.getRow&&(ds.getRow(id)||ds.getRow(String(id))); }catch(e){} row=row&&(row.toPlainObject?row.toPlainObject():row); var c=ctx(); if(c&&id!=null)c.set('currentAcct', {id:id, code:(row&&row.acct_code)||id, name:row&&row.name, title:[(row&&row.acct_code)||id,row&&row.name].filter(Boolean).join(' '), isLeaf:row&&row.is_leaf}); }); }\n  });\n  if(pending && (host.__acctBindRetry||0)<12){\n    host.__acctBindRetry=(host.__acctBindRetry||0)+1;\n    clearTimeout(host.__acctBindRetryTimer);\n    host.__acctBindRetryTimer=setTimeout(function(){ bindGrids(modelHost()); },160);\n  } else if(!pending){\n    host.__acctBindRetry=0;\n  }\n}\nfunction refreshSummary(m){\n  var s=m.acctSummary&&m.acctSummary(); if(!s)return; var c=s.count||{};\n  var demo=function(n,k){ return Math.round(((n||0)*128750.35)+((k||0)*1000)); };\n  var L=demo(c.L,1), E=demo(c.E,2), A=L+E;\n  setText('sumA', fmtAmt(A)); setText('sumL', fmtAmt(L)); setText('sumE', fmtAmt(E));\n  setText('sumR', fmtAmt(demo(c.R,3))); setText('sumX', fmtAmt(demo(c.X,4))); setText('sumC', fmtAmt(demo(c.C,5)));\n  var inBase=(c.A||0)+(c.R||0), outBase=(c.X||0)+(c.C||0)+(c.L||0);\n  setText('cashIn', fmtAmt(demo(inBase,6))); setText('cashOut', fmtAmt(demo(outBase,7)));\n}\nonModelReady('data', function(m){\n  bindGrids(m); refreshSummary(m);\n  /* 当前组织名:读 context.currentOrg(explorer 选中);并订阅变化 */\n  var c=ctx();\n  var DEFAULT_COMPANY_LOGO='/portal/assets/cmx.png';\n  function companyLogoUrl(o){ return (o&&(o.logo||o.logoUrl||o.companyLogo))||DEFAULT_COMPANY_LOGO; }\n  function orgText(o){ if(o&&typeof o!=='object')return String(o); return (o&&(o.name||o.title||o.displayValue||o.code||o.id)) || '(全部组织)'; }\n  function showOrg(o){\n    setText('curOrg', orgText(o));\n    var img=$('#companyLogo'); if(img){ img.src=companyLogoUrl(o); img.alt=orgText(o); }\n  }\n  function syncOrgFromContext(){ var cc=ctx(); showOrg(cc&&cc.get&&cc.get('currentOrg')); }\n  if(c){ syncOrgFromContext(); c.on('change', function(e){ if(e.key==='currentOrg'){ showOrg(e.value); host.refreshAuxBalance(host.__curAuxList||[host.__curAux]); } if(e.key==='currentAcct'){ host.refreshAuxBalance(host.__curAuxList||[host.__curAux]); } }); }\n  setTimeout(syncOrgFromContext,0);\n  setTimeout(syncOrgFromContext,160);\n  host.refreshAuxBalance(host.__curAuxList||[host.__curAux]);\n  if(!host.__auxReady)setText('statusText','');\n});\nonModelEvent('accts', function(m){ bindGrids(m); refreshSummary(m); host.refreshAuxBalance(host.__curAuxList||[host.__curAux]); });\n"},{"name":"getPageApi","enabled":true,"body":"return {};"},{"name":"isDirty","enabled":true,"body":"return false;"}],"dataSources":[],"dataFlow":{"schema":[],"aggregations":[],"relations":[]},"models":[]}</script>

@@ -1,0 +1,784 @@
+{
+  "generatedAt": "2026-06-24T03:29:25.474Z",
+  "dataRoot": "/Users/nanomesh/Workspace/presentation/CMXPortalManager/cmx-node-server/data",
+  "modules": [
+    {
+      "domain": "cr",
+      "application": "explorer",
+      "module": "explorer-menu",
+      "title": "CR Explorer 菜单页面示例",
+      "manifestPath": "modules/cr/explorer/explorer-menu/module.json",
+      "aliases": [],
+      "resources": {
+        "htmlPages": {
+          "roots": [
+            "html-pages/sources/cr/explorer/explorer-menu"
+          ],
+          "fileCount": 1,
+          "sampleFiles": [
+            "html-pages/sources/cr/explorer/explorer-menu/testdlg.html"
+          ]
+        },
+        "htmlPageIndex": {
+          "roots": [
+            "html-pages/index/cr.pages.json"
+          ],
+          "fileCount": 1,
+          "sampleFiles": [
+            "html-pages/index/cr.pages.json"
+          ]
+        }
+      },
+      "missingResourceRoots": []
+    },
+    {
+      "domain": "fi",
+      "application": "cmxfico",
+      "module": "gl",
+      "title": "会计核算管理 / 总账",
+      "manifestPath": "modules/fi/cmxfico/gl/module.json",
+      "aliases": [
+        "fi.cmxfico.gl",
+        "cmxfico.gl"
+      ],
+      "resources": {
+        "activities": {
+          "roots": [
+            "activities/fiportal.json"
+          ],
+          "fileCount": 1,
+          "sampleFiles": [
+            "activities/fiportal.json"
+          ]
+        },
+        "menus": {
+          "roots": [
+            "menu-pages/fi/cmxfico/gl/explorer-menu.json"
+          ],
+          "fileCount": 1,
+          "sampleFiles": [
+            "menu-pages/fi/cmxfico/gl/explorer-menu.json"
+          ]
+        },
+        "htmlPages": {
+          "roots": [
+            "html-pages/sources/fi/cmxfico/gl"
+          ],
+          "fileCount": 41,
+          "sampleFiles": [
+            "html-pages/sources/fi/cmxfico/gl/account-def.html",
+            "html-pages/sources/fi/cmxfico/gl/acctws-content.html",
+            "html-pages/sources/fi/cmxfico/gl/acctws-explorer.html",
+            "html-pages/sources/fi/cmxfico/gl/acctws-model.html",
+            "html-pages/sources/fi/cmxfico/gl/acctws-prop-detail.html"
+          ]
+        },
+        "htmlPageIndex": {
+          "roots": [
+            "html-pages/index.json",
+            "html-pages/index/fi.pages.json",
+            "html-pages/pages-list.json"
+          ],
+          "fileCount": 1,
+          "sampleFiles": [
+            "html-pages/index/fi.pages.json"
+          ]
+        },
+        "metaDefinitions": {
+          "roots": [
+            "meta/definitions/fi/cmxfico/gl"
+          ],
+          "fileCount": 5,
+          "sampleFiles": [
+            "meta/definitions/fi/cmxfico/gl/cmxfico_dct_meta_v1.json",
+            "meta/definitions/fi/cmxfico/gl/cmxfico_doc_meta_v1.json",
+            "meta/definitions/fi/cmxfico/gl/gl_md_dct_meta_v1.json",
+            "meta/definitions/fi/cmxfico/gl/gl_md_doc_meta_v1.json",
+            "meta/definitions/fi/cmxfico/gl/samples/cnpc/cmxfico_dict_data.json"
+          ]
+        },
+        "flexibleCombinations": {
+          "roots": [
+            "meta/flexible-combination/fi/cmxfico/gl"
+          ],
+          "fileCount": 4,
+          "sampleFiles": [
+            "meta/flexible-combination/fi/cmxfico/gl/account.json",
+            "meta/flexible-combination/fi/cmxfico/gl/new_profile.json",
+            "meta/flexible-combination/fi/cmxfico/gl/trade.json",
+            "meta/flexible-combination/fi/cmxfico/gl/travel-expense.json"
+          ]
+        },
+        "dictRegistry": {
+          "roots": [
+            "dict/registry.json"
+          ],
+          "fileCount": 1,
+          "sampleFiles": [
+            "dict/registry.json"
+          ]
+        },
+        "dictEntries": {
+          "roots": [
+            "dict/entries/fi/cmxfico/gl"
+          ],
+          "fileCount": 35,
+          "sampleFiles": [
+            "dict/entries/fi/cmxfico/gl/cf_account_type.json",
+            "dict/entries/fi/cmxfico/gl/cf_acct_group.json",
+            "dict/entries/fi/cmxfico/gl/cf_acct_princ.json",
+            "dict/entries/fi/cmxfico/gl/cf_bus_area.json",
+            "dict/entries/fi/cmxfico/gl/cf_bus_partner.json"
+          ]
+        },
+        "dictSeeds": {
+          "roots": [
+            "dict/seeds/fi/cmxfico/gl"
+          ],
+          "fileCount": 16,
+          "sampleFiles": [
+            "dict/seeds/fi/cmxfico/gl/account_category_dict.json",
+            "dict/seeds/fi/cmxfico/gl/acct_entity.json",
+            "dict/seeds/fi/cmxfico/gl/bank.json",
+            "dict/seeds/fi/cmxfico/gl/cashflow_item.json",
+            "dict/seeds/fi/cmxfico/gl/contract.json"
+          ]
+        },
+        "facts": {
+          "roots": [
+            "fact/fi/cmxfico/gl"
+          ],
+          "fileCount": 105,
+          "sampleFiles": [
+            "fact/fi/cmxfico/gl/cmxfico_batch_page_00.json",
+            "fact/fi/cmxfico/gl/cmxfico_batch_page_01.json",
+            "fact/fi/cmxfico/gl/cmxfico_batch_page_02.json",
+            "fact/fi/cmxfico/gl/cmxfico_meta.json",
+            "fact/fi/cmxfico/gl/cmxfico_voucher_1000000001.json"
+          ]
+        },
+        "serviceCatalog": {
+          "roots": [
+            "service-catalog/fi/cmxfico/gl"
+          ],
+          "fileCount": 4,
+          "sampleFiles": [
+            "service-catalog/fi/cmxfico/gl/folder.bru",
+            "service-catalog/fi/cmxfico/gl/page-meta.bru",
+            "service-catalog/fi/cmxfico/gl/user-create.bru",
+            "service-catalog/fi/cmxfico/gl/user-list.bru"
+          ]
+        },
+        "tools": {
+          "roots": [
+            "../tools/fico-ws"
+          ],
+          "fileCount": 0,
+          "sampleFiles": []
+        }
+      },
+      "missingResourceRoots": []
+    },
+    {
+      "domain": "fi",
+      "application": "ebs",
+      "module": "ebs_gl",
+      "title": "Oracle EBS 总账样例",
+      "manifestPath": "modules/fi/ebs/ebs_gl/module.json",
+      "aliases": [],
+      "resources": {
+        "metaDefinitions": {
+          "roots": [
+            "meta/definitions/fi/ebs_gl"
+          ],
+          "fileCount": 4,
+          "sampleFiles": [
+            "meta/definitions/fi/ebs_gl/ebs_gl_dct_meta_v1.json",
+            "meta/definitions/fi/ebs_gl/ebs_gl_doc_meta_v1.json",
+            "meta/definitions/fi/ebs_gl/samples/cnpc/ebs_dict_data.json",
+            "meta/definitions/fi/ebs_gl/samples/cnpc/ebs_voucher_sample.json"
+          ]
+        },
+        "dictEntries": {
+          "roots": [
+            "dict/entries/fi/ebs/ebs_gl"
+          ],
+          "fileCount": 24,
+          "sampleFiles": [
+            "dict/entries/fi/ebs/ebs_gl/ebs_accounting_calendar.json",
+            "dict/entries/fi/ebs/ebs_gl/ebs_balance_type.json",
+            "dict/entries/fi/ebs/ebs_gl/ebs_coa_structure.json",
+            "dict/entries/fi/ebs/ebs_gl/ebs_code_combination.json",
+            "dict/entries/fi/ebs/ebs_gl/ebs_conversion_rate_type.json"
+          ]
+        },
+        "facts": {
+          "roots": [
+            "fact/fi/ebs/ebs_gl"
+          ],
+          "fileCount": 2,
+          "sampleFiles": [
+            "fact/fi/ebs/ebs_gl/ebs_voucher_jssale_sales.json",
+            "fact/fi/ebs/ebs_gl/ebs_vouchers.json"
+          ]
+        }
+      },
+      "missingResourceRoots": []
+    },
+    {
+      "domain": "fi",
+      "application": "kingdee",
+      "module": "kingdee_gl",
+      "title": "金蝶总账样例",
+      "manifestPath": "modules/fi/kingdee/kingdee_gl/module.json",
+      "aliases": [],
+      "resources": {
+        "metaDefinitions": {
+          "roots": [
+            "meta/definitions/fi/kingdee/kingdee_gl"
+          ],
+          "fileCount": 4,
+          "sampleFiles": [
+            "meta/definitions/fi/kingdee/kingdee_gl/kingdee_gl_dct_meta_v1.json",
+            "meta/definitions/fi/kingdee/kingdee_gl/kingdee_gl_doc_meta_v1.json",
+            "meta/definitions/fi/kingdee/kingdee_gl/samples/cnpc/kingdee_dict_data.json",
+            "meta/definitions/fi/kingdee/kingdee_gl/samples/cnpc/kingdee_voucher_sample.json"
+          ]
+        },
+        "dictEntries": {
+          "roots": [
+            "dict/entries/fi/kingdee/kingdee_gl"
+          ],
+          "fileCount": 27,
+          "sampleFiles": [
+            "dict/entries/fi/kingdee/kingdee_gl/kd_acc_dimension.json",
+            "dict/entries/fi/kingdee/kingdee_gl/kd_account.json",
+            "dict/entries/fi/kingdee/kingdee_gl/kd_account_book.json",
+            "dict/entries/fi/kingdee/kingdee_gl/kd_account_type.json",
+            "dict/entries/fi/kingdee/kingdee_gl/kd_accounting_org.json"
+          ]
+        },
+        "facts": {
+          "roots": [
+            "fact/fi/kingdee/kingdee_gl"
+          ],
+          "fileCount": 2,
+          "sampleFiles": [
+            "fact/fi/kingdee/kingdee_gl/kingdee_voucher_jssale_sales.json",
+            "fact/fi/kingdee/kingdee_gl/kingdee_vouchers.json"
+          ]
+        }
+      },
+      "missingResourceRoots": []
+    },
+    {
+      "domain": "fi",
+      "application": "sap",
+      "module": "sap_gl",
+      "title": "SAP 总账样例",
+      "manifestPath": "modules/fi/sap/sap_gl/module.json",
+      "aliases": [],
+      "resources": {
+        "metaDefinitions": {
+          "roots": [
+            "meta/definitions/fi/sap/sap_gl"
+          ],
+          "fileCount": 4,
+          "sampleFiles": [
+            "meta/definitions/fi/sap/sap_gl/samples/cnpc/fico_dict_data.json",
+            "meta/definitions/fi/sap/sap_gl/samples/cnpc/fico_voucher_sample.json",
+            "meta/definitions/fi/sap/sap_gl/sap_fi_dct_meta_v1.json",
+            "meta/definitions/fi/sap/sap_gl/sap_fi_doc_meta_v1.json"
+          ]
+        },
+        "dictEntries": {
+          "roots": [
+            "dict/entries/fi/sap/sap_gl"
+          ],
+          "fileCount": 31,
+          "sampleFiles": [
+            "dict/entries/fi/sap/sap_gl/sap_account_group.json",
+            "dict/entries/fi/sap/sap_gl/sap_account_type.json",
+            "dict/entries/fi/sap/sap_gl/sap_business_area.json",
+            "dict/entries/fi/sap/sap_gl/sap_business_partner.json",
+            "dict/entries/fi/sap/sap_gl/sap_chart_of_accounts.json"
+          ]
+        },
+        "facts": {
+          "roots": [
+            "fact/fi/sap/sap_gl"
+          ],
+          "fileCount": 2,
+          "sampleFiles": [
+            "fact/fi/sap/sap_gl/sap_voucher_jssale_sales.json",
+            "fact/fi/sap/sap_gl/sap_vouchers.json"
+          ]
+        }
+      },
+      "missingResourceRoots": []
+    },
+    {
+      "domain": "fi",
+      "application": "yonyou",
+      "module": "yonyou_gl",
+      "title": "用友总账样例",
+      "manifestPath": "modules/fi/yonyou/yonyou_gl/module.json",
+      "aliases": [],
+      "resources": {
+        "metaDefinitions": {
+          "roots": [
+            "meta/definitions/fi/yonyou/yonyou_gl"
+          ],
+          "fileCount": 4,
+          "sampleFiles": [
+            "meta/definitions/fi/yonyou/yonyou_gl/samples/cnpc/yonyou_dict_data.json",
+            "meta/definitions/fi/yonyou/yonyou_gl/samples/cnpc/yonyou_voucher_sample.json",
+            "meta/definitions/fi/yonyou/yonyou_gl/yonyou_gl_dct_meta_v1.json",
+            "meta/definitions/fi/yonyou/yonyou_gl/yonyou_gl_doc_meta_v1.json"
+          ]
+        },
+        "dictEntries": {
+          "roots": [
+            "dict/entries/fi/yonyou/yonyou_gl"
+          ],
+          "fileCount": 27,
+          "sampleFiles": [
+            "dict/entries/fi/yonyou/yonyou_gl/yy_account_book.json",
+            "dict/entries/fi/yonyou/yonyou_gl/yy_account_category.json",
+            "dict/entries/fi/yonyou/yonyou_gl/yy_account_subject.json",
+            "dict/entries/fi/yonyou/yonyou_gl/yy_accounting_org.json",
+            "dict/entries/fi/yonyou/yonyou_gl/yy_accounting_period.json"
+          ]
+        },
+        "facts": {
+          "roots": [
+            "fact/fi/yonyou/yonyou_gl"
+          ],
+          "fileCount": 2,
+          "sampleFiles": [
+            "fact/fi/yonyou/yonyou_gl/yonyou_voucher_jssale_sales.json",
+            "fact/fi/yonyou/yonyou_gl/yonyou_vouchers.json"
+          ]
+        }
+      },
+      "missingResourceRoots": []
+    },
+    {
+      "domain": "hr",
+      "application": "recruit",
+      "module": "candidate",
+      "title": "招聘候选人服务目录",
+      "manifestPath": "modules/hr/recruit/candidate/module.json",
+      "aliases": [],
+      "resources": {
+        "serviceCatalog": {
+          "roots": [
+            "service-catalog/hr/recruit/candidate"
+          ],
+          "fileCount": 2,
+          "sampleFiles": [
+            "service-catalog/hr/recruit/candidate/candidate-feed.bru",
+            "service-catalog/hr/recruit/candidate/folder.bru"
+          ]
+        }
+      },
+      "missingResourceRoots": []
+    }
+  ],
+  "summary": {
+    "moduleCount": 7,
+    "scannedFileCount": 428,
+    "mappedFileCount": 351,
+    "legacyOrGlobalCount": 56,
+    "unmappedCount": 21
+  },
+  "legacyOrGlobal": [
+    {
+      "type": "activities",
+      "path": "activities/crportal.json",
+      "classification": "global"
+    },
+    {
+      "type": "activities",
+      "path": "activities/domains.json",
+      "classification": "global"
+    },
+    {
+      "type": "activities",
+      "path": "activities/drportal.json",
+      "classification": "global"
+    },
+    {
+      "type": "activities",
+      "path": "activities/hrportal.json",
+      "classification": "global"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/account_category_dict.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/account.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/acct_entity.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/bank.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/cashflow_item.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/contract.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/cost_center.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/costCenter.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/currency.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/employee.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/fiscal_period.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/gl_account.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/org.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/partner_category_dict.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/partner.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/profit_center.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/project.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/report_group_dict.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/status.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "dictEntries",
+      "path": "dict/entries/voucher_type.json",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPageIndex",
+      "path": "html-pages/index/_legacy.pages.json",
+      "classification": "global"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/btm_view1.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/btm_view2.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/cmx-grid-form-linkage-demo.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/cmx-input-editors-demo.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/combo-box-demo.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/ctn_view1.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/ctn_view2.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/demo-master-slave.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/dict-select-demo.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/embed_page1.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/embed_page2.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/exp_view1.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/exp_view2.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/flt_view1.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/flt_view2.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/inner_page1.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/inner_page2.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/my-data-set.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/my-page-test101.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/my-page-test102.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/my-page-test103.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/outlook-mail-content.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/outlook-mail-explorer.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/pre_view1.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/pre_view2.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/pro_view1.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/pro_view2.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/tabulator-treegrid-demo.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/welcome.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "htmlPages",
+      "path": "html-pages/sources/_legacy/ws-shared-model.html",
+      "classification": "legacy"
+    },
+    {
+      "type": "serviceCatalog",
+      "path": "service-catalog/environments/dev.bru",
+      "classification": "global"
+    }
+  ],
+  "unmapped": [
+    {
+      "type": "formPages",
+      "path": "form-pages/sources/myform_20260504_152820279.json",
+      "classification": "unmapped"
+    },
+    {
+      "type": "formPages",
+      "path": "form-pages/sources/myform1_20260504_153457002.json",
+      "classification": "unmapped"
+    },
+    {
+      "type": "metaDefinitions",
+      "path": "meta/definitions/base/base_dct_meta_v1.json",
+      "classification": "unmapped"
+    },
+    {
+      "type": "metaDefinitions",
+      "path": "meta/definitions/base/base_doc_meta_v1.json",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/dict-base/dict-base-inspector.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/dict-base/dict-base-list.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/dict-base/dict-base-manager.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/dict-base/dict-base-source.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/doc-base/doc-base-inspector.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/doc-base/doc-base-list.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/doc-base/doc-base-manager.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/doc-base/doc-base-schema.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/doc-base/doc-base-source.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/interactive-demo.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/product-content.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "nativePages",
+      "path": "native-pages/sources/demo/product-explorer.html",
+      "classification": "unmapped"
+    },
+    {
+      "type": "serviceCatalog",
+      "path": "service-catalog/bruno.json",
+      "classification": "unmapped"
+    },
+    {
+      "type": "serviceCatalog",
+      "path": "service-catalog/collection.bru",
+      "classification": "unmapped"
+    },
+    {
+      "type": "serviceCatalog",
+      "path": "service-catalog/fi/folder.bru",
+      "classification": "unmapped"
+    },
+    {
+      "type": "serviceCatalog",
+      "path": "service-catalog/hr/folder.bru",
+      "classification": "unmapped"
+    },
+    {
+      "type": "serviceCatalog",
+      "path": "service-catalog/hr/recruit/folder.bru",
+      "classification": "unmapped"
+    }
+  ]
+}

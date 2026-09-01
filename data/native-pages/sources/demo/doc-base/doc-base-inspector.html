@@ -1,0 +1,186 @@
+<div class="docbx-insp" style="display:flex;flex-direction:column;height:100%;font:13px/1.45 -apple-system,'Segoe UI','PingFang SC',sans-serif;color:var(--sapTextColor,#1d2d3e);background:var(--sapBackgroundColor,#fff);box-sizing:border-box">
+  <div style="padding:9px 12px;border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);font-weight:700;flex:0 0 auto">属性检查器</div>
+  <div id="form" style="flex:1 1 auto;overflow:auto;padding:10px"></div>
+
+  <style>
+    .docbx-insp .dx-form{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px 10px;align-items:center}
+    .docbx-insp .dx-form label{color:var(--sapContent_LabelColor,#6a6d70)}
+    .docbx-insp input,.docbx-insp select,.docbx-insp textarea{width:100%;box-sizing:border-box;border:1px solid var(--sapField_BorderColor,#89919a);border-radius:4px;padding:5px 7px;background:var(--sapField_Background,#fff);color:inherit;font:inherit}
+    .docbx-insp textarea{min-height:48px;resize:vertical}
+    .docbx-insp .dx-section{border:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);border-radius:6px;background:var(--sapList_Background,#fff);overflow:hidden;margin-bottom:10px}
+    .docbx-insp .dx-section-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 9px;border-bottom:1px solid var(--sapGroup_TitleBorderColor,#e5e5e5);background:var(--sapList_HeaderBackground,#f4f6f9);font-weight:700}
+    .docbx-insp .dx-section-sub{font-size:12px;font-weight:400;color:var(--sapContent_LabelColor,#6a6d70)}
+    .docbx-insp .dx-tables{display:flex;flex-direction:column;gap:8px;padding:8px}
+    .docbx-insp .dx-table-card{border:1px solid var(--sapList_BorderColor,#e5e5e5);border-radius:6px;padding:8px;background:var(--sapTile_Background,#fff)}
+    .docbx-insp .dx-table-card.active{border-color:var(--sapHighlightColor,#0070f2);box-shadow:inset 3px 0 0 var(--sapHighlightColor,#0070f2)}
+    .docbx-insp .dx-table-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
+    .docbx-insp .dx-table-name{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .docbx-insp .dx-table-id{font-size:11px;color:var(--sapContent_LabelColor,#6a6d70)}
+    .docbx-insp .dx-empty{padding:12px;color:var(--sapContent_LabelColor,#6a6d70)}
+  </style>
+
+  <script>
+    /* 业务单据定义 · 检查器（property 区）：编辑当前层级表属性与选中字段完整属性（含单据特有 dimType/agg）。
+       读写同一 workspace.context（docDoc + docSelectedTable + docSelectedFieldIndex），与 manager 联动。 */
+    var root = host.renderRoot;
+    var ctx = workspace && workspace.context;
+    var DATA_TYPES = ['VARCHAR', 'BIGINT', 'INT', 'TINYINT', 'DECIMAL', 'DATE', 'DATETIME', 'TEXT'];
+    var DIM_TYPES = ['', 'dimension', 'measure', 'attribute', 'relation'];
+    var AGGS = ['', 'sum', 'count', 'avg', 'max', 'min'];
+    var EDIT_MODES = ['', 'cmx-text-input', 'cmx-number-input', 'cmx-date-input', 'cmx-datetime-input', 'cmx-dict-select', 'select', 'checkbox'];
+    var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+    function get (k) { return ctx ? ctx.get(k) : null; }
+    function set (k, v) { if (ctx) ctx.set(k, v); }
+    function optionHtml (items, value) { return items.map(function (it) { return '<option value="' + esc(it) + '"' + (String(value || '') === it ? ' selected' : '') + '>' + esc(it || '无') + '</option>'; }).join(''); }
+    function optionObjHtml (items, value, emptyLabel) {
+      var html = emptyLabel == null ? '' : '<option value="">' + esc(emptyLabel) + '</option>';
+      return html + items.map(function (it) { return '<option value="' + esc(it.value) + '"' + (String(value || '') === String(it.value) ? ' selected' : '') + '>' + esc(it.label) + '</option>'; }).join('');
+    }
+
+    function tables (doc) { return (doc && Array.isArray(doc.voucherTables)) ? doc.voucherTables : []; }
+    function tableKey (t) { return t ? String(t.id || t.tableName || t.name || '') : ''; }
+    function tableLabel (t) {
+      var key = tableKey(t);
+      var title = (t && (t.tableAlias || (t.caption && t.caption.zh_CN) || t.name || t.tableName || t.id)) || key;
+      return title + (key && key !== title ? ' (' + key + ')' : '');
+    }
+    function levelNo (level) {
+      var m = String(level || '').match(/(\d+)/);
+      return m ? Number(m[1]) : NaN;
+    }
+    function levelSortKey (level, fallback) {
+      var n = levelNo(level);
+      return Number.isFinite(n) ? n : 1000 + fallback;
+    }
+    function curTableObj () { var doc = get('docDoc'); var tn = get('docSelectedTable'); return tables(doc).find(function (t) { return t.tableName === tn || tableKey(t) === tn; }) || null; }
+    function curField () { var t = curTableObj(); if (!t || !Array.isArray(t.fields)) return null; return t.fields[get('docSelectedFieldIndex')] || null; }
+    function sameLevelTables (doc, t) {
+      if (!t) return [];
+      var level = t.level || '';
+      return tables(doc).filter(function (x) { return String(x.level || '') === String(level); });
+    }
+    function previousLevelTables (doc, t) {
+      if (!t) return [];
+      var all = tables(doc);
+      var curLevel = t.level || '';
+      var curNo = levelNo(curLevel);
+      if (Number.isFinite(curNo)) {
+        var direct = all.filter(function (x) { return levelNo(x.level) === curNo - 1; });
+        if (direct.length) return direct;
+      }
+      var levels = [];
+      all.forEach(function (x) {
+        var lv = x.level || '';
+        if (levels.indexOf(lv) < 0) levels.push(lv);
+      });
+      levels.sort(function (a, b) { return levelSortKey(a, levels.indexOf(a)) - levelSortKey(b, levels.indexOf(b)); });
+      var idx = levels.indexOf(curLevel);
+      if (idx <= 0) return [];
+      var prev = levels[idx - 1];
+      return all.filter(function (x) { return String(x.level || '') === String(prev); });
+    }
+    function parentValue (tbl, prevTables) {
+      return tbl.parentTable || (prevTables.length === 1 ? tableKey(prevTables[0]) : '');
+    }
+    function ensureDefaultParentTables (doc, currentTable) {
+      var changed = false;
+      sameLevelTables(doc, currentTable).forEach(function (tbl) {
+        var prev = previousLevelTables(doc, tbl);
+        if (!tbl.parentTable && prev.length === 1) {
+          tbl.parentTable = tableKey(prev[0]);
+          changed = true;
+        }
+      });
+      return changed;
+    }
+
+    function setPath (obj, path, value, type) {
+      var segs = path.split('.'); var leaf = segs.pop(); var node = obj;
+      segs.forEach(function (s) { if (!node[s] || typeof node[s] !== 'object') node[s] = {}; node = node[s]; });
+      if (type === 'boolean') node[leaf] = !!value;
+      else if (type === 'number') { if (value === '') delete node[leaf]; else { var n = Number(value); node[leaf] = Number.isFinite(n) ? n : value; } }
+      else if (value === '') delete node[leaf]; else node[leaf] = value;
+    }
+
+    function render () {
+      var box = root.querySelector('#form');
+      var doc = get('docDoc');
+      var t = curTableObj();
+      var f = curField();
+      if (!t) { box.innerHTML = '<div class="dx-empty">请选择单据 / 表</div>'; return; }
+      var filledDefaults = ensureDefaultParentTables(doc, t);
+      var sameTables = sameLevelTables(doc, t);
+      var prevTables = previousLevelTables(doc, t);
+      var parentOptions = prevTables.map(function (x) { return { value: tableKey(x), label: tableLabel(x) }; });
+      var tablePanels = sameTables.map(function (tbl, i) {
+        var idx = tables(doc).indexOf(tbl);
+        var val = parentValue(tbl, prevTables);
+        var parentControl = prevTables.length
+          ? '<select data-table-i="' + idx + '" data-table-p="parentTable">' + optionObjHtml(parentOptions, val, prevTables.length > 1 ? '请选择父表' : null) + '</select>'
+          : '<select disabled><option>根层级无父表</option></select>';
+        return '<div class="dx-table-card' + (tbl === t ? ' active' : '') + '">'
+          + '<div class="dx-table-title"><div class="dx-table-name">' + esc(tbl.tableAlias || tbl.tableName || tbl.name || tbl.id || ('表 ' + (i + 1))) + '</div><div class="dx-table-id">' + esc(tableKey(tbl)) + '</div></div>'
+          + '<div class="dx-form"><label>父表属性</label>' + parentControl
+          + '<label>层级</label><input value="' + esc(tbl.level || '') + '" readonly></div>'
+          + '</div>';
+      }).join('');
+      var tableHtml = '<div class="dx-section"><div class="dx-section-h"><span>本层表</span><span class="dx-section-sub">' + esc(t.level || '未分层') + ' · ' + sameTables.length + ' 表</span></div><div class="dx-tables">' + tablePanels + '</div></div>';
+      var rows = '<label>所属表</label><input value="' + esc((t.tableAlias || t.tableName) + ' (' + (t.level || '') + ')') + '" readonly>';
+      if (f) {
+        rows += '<label>字段ID</label><input data-p="id" value="' + esc(f.id || '') + '">'
+          + '<label>字段名称</label><input data-p="name" value="' + esc(f.name || '') + '">'
+          + '<label>标题</label><input data-p="caption.zh_CN" value="' + esc(f.caption && f.caption.zh_CN || '') + '">'
+          + '<label>数据类型</label><select data-p="dataType">' + optionHtml(DATA_TYPES, f.dataType) + '</select>'
+          + '<label>长度</label><input data-p="fieldLength" data-t="number" type="number" value="' + esc(f.fieldLength == null ? '' : f.fieldLength) + '">'
+          + '<label>整数位</label><input data-p="intDigits" data-t="number" type="number" value="' + esc(f.intDigits == null ? '' : f.intDigits) + '">'
+          + '<label>小数位</label><input data-p="decimalDigits" data-t="number" type="number" value="' + esc(f.decimalDigits == null ? '' : f.decimalDigits) + '">'
+          + '<label>维度类型</label><select data-p="dimType">' + optionHtml(DIM_TYPES, f.dimType) + '</select>'
+          + '<label>聚合方式</label><select data-p="agg">' + optionHtml(AGGS, f.agg) + '</select>'
+          + '<label>允许为空</label><input data-p="nullable" data-t="boolean" type="checkbox"' + (f.nullable !== false ? ' checked' : '') + '>'
+          + '<label>参照字典</label><input data-p="refDict" value="' + esc(f.refDict || '') + '">'
+          + '<label>参照字段</label><input data-p="refField" value="' + esc(f.refField || '') + '">'
+          + '<label>显示字段</label><input data-p="displayField" value="' + esc(f.displayField || '') + '">'
+          + '<label>录入控件</label><select data-p="edit.mode">' + optionHtml(EDIT_MODES, f.edit && f.edit.mode) + '</select>';
+      } else {
+        rows += '<label>当前字段</label><div>无（在设计页选择一行）</div>';
+      }
+      rows += '<label>保存状态</label><div>' + (get('docDirty') ? '未保存' : '已保存') + '</div>';
+      box.innerHTML = tableHtml + '<div class="dx-section"><div class="dx-section-h"><span>字段检查器</span><span class="dx-section-sub">' + esc(f ? (f.id || f.name || '') : '未选择字段') + '</span></div><div style="padding:8px"><div class="dx-form">' + rows + '</div></div></div>';
+      bind(box);
+      if (filledDefaults) { set('docDirty', true); set('docDoc', doc); set('docFieldTick', Date.now()); }
+    }
+
+    function bind (box) {
+      box.querySelectorAll('[data-table-p]').forEach(function (el) {
+        el.addEventListener('change', function () {
+          var doc = get('docDoc');
+          var tbl = tables(doc)[Number(el.getAttribute('data-table-i'))];
+          if (!tbl) return;
+          var p = el.getAttribute('data-table-p');
+          if (el.value === '') delete tbl[p]; else tbl[p] = el.value;
+          set('docDirty', true); set('docDoc', doc); set('docFieldTick', Date.now());
+        });
+      });
+      box.querySelectorAll('[data-p]').forEach(function (el) {
+        var evt = el.type === 'checkbox' ? 'change' : 'input';
+        el.addEventListener(evt, function () {
+          var f = curField(); if (!f) return;
+          var p = el.getAttribute('data-p');
+          setPath(f, p, el.type === 'checkbox' ? el.checked : el.value, el.getAttribute('data-t') || '');
+          if (p === 'id' && !f.name) f.name = el.value;
+          if (p === 'name' && !f.id) f.id = el.value;
+          set('docDirty', true); set('docDoc', get('docDoc')); set('docFieldTick', Date.now());
+        });
+      });
+    }
+
+    if (ctx) {
+      var onChange = function (ev) { if (['docDoc', 'docSelectedTable', 'docSelectedFieldIndex', 'docDirty', 'docFieldTick'].indexOf(ev.key) >= 0) render(); };
+      ctx.on('change', onChange);
+      host.onDispose = function () { try { ctx.off('change', onChange); } catch (e) {} };
+      render();
+    } else {
+      root.querySelector('#form').innerHTML = '<div class="dx-empty">workspace.context 不可用</div>';
+    }
+  </script>
+</div>

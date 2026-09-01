@@ -1,0 +1,88 @@
+<div class="docbx-schema" style="display:flex;flex-direction:column;height:100%;font:13px/1.45 -apple-system,'Segoe UI','PingFang SC',sans-serif;color:var(--sapTextColor,#1d2d3e);background:var(--sapBackgroundColor,#fff);box-sizing:border-box">
+  <div style="padding:9px 12px;border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);font-weight:700;flex:0 0 auto;display:flex;justify-content:space-between;align-items:center">
+    <span>业务单据定义 · Schema（展开结构 · 只读）</span>
+    <span id="state" style="font-size:12px;font-weight:400;color:var(--sapContent_LabelColor,#6a6d70)"></span>
+  </div>
+  <div id="body" style="flex:1 1 auto;overflow:auto;padding:12px"></div>
+
+  <style>
+    .docbx-schema .sx-table{border:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);border-radius:6px;margin-bottom:12px;overflow:hidden}
+    .docbx-schema .sx-head{padding:8px 10px;font-weight:700;background:var(--sapList_HeaderBackground,#f4f6f9);border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);display:flex;align-items:center;gap:8px}
+    .docbx-schema .sx-lvl{font-size:11px;font-weight:700;background:var(--sapInformationBackground,#eaf4ff);color:var(--sapInformationColor,#0a6ed1);border-radius:10px;padding:1px 7px}
+    .docbx-schema .sx-refs{font-size:12px;color:var(--sapContent_LabelColor,#6a6d70);font-weight:400}
+    .docbx-schema table{width:100%;border-collapse:collapse;font-size:12px}
+    .docbx-schema th,.docbx-schema td{border-bottom:1px solid var(--sapList_BorderColor,#eee);padding:4px 8px;text-align:left}
+    .docbx-schema th{color:var(--sapContent_LabelColor,#6a6d70);font-weight:600}
+    .docbx-schema .sx-rel{margin:10px 0;padding:10px;border:1px dashed var(--sapGroup_TitleBorderColor,#c8ccd1);border-radius:6px;font-size:12px}
+    .docbx-schema .sx-tag{display:inline-block;background:var(--sapNeutralBackground,#eef1f4);border-radius:4px;padding:1px 6px;margin:0 4px 4px 0;font-size:11px}
+    .docbx-schema .dx-empty{padding:12px;color:var(--sapContent_LabelColor,#6a6d70)}
+  </style>
+
+  <script>
+    /* 业务单据定义 · Schema 页（content 区第三 tab，只读）：把多层表结构 + 主从关系 + 聚合
+       展开可视化。base 引用字段集（documentFieldSets）以标签列出（真实字段在 base 文件，此处只展示引用）。 */
+    var root = host.renderRoot;
+    var ctx = workspace && workspace.context;
+    var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+    function get (k) { return ctx ? ctx.get(k) : null; }
+
+    function render () {
+      var doc = get('docDoc');
+      var box = root.querySelector('#body');
+      root.querySelector('#state').textContent = doc ? (get('docDirty') ? '未保存（基于当前编辑态展开）' : '') : '';
+      if (!doc) { box.innerHTML = '<div class="dx-empty">请在左侧选择单据文件</div>'; return; }
+      var html = '';
+      // 层级结构（voucherSchema.schema）
+      var vs = doc.voucherSchema || {};
+      var tables = Array.isArray(doc.voucherTables) ? doc.voucherTables : [];
+      var byName = {}; tables.forEach(function (t) { byName[t.tableName] = t; });
+
+      (Array.isArray(vs.schema) ? vs.schema : []).forEach(function (layer) {
+        (Array.isArray(layer) ? layer : []).forEach(function (node) {
+          var t = byName[node.id] || {};
+          var fields = Array.isArray(t.fields) ? t.fields : [];
+          var refs = Array.isArray(t.documentFieldSets) ? t.documentFieldSets : [];
+          html += '<div class="sx-table">'
+            + '<div class="sx-head"><span class="sx-lvl">' + esc(node.level || '') + '</span><span>' + esc(node.levelName || t.tableAlias || node.id) + '</span><span class="sx-refs">' + esc(node.id) + '</span></div>'
+            + '<div style="padding:8px 10px">';
+          if (refs.length) html += '<div style="margin-bottom:6px"><span class="sx-refs">引用基础字段集：</span>' + refs.map(function (r) { return '<span class="sx-tag">' + esc(r) + '</span>'; }).join('') + '</div>';
+          if (fields.length) {
+            html += '<table><thead><tr><th>字段ID</th><th>标题</th><th>类型</th><th>维度</th><th>聚合</th><th>参照字典</th></tr></thead><tbody>'
+              + fields.map(function (f) {
+                return '<tr><td>' + esc(f.id || '') + '</td><td>' + esc(f.caption && f.caption.zh_CN || '') + '</td><td>' + esc(f.dataType || '')
+                  + (f.fieldLength != null ? '(' + esc(f.fieldLength) + ')' : '') + '</td><td>' + esc(f.dimType || '') + '</td><td>' + esc(f.agg || '') + '</td><td>' + esc(f.refDict || '') + '</td></tr>';
+              }).join('') + '</tbody></table>';
+          } else {
+            html += '<div class="dx-empty" style="padding:6px 0">本表无特有字段（仅引用基础字段集）</div>';
+          }
+          html += '</div></div>';
+        });
+      });
+
+      // 主从关系
+      var rels = Array.isArray(vs.relations) ? vs.relations : [];
+      if (rels.length) {
+        html += '<div class="sx-rel"><strong>主从关系</strong><br>' + rels.map(function (r) {
+          return esc(r.parent) + ' <b>→</b> ' + esc(r.child) + ' <span class="sx-refs">(' + esc(r.parentKey) + ' = ' + esc(r.childKey) + ')</span>';
+        }).join('<br>') + '</div>';
+      }
+      // 聚合
+      var aggs = Array.isArray(vs.aggregations) ? vs.aggregations : [];
+      if (aggs.length) {
+        html += '<div class="sx-rel"><strong>聚合/上卷</strong><br>' + aggs.map(function (a) {
+          return esc(a.field || '') + ' <b>' + esc(a.agg || '') + '</b> : ' + esc(a.from || '') + ' → ' + esc(a.to || '') + (a.toField ? ('.' + esc(a.toField)) : '');
+        }).join('<br>') + '</div>';
+      }
+      box.innerHTML = html || '<div class="dx-empty">无 voucherSchema 结构</div>';
+    }
+
+    if (ctx) {
+      var onChange = function (ev) { if (['docDoc', 'docDirty', 'docFieldTick'].indexOf(ev.key) >= 0) render(); };
+      ctx.on('change', onChange);
+      host.onDispose = function () { try { ctx.off('change', onChange); } catch (e) {} };
+      render();
+    } else {
+      root.querySelector('#body').innerHTML = '<div class="dx-empty">workspace.context 不可用</div>';
+    }
+  </script>
+</div>

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "domain": "fi",
+  "application": "cmxfico",
+  "module": "gl",
+  "title": "会计核算管理 / 总账",
+  "status": "active",
+  "aliases": [
+    "fi.cmxfico.gl",
+    "cmxfico.gl"
+  ],
+  "resources": {
+    "activities": [
+      {
+        "path": "activities/fiportal.json",
+        "scope": "application",
+        "note": "财务门户活动入口，含 explorer/content 等工作台装配。"
+      }
+    ],
+    "menus": [
+      {
+        "path": "menu-pages/fi/cmxfico/gl/explorer-menu.json",
+        "menuRef": "fi.cmxfico.gl.explorer-menu"
+      }
+    ],
+    "htmlPages": [
+      {
+        "path": "html-pages/sources/fi/cmxfico/gl"
+      }
+    ],
+    "htmlPageIndex": [
+      {
+        "path": "html-pages/index/fi.pages.json"
+      },
+      {
+        "path": "html-pages/index.json"
+      },
+      {
+        "path": "html-pages/pages-list.json",
+        "scope": "global"
+      }
+    ],
+    "metaDefinitions": [
+      {
+        "path": "meta/definitions/fi/cmxfico/gl"
+      }
+    ],
+    "flexibleCombinations": [
+      {
+        "path": "meta/flexible-combination/fi/cmxfico/gl"
+      }
+    ],
+    "dictRegistry": [
+      {
+        "path": "dict/registry.json",
+        "scope": "global"
+      }
+    ],
+    "dictEntries": [
+      {
+        "path": "dict/entries/fi/cmxfico/gl"
+      }
+    ],
+    "dictSeeds": [
+      {
+        "path": "dict/seeds/fi/cmxfico/gl"
+      }
+    ],
+    "facts": [
+      {
+        "path": "fact/fi/cmxfico/gl"
+      }
+    ],
+    "serviceCatalog": [
+      {
+        "path": "service-catalog/fi/cmxfico/gl"
+      }
+    ],
+    "tools": [
+      {
+        "path": "../tools/fico-ws",
+        "scope": "generator"
+      }
+    ]
+  },
+  "notes": [
+    "canonical application 使用 cmxfico，module 使用 gl。"
+  ]
+}

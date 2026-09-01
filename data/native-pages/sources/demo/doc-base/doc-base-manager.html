@@ -1,0 +1,162 @@
+<div class="docbx-mgr" style="display:flex;flex-direction:column;height:100%;font:13px/1.45 -apple-system,'Segoe UI','PingFang SC',sans-serif;color:var(--sapTextColor,#1d2d3e);background:var(--sapBackgroundColor,#fff);box-sizing:border-box">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);flex:0 0 auto">
+    <div><div style="font-size:14px;font-weight:700">业务单据定义 · 设计</div><div id="sub" style="font-size:12px;color:var(--sapContent_LabelColor,#6a6d70)"></div></div>
+    <div style="display:flex;gap:6px">
+      <button class="dx-btn primary" data-act="save">保存</button>
+      <button class="dx-btn" data-act="reload">刷新</button>
+      <button class="dx-btn" data-act="add">新增字段</button>
+      <button class="dx-btn danger" data-act="del">删除字段</button>
+    </div>
+  </div>
+  <div style="padding:6px 12px;border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);flex:0 0 auto;font-weight:700"><span id="tname">表：—</span></div>
+  <div id="tablewrap" style="flex:1 1 auto;overflow:auto;padding:8px"></div>
+
+  <style>
+    .docbx-mgr .dx-btn{border:1px solid var(--sapButton_BorderColor,#8a8f94);border-radius:4px;background:var(--sapButton_Background,#fff);color:var(--sapButton_TextColor,#0064d9);padding:5px 9px;cursor:pointer;font:inherit}
+    .docbx-mgr .dx-btn.primary{background:var(--sapButton_Emphasized_Background,#0070f2);border-color:#0070f2;color:#fff}
+    .docbx-mgr .dx-btn.danger{color:var(--sapNegativeTextColor,#b00)}
+    .docbx-mgr table{width:100%;border-collapse:collapse;font-size:12px}
+    .docbx-mgr th,.docbx-mgr td{border-bottom:1px solid var(--sapList_BorderColor,#eee);padding:5px;text-align:left;vertical-align:top}
+    .docbx-mgr tr.active{background:var(--sapList_SelectionBackgroundColor,#e5f2ff)}
+    .docbx-mgr input,.docbx-mgr select{width:100%;box-sizing:border-box;border:1px solid var(--sapField_BorderColor,#89919a);border-radius:4px;padding:4px 6px;background:var(--sapField_Background,#fff);color:inherit;font:inherit}
+    .docbx-mgr .dx-empty{padding:12px;color:var(--sapContent_LabelColor,#6a6d70)}
+  </style>
+
+  <script>
+    /* 业务单据定义 · 设计页（content 区，核心）：加载/保存 DOC，选中表的字段表格编辑。
+       数据单一来源 workspace.context（docDoc / docSelectedTable / docSelectedFieldIndex / docDirty）。
+       单据特有：多层表（voucherTables[]）+ 字段维度 dimType + 聚合 agg。 */
+    var root = host.renderRoot;
+    var ctx = workspace && workspace.context;
+    var DATA_TYPES = ['VARCHAR', 'BIGINT', 'INT', 'TINYINT', 'DECIMAL', 'DATE', 'DATETIME', 'TEXT'];
+    var DIM_TYPES = ['', 'dimension', 'measure', 'attribute', 'relation'];
+    var AGGS = ['', 'sum', 'count', 'avg', 'max', 'min'];
+    var EDIT_MODES = ['', 'cmx-text-input', 'cmx-number-input', 'cmx-date-input', 'cmx-datetime-input', 'cmx-dict-select', 'select', 'checkbox'];
+    var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+    function get (k) { return ctx ? ctx.get(k) : null; }
+    function set (k, v) { if (ctx) ctx.set(k, v); }
+
+    async function apiJson (url, options) {
+      var res = await fetch(url, Object.assign({ headers: { Accept: 'application/json' }, credentials: 'same-origin' }, options || {}));
+      if (!res.ok) { var m = 'HTTP ' + res.status; try { var j = await res.json(); if (j && j.error) m = j.error; } catch (e) {} throw new Error(m); }
+      return res.json();
+    }
+
+    function tables (doc) { return (doc && Array.isArray(doc.voucherTables)) ? doc.voucherTables : []; }
+    function curTable () { var doc = get('docDoc'); var tn = get('docSelectedTable'); return tables(doc).find(function (t) { return t.tableName === tn; }) || null; }
+    function curFields () { var t = curTable(); return (t && Array.isArray(t.fields)) ? t.fields : []; }
+
+    async function loadDoc (sel) {
+      if (!sel || !sel.file) return;
+      var q = new URLSearchParams({ domain: sel.domain || '', module: sel.module || '', file: sel.file });
+      var doc = await apiJson('/api/definitions/config?' + q);
+      if (!Array.isArray(doc.voucherTables)) doc.voucherTables = [];
+      set('docDoc', doc);
+      var ts = tables(doc);
+      var curTn = get('docSelectedTable');
+      if (!curTn || !ts.some(function (t) { return t.tableName === curTn; })) set('docSelectedTable', ts[0] ? ts[0].tableName : '');
+      set('docSelectedFieldIndex', curFields()[0] ? 0 : -1);
+      set('docDirty', false);
+    }
+
+    function optionHtml (items, value) { return items.map(function (it) { return '<option value="' + esc(it) + '"' + (String(value || '') === it ? ' selected' : '') + '>' + esc(it || '无') + '</option>'; }).join(''); }
+
+    function render () {
+      var doc = get('docDoc');
+      var t = curTable();
+      var idx = get('docSelectedFieldIndex');
+      var sel = get('docSelectedFile');
+      root.querySelector('#sub').textContent = (sel ? sel.file : '') + (get('docDirty') ? ' · 未保存' : '');
+      root.querySelector('#tname').textContent = '表：' + (t ? (t.tableAlias || t.tableName) + ' (' + (t.level || '') + ')' : '—');
+      var wrap = root.querySelector('#tablewrap');
+      if (!doc) { wrap.innerHTML = '<div class="dx-empty">请在左侧选择单据文件</div>'; return; }
+      if (!t) { wrap.innerHTML = '<div class="dx-empty">请在左侧选择一个表（层级）</div>'; return; }
+      var fields = curFields();
+      if (!fields.length) { wrap.innerHTML = '<div class="dx-empty">当前表暂无字段（仅引用基础字段集）</div>'; return; }
+      var rows = fields.map(function (f, i) {
+        return '<tr class="' + (i === idx ? 'active' : '') + '" data-i="' + i + '">'
+          + '<td><input data-i="' + i + '" data-p="id" value="' + esc(f.id || '') + '"></td>'
+          + '<td><input data-i="' + i + '" data-p="caption.zh_CN" value="' + esc(f.caption && f.caption.zh_CN || '') + '"></td>'
+          + '<td><select data-i="' + i + '" data-p="dataType">' + optionHtml(DATA_TYPES, f.dataType) + '</select></td>'
+          + '<td><input data-i="' + i + '" data-p="fieldLength" data-t="number" type="number" value="' + esc(f.fieldLength == null ? '' : f.fieldLength) + '"></td>'
+          + '<td><select data-i="' + i + '" data-p="dimType">' + optionHtml(DIM_TYPES, f.dimType) + '</select></td>'
+          + '<td><select data-i="' + i + '" data-p="agg">' + optionHtml(AGGS, f.agg) + '</select></td>'
+          + '<td><input data-i="' + i + '" data-p="refDict" value="' + esc(f.refDict || '') + '"></td>'
+          + '<td style="text-align:center"><input data-i="' + i + '" data-p="nullable" data-t="boolean" type="checkbox"' + (f.nullable === false ? '' : ' checked') + '></td>'
+          + '</tr>';
+      }).join('');
+      wrap.innerHTML = '<table><thead><tr><th>ID</th><th>标题</th><th>类型</th><th>长度</th><th>维度</th><th>聚合</th><th>参照字典</th><th>必填</th></tr></thead><tbody>' + rows + '</tbody></table>';
+      bind(wrap);
+    }
+
+    function setPath (obj, path, value, type) {
+      var segs = path.split('.'); var leaf = segs.pop(); var node = obj;
+      segs.forEach(function (s) { if (!node[s] || typeof node[s] !== 'object') node[s] = {}; node = node[s]; });
+      if (type === 'boolean') node[leaf] = !!value;
+      else if (type === 'number') { if (value === '') delete node[leaf]; else { var n = Number(value); node[leaf] = Number.isFinite(n) ? n : value; } }
+      else if (value === '') delete node[leaf]; else node[leaf] = value;
+    }
+
+    function bind (wrap) {
+      wrap.querySelectorAll('input[data-p],select[data-p]').forEach(function (el) {
+        var evt = el.type === 'checkbox' ? 'change' : 'input';
+        el.addEventListener('focus', function () { set('docSelectedFieldIndex', Number(el.getAttribute('data-i'))); });
+        el.addEventListener(evt, function () {
+          var i = Number(el.getAttribute('data-i'));
+          var f = curFields()[i]; if (!f) return;
+          var p = el.getAttribute('data-p');
+          setPath(f, p, el.type === 'checkbox' ? el.checked : el.value, el.getAttribute('data-t') || '');
+          if (p === 'id' && !f.name) f.name = el.value;
+          set('docDirty', true); set('docSelectedFieldIndex', i);
+          set('docDoc', get('docDoc')); set('docFieldTick', Date.now());
+        });
+      });
+      wrap.querySelectorAll('tr[data-i]').forEach(function (tr) {
+        tr.addEventListener('click', function (e) {
+          if (e.target instanceof Element && e.target.closest('input,select')) return;
+          set('docSelectedFieldIndex', Number(tr.getAttribute('data-i')));
+        });
+      });
+    }
+
+    root.querySelector('[data-act="save"]').addEventListener('click', async function () {
+      var doc = get('docDoc'); var sel = get('docSelectedFile');
+      if (!doc || !sel) return;
+      try {
+        var q = new URLSearchParams({ domain: sel.domain || '', module: sel.module || '', file: sel.file });
+        var res = await apiJson('/api/definitions/config?' + q, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(doc) });
+        set('docDoc', res.saved || doc); set('docDirty', false); render();
+      } catch (e) { root.querySelector('#sub').textContent = '保存失败：' + e.message; }
+    });
+    root.querySelector('[data-act="reload"]').addEventListener('click', function () { loadDoc(get('docSelectedFile')).catch(function (e) { root.querySelector('#sub').textContent = '刷新失败：' + e.message; }); });
+    root.querySelector('[data-act="add"]').addEventListener('click', function () {
+      var t = curTable(); if (!t) return;
+      if (!Array.isArray(t.fields)) t.fields = [];
+      var id = 'new_field', i = 2;
+      while (t.fields.some(function (f) { return f.id === id; })) id = 'new_field_' + (i++);
+      t.fields.push({ id: id, name: id, dataType: 'VARCHAR', fieldLength: 64, nullable: true, caption: { zh_CN: '新字段' }, edit: { mode: 'cmx-text-input' } });
+      set('docSelectedFieldIndex', t.fields.length - 1);
+      set('docDirty', true); set('docDoc', get('docDoc')); set('docFieldTick', Date.now());
+    });
+    root.querySelector('[data-act="del"]').addEventListener('click', function () {
+      var t = curTable(); if (!t || !Array.isArray(t.fields)) return;
+      var idx = get('docSelectedFieldIndex'); if (!t.fields[idx]) return;
+      t.fields.splice(idx, 1);
+      set('docSelectedFieldIndex', t.fields[idx] ? idx : t.fields.length - 1);
+      set('docDirty', true); set('docDoc', get('docDoc')); set('docFieldTick', Date.now());
+    });
+
+    if (ctx) {
+      var onChange = function (ev) {
+        if (ev.key === 'docSelectedFile') { loadDoc(ev.value).catch(function (e) { root.querySelector('#sub').textContent = '加载失败：' + e.message; }); return; }
+        if (['docDoc', 'docSelectedTable', 'docSelectedFieldIndex', 'docDirty', 'docFieldTick'].indexOf(ev.key) >= 0) render();
+      };
+      ctx.on('change', onChange);
+      host.onDispose = function () { try { ctx.off('change', onChange); } catch (e) {} };
+      var sel0 = get('docSelectedFile');
+      if (sel0 && !get('docDoc')) loadDoc(sel0).catch(function () { render(); }); else render();
+    } else {
+      root.querySelector('#tablewrap').innerHTML = '<div class="dx-empty">workspace.context 不可用</div>';
+    }
+  </script>
+</div>

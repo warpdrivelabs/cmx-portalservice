@@ -1,0 +1,21 @@
+{
+  "domain": "hr",
+  "app": "recruit",
+  "module": "candidate",
+  "file": "candidate-intro.json",
+  "id": "candidate-intro",
+  "path": "",
+  "title": "候选人管理简介",
+  "summary": "招聘域候选人模块的基本概念与状态流转。",
+  "keywords": [
+    "招聘",
+    "候选人",
+    "candidate",
+    "hr",
+    "状态"
+  ],
+  "order": 0,
+  "content": "# 候选人管理简介\n\n候选人(candidate)模块管理招聘过程中的人才档案与状态流转。\n\n## 状态流转\n\n`新建 → 初筛 → 面试 → Offer → 入职 / 淘汰`\n\n每次状态变更记录操作人与时间，形成完整的招聘轨迹。",
+  "examples": [],
+  "updatedAt": 0
+}

@@ -1,0 +1,533 @@
+<div data-node-id="vd-root" style="display:flex;flex-direction:column;width:100%;height:100%;gap:6px;padding:8px;box-sizing:border-box;background:var(--sapBackgroundColor,#fafafa);overflow:auto;">
+  <ui5-bar design="Header" accessible-role="Toolbar" data-node-id="vd-bar" data-sap-ui-fastnavgroup="true">
+    <ui5-label data-node-id="vd-title" wrapping-type="Normal" style="font-weight:800;font-size:1.05rem;color:var(--sapShellTitleColor,var(--sapTitleColor));">会计凭证详情（Sqlx 二进制 · 四层主从）</ui5-label>
+    <ui5-button design="Transparent" slot="endContent" icon="refresh" accessible-role="Button" data-eventclick="reloadVoucher();" tooltip="重新加载" data-node-id="n-1" loading-delay="1000">刷新</ui5-button>
+    <ui5-button design="Emphasized" slot="endContent" icon="save" accessible-role="Button" data-eventclick="saveVoucher();" loading-delay="1000" data-node-id="n-2">保存</ui5-button>
+  </ui5-bar>
+
+  <!-- L1 凭证批（表头 · 只读概要表单） -->
+  <div data-node-id="vd-batch-wrap" style="flex:0 0 auto;border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:6px;overflow:hidden;">
+    <div data-node-id="vd-batch-head" style="display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);background:var(--sapGroup_TitleBackground,transparent);">
+      <ui5-icon name="add-document" data-node-id="vd-batch-icon" style="color:var(--sapInformativeTextColor,var(--sapHighlightColor));font-size:1rem;" design="Default" mode="Decorative"></ui5-icon>
+      <ui5-title level="H6" size="H6" wrapping-type="Normal" data-node-id="vd-batch-title" style="margin:0;font-weight:700;color:var(--sapTitleColor);">凭证批（L1 表头）</ui5-title>
+    </div>
+    <cmx-ui5-form id="batchForm" data-cmx-master-slave-id="ms" data-cmx-dataset-id="cv_batch" data-cmx-model-id="batchModel" data-cmx-layout="S1 M2 L3 XL4" style="display:block;width:100%;padding:8px 10px;box-sizing:border-box;--_ui5_input_height:1.9rem;" data-node-id="vd-batch-form" class="cmx-form-neo"></cmx-ui5-form>
+  </div>
+
+  <!-- L2 凭证头（可编辑表格） -->
+  <div data-node-id="vd-header-wrap" style="flex:0 0 280px;display:flex;flex-direction:column;background:var(--sapList_Background,#fff);border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:6px;overflow:hidden;">
+    <div data-node-id="vd-header-bar" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);background:var(--sapGroup_TitleBackground,transparent);">
+      <div data-node-id="vd-header-title-wrap" style="display:flex;align-items:center;gap:6px;">
+        <ui5-icon name="add-document" data-node-id="vd-header-icon" style="color:var(--sapInformativeTextColor,var(--sapHighlightColor));font-size:1rem;" design="Default" mode="Decorative"></ui5-icon>
+        <ui5-title level="H6" size="H6" wrapping-type="Normal" data-node-id="vd-header-title" style="margin:0;font-weight:700;color:var(--sapTitleColor);">凭证头（L2）</ui5-title>
+        <ui5-label data-node-id="vd-header-count" style="font-size:0.8rem;color:var(--sapContent_LabelColor,#6a6d70);" wrapping-type="Normal"></ui5-label>
+      </div>
+      <div data-node-id="vd-header-acts" style="display:flex;gap:4px;align-items:center;">
+        <ui5-button design="Default" accessible-role="Button" icon="add" data-node-id="vd-header-add" data-eventclick="addHeader();" loading-delay="1000">新增凭证</ui5-button>
+        <ui5-button design="Negative" accessible-role="Button" icon="delete" data-node-id="vd-header-del" data-eventclick="removeHeader();" loading-delay="1000">删除凭证</ui5-button>
+      </div>
+    </div>
+    <cmx-revo-grid id="headerGrid" data-cmx-master-slave-id="ms" data-cmx-dataset-id="cv_batch.cv_header" data-cmx-model-id="headerModel" data-eventcmx-row-selected="onHeaderSelected(event);" style="display: flex; width: 100%; flex: 1 1 0%; min-width: 0px; flex-direction: column; min-height: 0px;" data-cmx-fill-height="" data-cmx-options="{&quot;editable&quot;:true}" class="cmx-grid-neo" data-node-id="vd-header-grid" data-fill-height=""></cmx-revo-grid>
+  </div>
+
+  <!-- L3 会计分录（可编辑表格） -->
+  <div data-node-id="vd-acc-wrap" style="flex:0 0 300px;display:flex;flex-direction:column;background:var(--sapList_Background,#fff);border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:6px;overflow:hidden;">
+    <div data-node-id="vd-acc-bar" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);background:var(--sapGroup_TitleBackground,transparent);">
+      <div data-node-id="vd-acc-title-wrap" style="display:flex;align-items:center;gap:6px;">
+        <ui5-icon name="detail-view" data-node-id="vd-acc-icon" style="color:var(--sapInformativeTextColor,var(--sapHighlightColor));font-size:1rem;" design="Default" mode="Decorative"></ui5-icon>
+        <ui5-title level="H6" size="H6" wrapping-type="Normal" data-node-id="vd-acc-title" style="margin:0;font-weight:700;color:var(--sapTitleColor);">会计分录（L3）</ui5-title>
+        <ui5-label data-node-id="vd-acc-count" style="font-size:0.8rem;color:var(--sapContent_LabelColor,#6a6d70);" wrapping-type="Normal"></ui5-label>
+      </div>
+      <div data-node-id="vd-acc-acts" style="display:flex;gap:4px;align-items:center;">
+        <ui5-button design="Default" accessible-role="Button" icon="add" data-node-id="vd-acc-add" data-eventclick="addAccLine();" loading-delay="1000">新增分录</ui5-button>
+        <ui5-button design="Negative" accessible-role="Button" icon="delete" data-node-id="vd-acc-del" data-eventclick="removeAccLine();" loading-delay="1000">删除分录</ui5-button>
+      </div>
+    </div>
+    <cmx-revo-grid id="gAcc" data-cmx-master-slave-id="ms" data-cmx-dataset-id="cv_batch.cv_header.cv_acc_line" data-cmx-model-id="accModel" data-eventcmx-row-selected="onAccLineSelected(event);" style="display: flex; width: 100%; flex: 1 1 0%; min-width: 0px; flex-direction: column; min-height: 0px;" data-cmx-fill-height="" data-cmx-options="{&quot;editable&quot;:true}" class="cmx-grid-neo" data-node-id="vd-acc-grid" data-fill-height=""></cmx-revo-grid>
+  </div>
+
+  <!-- L4 辅助核算（可编辑表格） -->
+  <div data-node-id="vd-aux-wrap" style="flex:0 0 260px;display:flex;flex-direction:column;background:var(--sapList_Background,#fff);border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:6px;overflow:hidden;">
+    <div data-node-id="vd-aux-bar" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);background:var(--sapGroup_TitleBackground,transparent);">
+      <div data-node-id="vd-aux-title-wrap" style="display:flex;align-items:center;gap:6px;">
+        <ui5-icon name="list" data-node-id="vd-aux-icon" style="color:var(--sapInformativeTextColor,var(--sapHighlightColor));font-size:1rem;" design="Default" mode="Decorative"></ui5-icon>
+        <ui5-title level="H6" size="H6" wrapping-type="Normal" data-node-id="vd-aux-title" style="margin:0;font-weight:700;color:var(--sapTitleColor);">辅助核算（L4）</ui5-title>
+      </div>
+      <div data-node-id="vd-aux-acts" style="display:flex;gap:4px;align-items:center;">
+        <ui5-button design="Default" accessible-role="Button" icon="add" data-node-id="vd-aux-add" data-eventclick="addAuxLine();" loading-delay="1000">新增明细</ui5-button>
+        <ui5-button design="Negative" accessible-role="Button" icon="delete" data-node-id="vd-aux-del" data-eventclick="removeAuxLine();" loading-delay="1000">删除明细</ui5-button>
+      </div>
+    </div>
+    <cmx-revo-grid id="auxGrid" data-cmx-master-slave-id="ms" data-cmx-dataset-id="cv_batch.cv_header.cv_acc_line.cv_aux_line" data-cmx-model-id="auxModel" style="display: flex; width: 100%; flex: 1 1 0%; min-width: 0px; flex-direction: column; min-height: 0px;" data-cmx-fill-height="" data-cmx-options="{&quot;editable&quot;:true}" class="cmx-grid-neo" data-node-id="vd-aux-grid" data-fill-height=""></cmx-revo-grid>
+  </div>
+</div>
+<script type="application/json" id="__designer_meta__">
+{
+  "pageData": [],
+  "pageFns": [
+    {
+      "name": "ensureBatchRow",
+      "params": "",
+      "body": "var ms = host.ms;\nif (!ms) return null;\nvar ds = ms.getRootDataSet ? ms.getRootDataSet(\"cv_batch\") : null;\nif (!ds) return null;\nif (ds.rows && ds.rows.length > 0) return ds.rows[0];\n// 根表为空时新建根行。关键：用户可能已在 batchForm 输入了字段值（表单实时写回 _row，\n// 但根表空时 _row 是游离对象，不在 DataSet 里）。先读 batchForm.getData() 把用户已输入的值\n// 合并进新根行（用户输入优先），避免\"填了名称点新增凭证后名称变回默认值\"。\nvar userInput = {};\ntry {\n  var form = host.batchForm;\n  if (form && typeof form.getData === \"function\") {\n    var d = form.getData() || {};\n    for (var k in d) { if (d[k] != null && String(d[k]).trim() !== \"\") userInput[k] = d[k]; }\n  }\n} catch(_) {}\nvar CmxDataSet = (globalThis.__cmxDataComp || {}).CmxDataSet;\nhost.__seq = (host.__seq || 0) + 1;\nvar today = new Date();\nvar y = today.getFullYear();\nvar mo = today.getMonth() + 1; var d = today.getDate();\nvar todayStr = y + \"-\" + (mo < 10 ? \"0\" + mo : mo) + \"-\" + (d < 10 ? \"0\" + d : d);\n// 默认值（用户未填的字段才用默认）\nvar newRow = {\n  id: \"b\" + host.__seq,\n  doc_no: \"\",   // 留空，保存时由后端 voucher_batch_daily 规则铸号\n  doc_date: todayStr,\n  doc_status: \"draft\",\n  batch_status: \"U\",\n  doc_type_id: 1,\n  entity_id: 1,\n  line_no: 1,\n  batch_name: \"新建凭证批_\" + todayStr\n};\n// 用户已输入的值覆盖默认值（batch_name 等用户填的字段保留）\nfor (var uk in userInput) { if (userInput[uk] != null) newRow[uk] = userInput[uk]; }\nvar children = {};\nif (CmxDataSet) children.cv_header = new CmxDataSet();\nds.addRow(newRow, children);\nif (ds.moveToId) ds.moveToId(newRow.id); else if (ds.moveLast) ds.moveLast();\n// 关键：addRow 后 ms 内部可能用包装行对象，必须从 ds.rows 重新取真实引用，\n// 否则后续 _ensureChildDs 会操作到与 ms 内部脱节的原始 newRow，导致子行丢失（点两次才生效）。\nvar realRow = null;\nfor (var ri = 0; ri < ds.rows.length; ri++) { if (String(ds.rows[ri].id) === String(newRow.id)) { realRow = ds.rows[ri]; break; } }\nreturn realRow || ds.rows[0] || newRow;",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "_ensureChildDs",
+      "params": "parentRow, childId, parentPath",
+      "body": "if (!parentRow) return null;\nvar CmxDataSet = (globalThis.__cmxDataComp || {}).CmxDataSet;\nif (!parentRow._children) parentRow._children = {};\nif (!parentRow._children[childId]) {\n  parentRow._children[childId] = CmxDataSet ? new CmxDataSet() : null;\n  var ms = host.ms;\n  var fullPath = (parentPath || \"\") + (parentPath ? \".\" : \"\") + childId;\n  var newDs = parentRow._children[childId];\n  if (newDs) {\n    if (ms && typeof ms._registerDsListeners === \"function\") ms._registerDsListeners(newDs, fullPath);\n    if (ms && ms._collector && typeof ms._collector._bindRecursive === \"function\") ms._collector._bindRecursive(newDs, fullPath);\n  }\n}\nreturn parentRow._children[childId];",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "reloadVoucher",
+      "params": "",
+      "body": "var ms = host.ms;\nif (!ms || !ms.reload) { host._cmxNotify('warn','协调器未初始化'); return; }\nms.reload().then(function(){ host.refreshCounts(); }).catch(function(e){ host._cmxNotify('error','加载失败：' + (e && e.message || e)); });",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "reloadAfterSave",
+      "params": "",
+      "body": "/* 保存成功后重载：用根行真实 id 反查。\n   saveDocData.applyIdMap 已把临时 id（b1）换成后端雪花 id，此时 bd.rows[0].id 已是真号。\n   新增态 doc_no 由后端 voucher_batch_daily 规则铸号写库不回传前端——只能靠 id 反查拿到真号。 */\nvar ms = host.ms;\nif (!ms) return;\nvar bd = ms.getRootDataSet ? ms.getRootDataSet(\"cv_batch\") : null;\nvar realId = bd && bd.rows && bd.rows[0] ? String(bd.rows[0].id) : \"\";\nvar loadDef = {\n  domain: \"fi\", application: \"cmxfico\", module: \"gl\", doc: \"cmxfico\",\n  dbId: \"fico-db\", binary: true, apiPath: \"/api/doc/data/sqlx-zmc-msgpack\",\n  limit: 1, depth: 50\n};\nif (realId && /^\\d+$/.test(realId)) {\n  loadDef.filter = \"id:\" + realId;\n  ms.loadDoc(loadDef).then(function(){ host.refreshCounts(); })\n    .catch(function(e){ host._cmxNotify(\"error\",\"保存后重载失败：\" + (e && e.message || e)); });\n} else if (ms.reload) {\n  ms.reload().then(function(){ host.refreshCounts(); }).catch(function(){});\n}",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "saveVoucher",
+      "params": "",
+      "body": "var ms = host.ms;\nif (!ms || typeof ms.saveDoc !== 'function') { host._cmxNotify('warn','协调器未初始化'); return; }\n// 保存前收拢编辑中的单元格：cmx-revo-grid.commitEdit() 派发合成 Enter 走 revo-grid 原生 save 链路\n//（Enter→saveCallback→afteredit→写回 DataSet），避免编辑未失焦直接保存丢最后一格。\n// 无编辑时 commitEdit 立即 resolve，零副作用。\nvar grids = ['#headerGrid','#gAcc','#auxGrid'].map(function(sel){\n  return host.shadowRoot && host.shadowRoot.querySelector(sel);\n}).filter(Boolean);\nPromise.all(grids.map(function(g){ return typeof g.commitEdit === 'function' ? g.commitEdit() : Promise.resolve(); })).then(function(){\n  return ms.saveDoc();\n}).then(function(r){\n  host._cmxNotify('ok','保存成功：影响 ' + (r && r.affected || 0) + ' 行');\n  // 组件库 saveDocData 已用后端 idMap 把临时 id（b1/h1）换成真实雪花 id（含 upper_id 重路由），\n  // 二次保存不再断链。reloadAfterSave 作双保险：刷新 update_time 基线 + 显示落库后真实数据。\n  host.reloadAfterSave();\n}).catch(function(e){ if(!e||!e.conflict){ host._cmxNotify('error','保存失败：' + (e && e.message || e)); } });",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "onHeaderSelected",
+      "params": "e",
+      "body": "Promise.resolve().then(function(){ host.refreshCounts(); });",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "onAccLineSelected",
+      "params": "e",
+      "body": "Promise.resolve().then(function(){ host.refreshCounts(); });",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "addHeader",
+      "params": "",
+      "body": "var ms = host.ms;\nif (!ms) { host._cmxNotify('warn','协调器未就绪'); return; }\nvar batchRow = host.ensureBatchRow();\nif (!batchRow) { host._cmxNotify('error','凭证批创建失败'); return; }\nvar childDs = host._ensureChildDs(batchRow, \"cv_header\", \"cv_batch\");\nif (!childDs) { host._cmxNotify('error','凭证头数据集创建失败'); return; }\nhost.__seq = (host.__seq || 0) + 1;\nvar newId = \"h\" + host.__seq;\nvar kids = {};\nvar CmxDataSet = (globalThis.__cmxDataComp || {}).CmxDataSet;\nif (CmxDataSet) kids.cv_acc_line = new CmxDataSet();\nvar today = new Date(); var ty = today.getFullYear(); var tmo = today.getMonth()+1; var td = today.getDate(); var todayStr = ty + \"-\" + (tmo<10?\"0\"+tmo:tmo) + \"-\" + (td<10?\"0\"+td:td);\nvar newRow = { id: newId, upper_id: batchRow.id, header_text: \"\", posting_date: todayStr };\n// 从父批继承单据标识\nvar baseFields = [\"doc_no\",\"doc_type_id\",\"entity_id\",\"doc_date\",\"doc_status\"];\nfor (var bi = 0; bi < baseFields.length; bi++) {\n  var bk = baseFields[bi];\n  if (batchRow[bk] != null && batchRow[bk] !== \"\") newRow[bk] = batchRow[bk];\n}\nnewRow.line_no = childDs.rows.length + 1;\nchildDs.addRow(newRow, kids);\nif (childDs.moveToId) childDs.moveToId(newId); else if (childDs.moveLast) childDs.moveLast();\nms._renderView && ms._renderView(\"cv_batch.cv_header\");\nhost.refreshCounts();",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "removeHeader",
+      "params": "",
+      "body": "var g = host.shadowRoot && host.shadowRoot.querySelector('#headerGrid');\nif (!g) { host._cmxNotify('warn','凭证头表格未就绪'); return; }\nvar selId = g._selectedId;\nif (!selId) { host._cmxNotify('warn','请先选择一条凭证'); return; }\nhost._libConfirm('删除该凭证将连同其下分录一起移除，确定？','删除确认').then(function(ok){\n  if (!ok) return;\n  if (g._ds && g._ds.removeRow) g._ds.removeRow(selId);\n  host.refreshCounts();\n});",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "addAccLine",
+      "params": "",
+      "body": "var ms = host.ms;\nif (!ms) { host._cmxNotify('warn','协调器未就绪'); return; }\nvar hg = host.shadowRoot && host.shadowRoot.querySelector('#headerGrid');\nvar headerId = hg && hg._selectedId;\nif (!headerId) { host._cmxNotify('warn','请先在凭证头表格中选择一条凭证'); return; }\nvar headerRow = ms.getRow ? ms.getRow('cv_batch.cv_header', headerId) : null;\nif (!headerRow) { host._cmxNotify('warn','未找到选中的凭证头，请重新选择'); return; }\nvar childDs = host._ensureChildDs(headerRow, 'cv_acc_line', 'cv_batch.cv_header');\nif (!childDs) { host._cmxNotify('error','分录数据集创建失败'); return; }\nhost.__seq = (host.__seq || 0) + 1;\nvar newId = 'a' + host.__seq;\nvar kids = {};\nvar CmxDataSet = (globalThis.__cmxDataComp || {}).CmxDataSet;\nif (CmxDataSet) kids.cv_aux_line = new CmxDataSet();\n// gl_account_id 留空：原硬编码 1 会把分录挂到无意义的「1 号科目」，用户漏改即落库出错。\n// 改空串让用户主动选科目；列模型若配 edit.required 可由 grid 校验拦截保存。\nvar newRow = { id: newId, upper_id: headerId, gl_account_id: '', item_text: '', entered_dr: 0, entered_cr: 0 };\nvar baseFields = ['doc_no','doc_type_id','entity_id','doc_date','doc_status','comp_unit_id'];\nfor (var bi = 0; bi < baseFields.length; bi++) {\n  var bk = baseFields[bi];\n  if (headerRow[bk] != null && headerRow[bk] !== '') newRow[bk] = headerRow[bk];\n}\nnewRow.line_no = childDs.rows.length + 1;\nchildDs.addRow(newRow, kids);\nif (childDs.moveToId) childDs.moveToId(newId); else if (childDs.moveLast) childDs.moveLast();\nms._renderView && ms._renderView('cv_batch.cv_header.cv_acc_line');\nhost.refreshCounts();",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "removeAccLine",
+      "params": "",
+      "body": "var g = host.shadowRoot && host.shadowRoot.querySelector('#gAcc');\nif (!g) { host._cmxNotify('warn','分录表格未就绪'); return; }\nvar selId = g._selectedId;\nif (!selId) { host._cmxNotify('warn','请先选择一条分录'); return; }\nhost._libConfirm('删除该分录将连同其辅助核算一起移除，确定？','删除确认').then(function(ok){\n  if (!ok) return;\n  if (g._ds && g._ds.removeRow) g._ds.removeRow(selId);\n  host.refreshCounts();\n});",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "addAuxLine",
+      "params": "",
+      "body": "var ms = host.ms;\nif (!ms) { host._cmxNotify('warn','协调器未就绪'); return; }\nvar ag = host.shadowRoot && host.shadowRoot.querySelector('#gAcc');\nvar accId = ag && ag._selectedId;\nif (!accId) { host._cmxNotify('warn','请先在会计分录表格中选择一条分录'); return; }\nvar accRow = ms.getRow ? ms.getRow('cv_batch.cv_header.cv_acc_line', accId) : null;\nif (!accRow) { host._cmxNotify('warn','未找到选中的分录，请重新选择'); return; }\nvar childDs = host._ensureChildDs(accRow, 'cv_aux_line', 'cv_batch.cv_header.cv_acc_line');\nif (!childDs) { host._cmxNotify('error','辅助核算数据集创建失败'); return; }\nhost.__seq = (host.__seq || 0) + 1;\nvar newId = 'x' + host.__seq;\nvar newRow = { id: newId, upper_id: accId, entered_dr: 0, entered_cr: 0 };\nvar baseFields = ['doc_no','doc_type_id','entity_id','doc_date','doc_status','comp_unit_id','gl_account_id'];\nfor (var bi = 0; bi < baseFields.length; bi++) {\n  var bk = baseFields[bi];\n  if (accRow[bk] != null && accRow[bk] !== '') newRow[bk] = accRow[bk];\n}\nnewRow.line_no = childDs.rows.length + 1;\nchildDs.addRow(newRow);\nif (childDs.moveToId) childDs.moveToId(newId); else if (childDs.moveLast) childDs.moveLast();\nms._renderView && ms._renderView('cv_batch.cv_header.cv_acc_line.cv_aux_line');",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "removeAuxLine",
+      "params": "",
+      "body": "var g = host.shadowRoot && host.shadowRoot.querySelector('#auxGrid');\nif (!g) { host._cmxNotify('warn','辅助核算表格未就绪'); return; }\nvar selId = g._selectedId;\nif (!selId) { host._cmxNotify('warn','请先选择一条辅助核算明细'); return; }\nhost._libConfirm('删除该辅助核算明细，确定？','删除确认').then(function(ok){\n  if (!ok) return;\n  if (g._ds && g._ds.removeRow) g._ds.removeRow(selId);\n  host.refreshCounts();\n});",
+      "readsVars": [],
+      "writesVars": []
+    },
+    {
+      "name": "refreshCounts",
+      "params": "",
+      "body": "var root = host.shadowRoot;\nif (!root || !host.ms) return;\nfunction countAt(path){\n  try { var rows = host.ms._collectRows ? host.ms._collectRows(host.ms._data, path) : null; return (rows && rows.length) || 0; } catch(e){ return 0; }\n}\nvar hl = root.querySelector('#vd-header-count');\nif (hl) hl.textContent = '(' + countAt('cv_batch.cv_header') + ' 条)';\nvar al = root.querySelector('#vd-acc-count');\nif (al) al.textContent = '(' + countAt('cv_batch.cv_header.cv_acc_line') + ' 条)';",
+      "readsVars": [],
+      "writesVars": []
+    }
+  ],
+  "pageServices": [],
+  "pageDeps": [],
+  "pageInterfaces": [
+    {
+      "name": "isDirty",
+      "enabled": true,
+      "body": "return !!(host.ms && host.ms.isDirty && host.ms.isDirty());"
+    },
+    {
+      "name": "getState",
+      "enabled": true,
+      "body": "return {};"
+    },
+    {
+      "name": "validate",
+      "enabled": true,
+      "body": "return { valid: true };"
+    },
+    {
+      "name": "initPage",
+      "enabled": true,
+      "body": "var root = host.shadowRoot;\nif (root) {\n  root.querySelectorAll(\"[id]\").forEach(function (el) { if (el.id && host[el.id] == null) host[el.id] = el; });\n}\n// 平台规范：用 cmxInfo/cmxConfirm 替代 alert/confirm。从 globalThis.__cmxDataComp 取组件库导出。\nvar lib = globalThis.__cmxDataComp || {};\nhost._cmxNotify = function(kind, msg){\n  var fn = lib[kind === 'ok' ? 'cmxInfo' : (kind === 'warn' ? 'cmxWarn' : 'cmxError')];\n  if (typeof fn === 'function') { try { fn(msg); } catch(_) {} }\n};\nhost._libConfirm = function(message, title){\n  if (lib && typeof lib.cmxConfirm === 'function') return lib.cmxConfirm({ message: message, title: title || '请确认' });\n  return Promise.resolve(window.confirm(message));\n};\nvar ms = host.ms;\nif (!ms || typeof ms.loadDoc !== \"function\") return;\nvar id = \"\";\ntry {\n  var ws = host.workspace;\n  id = (ws && ws.context && typeof ws.context.get === \"function\") ? (ws.context.get(\"id\") || \"\") : \"\";\n  if (!id && host.props && host.props.id) id = host.props.id;\n} catch(_) {}\nid = String(id || \"\").trim();\n// 公共装载参数（坐标 + source 通道）\nvar loadDef = {\n  domain: \"fi\", application: \"cmxfico\", module: \"gl\", doc: \"cmxfico\",\n  dbId: \"fico-db\", binary: true, apiPath: \"/api/doc/data/sqlx-zmc-msgpack\",\n  limit: 1, depth: 50\n};\nif (id) {\n  // 查看态：按 id 装载该单据\n  loadDef.filter = \"id:\" + id;\n  ms.loadDoc(loadDef).then(function(){ host.refreshCounts(); }).catch(function(e){ host._cmxNotify('error',\"加载单据失败：\" + (e && e.message || e)); });\n} else {\n  // 新增态：用 id:-1 空装载，让 ms 初始化 _def / _collector / 空根表，之后 addRow 与 saveDoc 均可用。\n  // 空装载成功后立即 ensureBatchRow 预建根行：用户从进入页面起就在编辑 DataSet 真实行，\n  // 彻底避免\"根表空时表单绑定游离 _row、用户输入的点新增凭证后丢失/被默认值覆盖\"问题。\n  // （ensureBatchRow 内部 addRow + moveToId 会触发 cursor-changed，form 自动同步到新根行）\n  loadDef.filter = \"id:-1\";\n  ms.loadDoc(loadDef).then(function(){\n    try { host.ensureBatchRow(); } catch(_) {}\n    host.refreshCounts();\n  }).catch(function(e){ host._cmxNotify('error',\"初始化新增态失败：\" + (e && e.message || e)); });\n}"
+    },
+    {
+      "name": "onActivate",
+      "enabled": true,
+      "body": "Promise.resolve().then(function(){ host.refreshCounts(); });"
+    }
+  ],
+  "dataSources": [],
+  "dataFlow": {
+    "schema": [
+      {
+        "id": "cv_batch",
+        "kind": "list",
+        "children": [
+          {
+            "id": "cv_header",
+            "kind": "list",
+            "children": [
+              {
+                "id": "cv_acc_line",
+                "kind": "list",
+                "children": [
+                  {
+                    "id": "cv_aux_line",
+                    "kind": "list",
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "aggregations": [],
+    "relations": [
+      {
+        "parent": "cv_batch",
+        "child": "cv_header",
+        "parentKey": "id",
+        "childKey": "upper_id"
+      },
+      {
+        "parent": "cv_header",
+        "child": "cv_acc_line",
+        "parentKey": "id",
+        "childKey": "upper_id"
+      },
+      {
+        "parent": "cv_acc_line",
+        "child": "cv_aux_line",
+        "parentKey": "id",
+        "childKey": "upper_id"
+      }
+    ]
+  },
+  "models": [
+    {
+      "id": "docMetaModel",
+      "modelType": "CmxDOCMeta",
+      "instanceId": "docMeta",
+      "props": {
+        "domain": "fi",
+        "application": "cmxfico",
+        "module": "gl",
+        "id": "cmxfico",
+        "autoLoad": true,
+        "json": {},
+        "baseMeta": {},
+        "apiPath": "/api/definitions/config",
+        "baseApiPath": "/api/definitions/config"
+      },
+      "events": {}
+    },
+    {
+      "id": "m1",
+      "modelType": "CmxMasterSlave",
+      "instanceId": "ms",
+      "props": {
+        "schema": [
+          {
+            "id": "cv_batch",
+            "children": [
+              {
+                "id": "cv_header",
+                "children": [
+                  {
+                    "id": "cv_acc_line",
+                    "children": [
+                      {
+                        "id": "cv_aux_line"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "loadKind": "detail",
+        "metaModelId": "docMeta",
+        "source": {
+          "moduleCode": "cmxfico",
+          "dbId": "fico-db",
+          "binary": true,
+          "apiPath": "/api/doc/data/sqlx-zmc-msgpack"
+        },
+        "depth": 50
+      },
+      "events": {}
+    },
+    {
+      "id": "m2",
+      "modelType": "CmxColumnModel",
+      "instanceId": "batchModel",
+      "props": {
+        "datasetId": "cv_batch",
+        "columns": [
+          {
+            "id": "batch_name",
+            "caption": "凭证批名称",
+            "type": "text",
+            "dataType": "VARCHAR",
+            "width": "100%",
+            "edit": {
+              "mode": "cmx-text-input",
+              "required": true
+            }
+          },
+          {
+            "id": "doc_no",
+            "caption": "单据号",
+            "type": "text",
+            "dataType": "VARCHAR",
+            "width": "100%",
+            "edit": {
+              "mode": "readonly"
+            }
+          },
+          {
+            "id": "doc_date",
+            "caption": "单据日期",
+            "type": "date",
+            "dataType": "DATE",
+            "width": "100%",
+            "edit": {
+              "mode": "cmx-date-input",
+              "required": true
+            }
+          },
+          {
+            "id": "doc_status",
+            "caption": "单据状态",
+            "type": "text",
+            "dataType": "VARCHAR",
+            "width": "100%",
+            "edit": {
+              "mode": "cmx-text-input"
+            }
+          },
+          {
+            "id": "batch_status",
+            "caption": "批状态",
+            "type": "text",
+            "dataType": "VARCHAR",
+            "width": "100%",
+            "edit": {
+              "mode": "cmx-text-input"
+            }
+          },
+          {
+            "id": "client_code",
+            "caption": "客户端",
+            "type": "text",
+            "dataType": "VARCHAR",
+            "width": "100%",
+            "edit": {
+              "mode": "cmx-dict-select"
+            },
+            "refDict": "client",
+            "refField": "code",
+            "displayField": "name",
+            "editSettings": {
+              "coord": {
+                "domain": "fi",
+                "application": "cmxfico",
+                "module": "gl"
+              },
+              "dictCode": "cf_client",
+              "idCol": "code",
+              "valueField": "code",
+              "labelCol": "name"
+            }
+          },
+          {
+            "id": "comp_unit_id",
+            "caption": "公司代码",
+            "type": "number",
+            "dataType": "BIGINT",
+            "width": "100%",
+            "edit": {
+              "mode": "cmx-dict-select"
+            },
+            "refDict": "comp_unit",
+            "refField": "id",
+            "displayField": "name",
+            "editSettings": {
+              "dictCode": "cf_comp_unit",
+              "coord": {
+                "domain": "fi",
+                "application": "cmxfico",
+                "module": "gl"
+              },
+              "idCol": "id",
+              "valueField": "id",
+              "labelCol": "name"
+            }
+          },
+          {
+            "id": "ledger_code",
+            "caption": "账本",
+            "type": "text",
+            "dataType": "VARCHAR",
+            "width": "100%",
+            "edit": {
+              "mode": "cmx-dict-select"
+            },
+            "refDict": "ledger",
+            "refField": "code",
+            "displayField": "name",
+            "editSettings": {
+              "coord": {
+                "domain": "fi",
+                "application": "cmxfico",
+                "module": "gl"
+              },
+              "dictCode": "cf_ledger",
+              "idCol": "code",
+              "valueField": "code",
+              "labelCol": "name"
+            }
+          },
+          {
+            "id": "period_code",
+            "caption": "会计期间",
+            "type": "text",
+            "dataType": "VARCHAR",
+            "width": "100%",
+            "edit": {
+              "mode": "cmx-dict-select"
+            },
+            "refDict": "fisc_period",
+            "refField": "code",
+            "displayField": "name",
+            "editSettings": {
+              "coord": {
+                "domain": "fi",
+                "application": "cmxfico",
+                "module": "gl"
+              },
+              "dictCode": "cf_fisc_period",
+              "idCol": "code",
+              "valueField": "code",
+              "labelCol": "name"
+            }
+          },
+          {
+            "id": "posting_date",
+            "caption": "过账日期",
+            "type": "date",
+            "dataType": "DATE",
+            "width": "100%",
+            "edit": {
+              "mode": "cmx-date-input"
+            }
+          },
+          {
+            "id": "journal_source",
+            "caption": "凭证来源",
+            "type": "text",
+            "dataType": "VARCHAR",
+            "width": "100%",
+            "edit": {
+              "mode": "cmx-text-input"
+            }
+          },
+          {
+            "id": "control_total",
+            "caption": "控制总额",
+            "type": "number",
+            "dataType": "DECIMAL",
+            "width": "100%",
+            "edit": {
+              "mode": "cmx-number-input"
+            }
+          }
+        ],
+        "columnGroups": [],
+        "metaModelId": "",
+        "metaTable": ""
+      },
+      "events": {}
+    },
+    {
+      "id": "m3",
+      "modelType": "CmxColumnModel",
+      "instanceId": "headerModel",
+      "props": {
+        "datasetId": "cv_batch.cv_header",
+        "columns": [],
+        "columnGroups": [],
+        "metaModelId": "docMeta",
+        "metaTable": "cv_header"
+      },
+      "events": {}
+    },
+    {
+      "id": "m4",
+      "modelType": "CmxColumnModel",
+      "instanceId": "accModel",
+      "props": {
+        "datasetId": "cv_batch.cv_header.cv_acc_line",
+        "columns": [],
+        "columnGroups": [],
+        "metaModelId": "docMeta",
+        "metaTable": "cv_acc_line"
+      },
+      "events": {}
+    },
+    {
+      "id": "m5",
+      "modelType": "CmxColumnModel",
+      "instanceId": "auxModel",
+      "props": {
+        "datasetId": "cv_batch.cv_header.cv_acc_line.cv_aux_line",
+        "columns": [],
+        "columnGroups": [],
+        "metaModelId": "docMeta",
+        "metaTable": "cv_aux_line"
+      },
+      "events": {}
+    }
+  ]
+}
+  </script>

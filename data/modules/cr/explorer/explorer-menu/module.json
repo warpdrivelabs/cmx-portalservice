@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "domain": "cr",
+  "application": "explorer",
+  "module": "explorer-menu",
+  "title": "CR Explorer 菜单页面示例",
+  "status": "active",
+  "resources": {
+    "htmlPages": [
+      {
+        "path": "html-pages/sources/cr/explorer/explorer-menu"
+      }
+    ],
+    "htmlPageIndex": [
+      {
+        "path": "html-pages/index/cr.pages.json"
+      }
+    ]
+  }
+}

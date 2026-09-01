@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "domain": "hr",
+  "application": "recruit",
+  "module": "candidate",
+  "title": "招聘候选人服务目录",
+  "status": "active",
+  "resources": {
+    "serviceCatalog": [
+      {
+        "path": "service-catalog/hr/recruit/candidate"
+      }
+    ]
+  }
+}

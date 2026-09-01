@@ -1,0 +1,26 @@
+meta {
+  name: 创建用户
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/users
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "",
+    "email": ""
+  }
+}
+
+docs {
+  新建用户。body 为用户基本信息。
+}

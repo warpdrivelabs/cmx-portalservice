@@ -1,0 +1,79 @@
+<style>
+  .acctws-explorer-root {
+    --acct-cyan: #00b4d8; --acct-violet: #7c3aed;
+    --acct-border: color-mix(in srgb, var(--acct-cyan) 14%, var(--sapGroup_ContentBorderColor, #e0e0e0));
+    display: flex; flex-direction: column; height: 100%; box-sizing: border-box;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--acct-cyan) 3%, var(--sapList_Background,#fff)), var(--sapList_Background,#fff));
+  }
+  .acctws-explorer-head {
+    flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding: 6px 10px;
+    border-bottom: 1px solid var(--acct-border);
+    background: linear-gradient(105deg, color-mix(in srgb, var(--acct-cyan) 8%, var(--sapList_Background,#fff)), color-mix(in srgb, var(--acct-violet) 5%, transparent) 60%, transparent);
+    position: relative; overflow: hidden;
+  }
+  .acctws-explorer-head::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(90deg, transparent, transparent 4px, color-mix(in srgb, var(--acct-cyan) 3%, transparent) 4px, color-mix(in srgb, var(--acct-cyan) 3%, transparent) 5px);
+    opacity: 0.18; mix-blend-mode: overlay;
+  }
+  .acctws-head-icon {
+    flex-shrink: 0; width: 1.1rem; height: 1.1rem;
+    color: var(--acct-cyan); filter: drop-shadow(0 0 6px color-mix(in srgb, var(--acct-cyan) 35%, transparent));
+  }
+  .acctws-head-title {
+    position: relative; z-index: 1; font-size: 0.85rem; font-weight: 800;
+    color: var(--sapTitleColor,#223548); letter-spacing: 0.02em;
+  }
+  .acctws-head-spacer { flex: 1; min-width: 4px; }
+  .acctws-period-label {
+    position: relative; z-index: 1; color: var(--sapContent_LabelColor,#6a6d70);
+    font-size: 0.72rem; font-weight: 500;
+  }
+  .acctws-period-select {
+    position: relative; z-index: 1; width: 6.1rem; min-width: 6.1rem;
+  }
+  .acctws-tree-wrap {
+    height: 100%; min-height: 0; display: flex; flex-direction: column;
+    padding: 0; box-sizing: border-box;
+    background:
+      radial-gradient(ellipse 120% 80% at 0% 0%, color-mix(in srgb, var(--acct-cyan) 5%, transparent), transparent 55%),
+      radial-gradient(ellipse 90% 60% at 100% 100%, color-mix(in srgb, var(--acct-violet) 4%, transparent), transparent 50%);
+  }
+  .acctws-tree-wrap cmx-web-treeview {
+    display: block; flex: 1; min-height: 0; overflow: auto;
+    border-radius: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .acctws-detail-wrap {
+    height: 100%; min-height: 110px; display: flex; flex-direction: column;
+    border-top: 0; background: var(--sapList_Background,#fff); overflow: hidden;
+  }
+  .acctws-detail-title {
+    flex: 0 0 auto; display: flex; align-items: center; gap: 6px; min-height: 28px; padding: 3px 8px;
+    box-sizing: border-box; border-bottom: 1px solid var(--acct-border); font-size: 0.78rem; font-weight: 800;
+    color: var(--sapTitleColor,#223548); background: color-mix(in srgb, var(--acct-cyan) 4%, var(--sapList_Background,#fff));
+  }
+  .acctws-detail-title ui5-icon { width: 0.9rem; height: 0.9rem; color: var(--acct-cyan); }
+  #orgDetailForm { flex: 1; min-height: 0; display: block; overflow: auto; }
+</style>
+<div class="acctws-explorer-root">
+  <div class="acctws-explorer-head">
+    <ui5-icon name="org-chart" class="acctws-head-icon"></ui5-icon>
+    <b class="acctws-head-title">组织机构</b>
+    <span class="acctws-head-spacer"></span>
+    <span class="acctws-period-label">期间:</span>
+    <ui5-select id="fiscalPeriodSelect" class="acctws-period-select"></ui5-select>
+  </div>
+  <cmx-split-pane id="orgSplitPane" orientation="horizontal" size="70%" min-first="120" min-second="100" splitter-size="3" style="display:block;flex:1;min-height:0;">
+    <div slot="first" class="acctws-tree-wrap">
+      <cmx-web-treeview id="tree" class="acctws-org-tree" selected-node-class="acctws-tree-selected" id-member="id" path-member="full_path" level-member="level_no" display-value-member="displayValue" is-selected-member="is_selected" icon-member="icon" should-toggle-on-node-click="false" toggle-icon-mode="swap" expand-level="9" data-cmx-skin="colored" data-cmx-accent-color="#00b4d8" data-cmx-tree-lines="false"></cmx-web-treeview>
+    </div>
+    <div slot="second" class="acctws-detail-wrap">
+    <div class="acctws-detail-title"><ui5-icon name="detail-view"></ui5-icon><span>组织详情</span></div>
+    <cmx-ui5-form id="orgDetailForm" data-cmx-density="compact" data-cmx-layout="S1 M1 L1 XL1"></cmx-ui5-form>
+    </div>
+  </cmx-split-pane>
+</div>
+<script type="application/json" id="__designer_meta__">{"pageData":[],"pageFns":[],"pageServices":[],"pageDeps":[],"pageInterfaces":[{"name":"initPage","enabled":true,"body":"\nvar root=host.shadowRoot;\nvar lib=globalThis.__cmxDataComp||host.__cmxClasses;\nvar bridge=(lib&&lib.createPageModelBridge)?lib.createPageModelBridge(host,{pageId:'acctws-model',eventName:'cmx-acctws-model',root:root}):null;\nfunction $(s){return bridge?bridge.$(s):root.querySelector(s);}\nfunction $all(s){return bridge?bridge.$all(s):Array.prototype.slice.call(root.querySelectorAll(s));}\nfunction setText(id,v){if(bridge){bridge.setText(id,v);return;} var e=$('#'+id); if(e)e.textContent=(v==null?'':String(v));}\nfunction fmtAmt(x){var n=+x||0;return n.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});}\nfunction modelHost(){return bridge?bridge.modelHost():(host.workspace&&host.workspace.pageview&&host.workspace.pageview['acctws-model']||null);}\nfunction ctx(){return bridge?bridge.ctx():(host.workspace&&host.workspace.context||null);}\nfunction fireModelReady(kind){ if(bridge){bridge.fireModelReady(kind);return;} window.dispatchEvent(new CustomEvent('cmx-acctws-model',{detail:{kind:kind}})); }\nfunction fireModelEvent(kind, extra){ if(bridge){bridge.fireModelEvent(kind,extra);return;} var d={kind:kind}; extra=extra||{}; for(var k in extra)d[k]=extra[k]; window.dispatchEvent(new CustomEvent('cmx-acctws-model',{detail:d})); }\nfunction onModelReady(kind, cb){ return bridge?bridge.ready(kind,cb):(function(){var m=modelHost(); if(m&&(kind==='meta'?m.__metaReady:m.__ready)){cb(m);return function(){};} var h=function(){var mm=modelHost(); if(mm&&(kind==='meta'?mm.__metaReady:mm.__ready)){window.removeEventListener('cmx-acctws-model',h);cb(mm);}}; window.addEventListener('cmx-acctws-model',h); return function(){window.removeEventListener('cmx-acctws-model',h);};})(); }\nfunction onModelEvent(kind, cb){ return bridge?bridge.on(kind,cb):(function(){var h=function(ev){if(ev&&ev.detail&&ev.detail.kind===kind)cb(modelHost(),ev.detail);}; window.addEventListener('cmx-acctws-model',h); return function(){window.removeEventListener('cmx-acctws-model',h);};})(); }\n\nfunction plainColumn(c){\n  if(!c)return null;\n  if(c.toPlainObject){ try{return c.toPlainObject();}catch(e){} }\n  var out={};\n  ['id','name','field','fieldName','caption','label','dataType','width','visible','editable','readonly','display','format','valueHelp','enumItems'].forEach(function(k){ if(c[k]!=null)out[k]=c[k]; });\n  return out.id||out.field||out.fieldName?out:null;\n}\nfunction orgColumnSource(cm){\n  if(!cm)return [];\n  var list=[];\n  try{ if(cm.getMembers)list=cm.getMembers()||[]; }catch(e){}\n  if(!list.length)list=cm.members||cm.columns||cm._members||cm._columns||[];\n  return Array.prototype.slice.call(list||[]);\n}\nfunction buildOrgDetailColumnModel(m){\n  if(host.__orgDetailColModel)return host.__orgDetailColModel;\n  lib=globalThis.__cmxDataComp||host.__cmxClasses||lib;\n  if(!lib||!lib.CmxColumnModel)return m&&m.colOrg;\n  var cm=new lib.CmxColumnModel({datasetId:'org',caption:'组织详情'});\n  var cols=orgColumnSource(m&&m.colOrg).map(function(c){\n    var p=plainColumn(c); if(!p)return null;\n    p=Object.assign({}, p);\n    delete p.width;\n    return lib.CmxColumn ? new lib.CmxColumn(p) : p;\n  }).filter(Boolean);\n  if(cols.length&&cm.setMembers)cm.setMembers(cols);\n  host.__orgDetailColModel=cm;\n  return cm;\n}\nfunction ensureOrgDetailModel(m, ds){\n  var form=$('#orgDetailForm'); if(!form||!m)return;\n  ds=ds||(m.orgMS&&m.orgMS.getRootDataSet&&m.orgMS.getRootDataSet('org'));\n  var cm=buildOrgDetailColumnModel(m);\n  if(cm&&form.setColumnModel) form.setColumnModel(cm);\n  if(ds&&form.setDataSet) form.setDataSet(ds, ds.currentRow?{currentRowId:ds.currentRow.id}:{});\n}\nfunction showOrgDetail(row){\n  var ds=host.__ds;\n  var id=row&&(row.id!=null?row.id:(row.toPlainObject&&row.toPlainObject().id));\n  if(ds&&id!=null&&ds.moveToId){ try{ ds.moveToId(id); }catch(e){ try{ ds.moveToId(String(id)); }catch(ex){} } }\n  var form=$('#orgDetailForm');\n  if(form&&ds&&form.setDataSet) form.setDataSet(ds, id!=null?{currentRowId:id}:{});\n  try{ if(form&&form.refreshLayout)form.refreshLayout(); }catch(e){}\n}\n\nfunction selectedPeriod(){\n  var sel=$('#fiscalPeriodSelect');\n  if(!sel)return '';\n  return sel.value || (sel.selectedOption&&sel.selectedOption.value) || '';\n}\nfunction setPeriodContext(period){\n  var c=ctx();\n  if(c){ c.set('fiscalPeriod', period); c.set('currentFiscalPeriod', period); }\n}\nfunction initFiscalPeriodSelect(){\n  var sel=$('#fiscalPeriodSelect'); if(!sel||host.__periodSelectReady)return;\n  host.__periodSelectReady=true;\n  var now=new Date();\n  var cur=new Date(now.getFullYear(), now.getMonth(), 1);\n  function ym(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }\n  for(var i=-2;i<=2;i++){\n    var d=new Date(cur.getFullYear(), cur.getMonth()+i, 1);\n    var v=ym(d);\n    var opt=document.createElement('ui5-option');\n    opt.value=v; opt.textContent=v;\n    if(i===0) opt.selected=true;\n    sel.appendChild(opt);\n  }\n  setPeriodContext(selectedPeriod());\n  sel.addEventListener('change', function(){\n    var period=selectedPeriod();\n    setPeriodContext(period);\n    var m=modelHost();\n    if(m&&m.setFiscalPeriod) m.setFiscalPeriod(period);\n    else if(m&&m.reloadOrgs) m.reloadOrgs();\n    else fireModelEvent('period',{period:period});\n  });\n}\ninitFiscalPeriodSelect();\n\nsetText('statusText','');\nonModelReady('data', function(m){\n  var tree=$('#tree'); if(!tree)return;\n  var ms=m.orgMS; var ds=ms&&ms.getRootDataSet&&ms.getRootDataSet('org');\n  ensureOrgDetailModel(m, ds);\n  if(m.colOrg&&tree.setColumnModel) tree.setColumnModel(m.colOrg);\n  if(ds&&tree.setDataSet) tree.setDataSet(ds); host.__ds=ds;\n  function rowOf(id){ if(!ds||!ds.getRow)return null; return ds.getRow(id)||ds.getRow(Number(id))||ds.getRow(String(id))||null; }\n  function highlight(selId){ if(!ds)return; (ds.rows||[]).forEach(function(rw){ var on=(String(rw.id)===String(selId))?1:0; if(rw.is_selected!==on){ if(typeof rw.set==='function')rw.set('is_selected',on); else rw.is_selected=on; } }); }\n  if(!host.__wired){ host.__wired=true;\n    tree.addEventListener('node-clicked', function(e){ var node=e&&e.detail&&e.detail.node; var id=node&&(node.id!=null?node.id:(node.data&&node.data.id)); if(id==null)return;\n      var r=rowOf(id); var rd=r&&(r.toPlainObject?r.toPlainObject():r)||{}; var title=[rd.code,rd.name].filter(Boolean).join(' ')||String(id);\n      highlight(id);\n      var c=ctx(); if(c){ c.set('currentOrg', {id:id, code:rd.code, name:rd.name, title:title}); }\n      showOrgDetail(r);\n      setText('statusText','');\n    });\n  }\n  var first=ds&&ds.rows&&ds.rows[0]; if(first){ var fd=first.toPlainObject?first.toPlainObject():first; highlight(first.id); showOrgDetail(first); var c=ctx(); if(c)c.set('currentOrg',{id:first.id,code:fd.code,name:fd.name,title:[fd.code,fd.name].filter(Boolean).join(' ')}); }\n  setText('statusText','');\n});\nonModelEvent('orgs', function(m){ var tree=$('#tree'); var ds=m.orgMS&&m.orgMS.getRootDataSet&&m.orgMS.getRootDataSet('org'); ensureOrgDetailModel(m, ds); if(tree&&ds&&tree.setDataSet)tree.setDataSet(ds); });\n"},{"name":"getPageApi","enabled":true,"body":"return {};"},{"name":"isDirty","enabled":true,"body":"return false;"}],"dataSources":[],"dataFlow":{"schema":[],"aggregations":[],"relations":[]},"models":[]}</script>

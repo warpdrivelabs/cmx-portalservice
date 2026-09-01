@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "domain": "fi",
+  "application": "sap",
+  "module": "sap_gl",
+  "title": "SAP 总账样例",
+  "status": "active",
+  "resources": {
+    "metaDefinitions": [
+      {
+        "path": "meta/definitions/fi/sap/sap_gl"
+      }
+    ],
+    "dictEntries": [
+      {
+        "path": "dict/entries/fi/sap/sap_gl"
+      }
+    ],
+    "facts": [
+      {
+        "path": "fact/fi/sap/sap_gl"
+      }
+    ]
+  }
+}

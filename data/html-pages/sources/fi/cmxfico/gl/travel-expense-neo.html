@@ -1,0 +1,845 @@
+<div class="travel-expense-neo-root" data-node-id="te-root" style="display:flex;flex-direction:column;width:100%;height:100%;gap:4px;padding:10px;box-sizing:border-box;position:relative;overflow:hidden;">
+  <style data-node-id="te-style">
+    .travel-expense-neo-root {
+      --neo-cyan: #00b4d8;
+      --neo-violet: #7c3aed;
+      --neo-mint: #10b981;
+      --neo-warn: #f59e0b;
+      --neo-glass: color-mix(in srgb, var(--sapList_Background, #fff) 88%, transparent);
+      --neo-border: color-mix(in srgb, var(--neo-cyan) 35%, var(--sapGroup_ContentBorderColor, #d9d9d9));
+      background:
+        radial-gradient(ellipse 120% 80% at 100% -20%, color-mix(in srgb, var(--neo-violet) 12%, transparent), transparent 50%),
+        radial-gradient(ellipse 90% 60% at 0% 100%, color-mix(in srgb, var(--neo-cyan) 10%, transparent), transparent 45%),
+        var(--sapBackgroundColor, #f4f6f8);
+    }
+    .travel-expense-neo-root::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(color-mix(in srgb, var(--neo-cyan) 6%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--neo-cyan) 6%, transparent) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .travel-expense-neo-root > * { position: relative; z-index: 1; }
+    .neo-hero {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+      padding: 5.5px 12px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      background:
+        linear-gradient(135deg,
+          color-mix(in srgb, var(--neo-violet) 10%, var(--sapList_Background, #fff)) 0%,
+          color-mix(in srgb, var(--neo-cyan) 7%, var(--sapList_Background, #fff)) 42%,
+          color-mix(in srgb, var(--neo-mint) 6%, var(--sapList_Background, #fff)) 100%);
+      border: 1px solid color-mix(in srgb, var(--neo-cyan) 32%, var(--neo-violet) 18%);
+      box-shadow:
+        0 6px 28px color-mix(in srgb, var(--neo-violet) 10%, transparent),
+        0 2px 12px color-mix(in srgb, var(--neo-cyan) 8%, transparent),
+        inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent);
+      backdrop-filter: none;
+    }
+    .neo-hero::before {
+      content: '';
+      position: absolute;
+      inset: -35% -15%;
+      background:
+        conic-gradient(from 210deg at 42% 38%,
+          color-mix(in srgb, var(--neo-violet) 22%, transparent),
+          color-mix(in srgb, var(--neo-cyan) 18%, transparent),
+          color-mix(in srgb, var(--neo-mint) 14%, transparent),
+          color-mix(in srgb, var(--neo-warn) 10%, transparent),
+          color-mix(in srgb, var(--neo-violet) 22%, transparent));
+      opacity: 0.42;
+      pointer-events: none;
+      z-index: 0;
+      filter: none;
+    }
+    .neo-hero::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 2px;
+      background: linear-gradient(90deg,
+        transparent,
+        var(--neo-violet) 18%,
+        var(--neo-cyan) 50%,
+        var(--neo-mint) 82%,
+        transparent);
+      opacity: 0.75;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .neo-hero > * { position: relative; z-index: 1; }
+    .neo-hero-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow: visible;
+      align-self: center;
+    }
+    .neo-hero-title h1 {
+      margin: 0;
+      font-size: 1.12rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0;
+    }
+    .neo-title-text {
+      background: linear-gradient(90deg, var(--sapTitleColor, #223548), var(--neo-cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .neo-hero-sub {
+      font-size: 0.72rem;
+      color: var(--sapContent_LabelColor);
+      font-family: ui-monospace, monospace;
+    }
+    .neo-hero-sub #travelClaimNo {
+      color: color-mix(in srgb, var(--neo-cyan) 75%, var(--sapTitleColor));
+      font-weight: 700;
+    }
+    .neo-kpi-row {
+      display: flex;
+      gap: 10px;
+      flex: 0 0 auto;
+      margin-left: auto;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      align-self: center;
+    }
+    .neo-kpi {
+      flex: 0 0 auto;
+      min-width: 96px;
+      padding: 8px 10px 8px 12px;
+      border-radius: 9px;
+      background:
+        linear-gradient(145deg,
+          color-mix(in srgb, var(--sapList_Background, #fff) 88%, transparent),
+          color-mix(in srgb, var(--neo-cyan) 6%, var(--sapList_Background, #fff)));
+      border: 1px solid color-mix(in srgb, var(--neo-cyan) 22%, transparent);
+      box-shadow:
+        0 2px 10px color-mix(in srgb, var(--neo-cyan) 6%, transparent),
+        inset 3px 0 0 color-mix(in srgb, var(--neo-cyan) 55%, transparent);
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .neo-kpi:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 4px 14px color-mix(in srgb, var(--neo-cyan) 12%, transparent),
+        inset 3px 0 0 var(--neo-cyan);
+    }
+    .neo-kpi:has(.neo-sale) {
+      box-shadow: 0 2px 10px color-mix(in srgb, var(--neo-mint) 8%, transparent), inset 3px 0 0 color-mix(in srgb, var(--neo-mint) 55%, transparent);
+    }
+    .neo-kpi:has(.neo-purch) {
+      box-shadow: 0 2px 10px color-mix(in srgb, var(--neo-warn) 8%, transparent), inset 3px 0 0 color-mix(in srgb, var(--neo-warn) 55%, transparent);
+    }
+    .neo-kpi-lbl { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sapContent_LabelColor); white-space: nowrap; }
+    .neo-kpi-val { font-size: 1.05rem; font-weight: 800; font-variant-numeric: tabular-nums; font-family: ui-monospace, monospace; color: var(--sapTitleColor); white-space: nowrap; }
+    .neo-kpi-val.neo-ok { color: var(--neo-mint); }
+    .neo-kpi-val.neo-warn { color: var(--neo-warn); }
+    .neo-kpi-val.neo-sale { color: var(--neo-mint); }
+    .neo-kpi-val.neo-purch { color: var(--neo-warn); }
+    .neo-ring-wrap { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; flex-shrink: 0; }
+    #balanceRing {
+      width: 44px; height: 44px; border-radius: 50%;
+      padding: 3px;
+      background: conic-gradient(var(--neo-cyan) 0% 50%, var(--neo-violet) 50% 100%);
+      box-shadow: 0 0 12px color-mix(in srgb, var(--neo-cyan) 40%, transparent);
+    }
+    #balanceRing::after {
+      content: '';
+      display: block;
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      background: var(--neo-glass);
+    }
+    #neoStatusBadge {
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--neo-border);
+      background: color-mix(in srgb, var(--neo-cyan) 12%, transparent);
+      color: var(--neo-cyan);
+    }
+    #neoStatusBadge[data-state="ok"] {
+      border-color: color-mix(in srgb, var(--neo-mint) 50%, transparent);
+      background: color-mix(in srgb, var(--neo-mint) 15%, transparent);
+      color: var(--neo-mint);
+    }
+    #neoStatusBadge[data-state="warn"] {
+      border-color: color-mix(in srgb, var(--neo-warn) 50%, transparent);
+      background: color-mix(in srgb, var(--neo-warn) 15%, transparent);
+      color: var(--neo-warn);
+    }
+    .neo-panel {
+      display: flex;
+      flex-direction: column;
+      background: var(--neo-glass);
+      border: 1px solid var(--neo-border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px color-mix(in srgb, #000 4%, transparent);
+      backdrop-filter: blur(8px);
+    }
+    .neo-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      border-bottom: 1px solid var(--neo-border);
+      background: linear-gradient(90deg, color-mix(in srgb, var(--neo-cyan) 8%, transparent), transparent 60%);
+    }
+    .neo-grid-zone > .neo-panel-head {
+      flex: 0 0 auto;
+      min-height: 0;
+      padding: 3px 10px;
+      gap: 8px;
+      border-bottom: 1px solid var(--neo-border);
+      background:
+        linear-gradient(90deg,
+          color-mix(in srgb, var(--neo-cyan) 10%, var(--neo-glass)),
+          color-mix(in srgb, var(--neo-violet) 6%, transparent) 55%,
+          transparent);
+    }
+    .neo-panel-head .neo-sec-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--sapTitleColor);
+    }
+    .neo-grid-zone > .neo-panel-head .neo-sec-title {
+      gap: 6px;
+      font-size: 0.74rem;
+      line-height: 1.1;
+    }
+    .neo-sec-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--neo-cyan);
+      box-shadow: 0 0 8px var(--neo-cyan);
+    }
+    .neo-grid-zone > .neo-panel-head .neo-sec-dot {
+      width: 5px;
+      height: 5px;
+      box-shadow: 0 0 6px color-mix(in srgb, var(--neo-cyan) 55%, transparent);
+    }
+    .neo-panel-body { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; padding: 4px 6px 6px; }
+    .neo-panel[data-neo-tone="cyan"] .neo-panel-body {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--neo-violet) 5%, transparent), transparent 48%);
+    }
+    .neo-panel[data-neo-tone="azure"] .neo-panel-body {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--neo-mint) 5%, transparent), transparent 48%);
+    }
+    .neo-panel.neo-grid-zone[data-neo-tone="cyan"] {
+      border-color: color-mix(in srgb, var(--neo-violet) 30%, var(--neo-border));
+    }
+    .neo-panel.neo-grid-zone[data-neo-tone="azure"] {
+      border-color: color-mix(in srgb, var(--neo-mint) 30%, var(--neo-border));
+    }
+    .neo-grid-zone > .neo-panel-body {
+      padding: 0;
+      background: transparent !important;
+    }
+    .neo-grid-zone cmx-revo-grid.neo-travel-grid-host {
+      flex: 1 1 0;
+      min-height: 0;
+      border-radius: 0;
+    }
+    .neo-panel-body cmx-revo-grid {
+      --revo-grid-bg: transparent;
+    }
+    .neo-form-panel { flex: 0 0 auto; padding: 4px 8px; --_ui5_input_height: 1.85rem; }
+    .neo-grid-zone { flex: 1 1 0; min-height: 140px; }
+    .neo-hint { font-size: 0.68rem; color: var(--sapContent_LabelColor); font-weight: 400; margin-left: 6px; }
+    .neo-voucher-seal {
+      flex-shrink: 0;
+      align-self: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transform: rotate(-12deg);
+      color: #ea580c;
+      background: color-mix(in srgb, currentColor 10%, var(--neo-glass));
+      border: 2px double currentColor;
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, currentColor 55%, transparent),
+        0 2px 8px color-mix(in srgb, currentColor 24%, transparent);
+      opacity: 0.94;
+      user-select: none;
+    }
+    .neo-voucher-seal::before {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      border: 1px solid color-mix(in srgb, currentColor 70%, transparent);
+      pointer-events: none;
+    }
+    .neo-voucher-seal::after {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border-radius: 50%;
+      border: 1px dashed color-mix(in srgb, currentColor 35%, transparent);
+      pointer-events: none;
+    }
+    .neo-seal-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      font-size: 0.58rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.14em;
+      font-family: "STKaiti", "KaiTi", "Songti SC", serif;
+      z-index: 1;
+    }
+    .neo-voucher-seal[data-status="draft"] { color: #ea580c; }
+    .neo-voucher-seal[data-status="void"] { color: #dc2626; }
+    .neo-voucher-seal[data-status="saved"] { color: #16a34a; }
+    .neo-voucher-seal[data-status="audited"] { color: #7c3aed; }
+    .neo-voucher-seal[data-status="posted"] { color: #2563eb; }
+    .neo-voucher-seal[data-status="paid"] { color: #2563eb; }
+    .neo-hero-right {
+      flex-shrink: 0;
+      margin-left: auto;
+      align-self: center;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .neo-hero-util-rail {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 2px 4px;
+      border-radius: 7px;
+      border: 1px solid color-mix(in srgb, var(--neo-cyan) 22%, var(--neo-violet) 12%);
+      background: color-mix(in srgb, var(--sapList_Background) 72%, transparent);
+      box-shadow: inset 0 0 12px color-mix(in srgb, var(--neo-cyan) 5%, transparent);
+    }
+    .neo-util-chip {
+      --util-hue: var(--neo-cyan);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      margin: 0;
+      padding: 0;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--util-hue);
+      font-size: 0.72rem;
+      font-weight: 800;
+      font-family: "STKaiti", "KaiTi", "Songti SC", serif;
+      transition: transform 0.18s ease, box-shadow 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .neo-util-chip::before {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: 4px;
+      border: 1px solid color-mix(in srgb, var(--util-hue) 28%, transparent);
+      background: color-mix(in srgb, var(--sapList_Background) 85%, transparent);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      z-index: 0;
+    }
+    .neo-util-chip span { position: relative; z-index: 1; }
+    .neo-util-chip:hover:not(:disabled):not(.is-disabled) { transform: translateY(-1px); }
+    .neo-util-chip:hover:not(:disabled):not(.is-disabled)::before {
+      border-color: color-mix(in srgb, var(--util-hue) 55%, transparent);
+      box-shadow: 0 0 8px color-mix(in srgb, var(--util-hue) 25%, transparent);
+    }
+    .neo-util-chip.is-active::before {
+      border-color: var(--util-hue);
+      background: color-mix(in srgb, var(--util-hue) 12%, transparent);
+      box-shadow: inset 0 0 6px color-mix(in srgb, var(--util-hue) 15%, transparent);
+    }
+    .neo-util-chip:disabled,
+    .neo-util-chip.is-disabled {
+      opacity: 0.32;
+      cursor: not-allowed;
+      filter: grayscale(0.85);
+    }
+    .neo-hero-act-rail {
+      flex-shrink: 0;
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      padding: 3px 8px;
+      border-radius: 9px;
+      background:
+        linear-gradient(135deg,
+          color-mix(in srgb, var(--sapList_Background) 80%, transparent),
+          color-mix(in srgb, var(--neo-violet) 6%, var(--sapList_Background)));
+      border: 1px solid color-mix(in srgb, var(--neo-violet) 22%, var(--neo-cyan) 14%);
+      box-shadow:
+        inset 0 0 16px color-mix(in srgb, var(--neo-violet) 5%, transparent),
+        0 2px 10px color-mix(in srgb, var(--neo-violet) 6%, transparent);
+    }
+    .neo-act-chip {
+      --act-hue: var(--neo-cyan);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 34px;
+      margin: 0;
+      padding: 2px 4px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--act-hue);
+      font-family: ui-monospace, monospace;
+      transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .neo-act-chip::before {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border-radius: 6px;
+      background:
+        linear-gradient(145deg, color-mix(in srgb, var(--act-hue) 18%, transparent), transparent 55%),
+        color-mix(in srgb, var(--sapList_Background) 82%, transparent);
+      border: 1px solid color-mix(in srgb, var(--act-hue) 38%, transparent);
+      box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 35%, transparent);
+      transition: box-shadow 0.25s ease, border-color 0.25s ease;
+      z-index: 0;
+    }
+    .neo-act-chip::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -1px;
+      width: 10px;
+      height: 2px;
+      transform: translateY(-50%);
+      background: linear-gradient(90deg, color-mix(in srgb, var(--act-hue) 55%, transparent), transparent);
+      opacity: 0.65;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .neo-act-chip:last-child::after { display: none; }
+    .neo-act-chip[data-act="save"] { --act-hue: var(--neo-mint); }
+    .neo-act-chip[data-act="audit"] { --act-hue: var(--neo-violet); }
+    .neo-act-chip[data-act="post"] { --act-hue: #2563eb; }
+    .neo-act-chip[data-act="submit"] { --act-hue: var(--neo-violet); }
+    .neo-act-glyph {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      font-family: "STKaiti", "KaiTi", "Songti SC", serif;
+      background: linear-gradient(160deg, var(--act-hue), color-mix(in srgb, var(--act-hue) 45%, #fff));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 4px color-mix(in srgb, var(--act-hue) 45%, transparent));
+    }
+    .neo-act-chip:hover:not(:disabled):not(.is-disabled) {
+      transform: translateY(-1px) scale(1.03);
+    }
+    .neo-act-chip:hover:not(:disabled):not(.is-disabled)::before {
+      box-shadow:
+        inset 0 1px 0 color-mix(in srgb, #fff 45%, transparent),
+        0 0 12px color-mix(in srgb, var(--act-hue) 35%, transparent);
+      border-color: color-mix(in srgb, var(--act-hue) 65%, transparent);
+    }
+    .neo-act-chip[data-done="true"]::before {
+      border-color: color-mix(in srgb, var(--act-hue) 55%, transparent);
+      background:
+        linear-gradient(145deg, color-mix(in srgb, var(--act-hue) 22%, transparent), transparent 55%),
+        color-mix(in srgb, var(--sapList_Background) 82%, transparent);
+    }
+    .neo-act-chip[data-current="true"]::before {
+      border-color: var(--act-hue);
+      box-shadow:
+        0 0 12px color-mix(in srgb, var(--act-hue) 40%, transparent),
+        inset 0 0 8px color-mix(in srgb, var(--act-hue) 12%, transparent);
+    }
+    .neo-act-chip:disabled,
+    .neo-act-chip.is-disabled {
+      cursor: not-allowed;
+      opacity: 0.32;
+      filter: grayscale(0.85);
+      transform: none;
+    }
+    .neo-meta-strip {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      padding: 4px 10px 4px 0;
+      min-width: 0;
+      position: relative;
+      border-radius: 11px;
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      isolation: isolate;
+      --_ui5_input_height: 1.25rem;
+      --lane-a: var(--neo-cyan);
+      --lane-b: var(--neo-violet);
+    }
+    .neo-lane-accent {
+      flex: 0 0 auto;
+      align-self: stretch;
+      width: 4px;
+      margin: 6px 10px 6px 0;
+      border-radius: 0 4px 4px 0;
+      background: linear-gradient(180deg, var(--lane-a), var(--lane-b));
+      box-shadow: 0 0 12px color-mix(in srgb, var(--lane-a) 45%, transparent);
+    }
+    .neo-lane-tag {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      min-width: 34px;
+      padding: 4px 6px;
+      margin-right: 8px;
+      border-radius: 8px;
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1.05;
+      font-family: ui-monospace, monospace;
+      color: color-mix(in srgb, var(--lane-a) 88%, var(--sapTitleColor));
+      background: color-mix(in srgb, var(--lane-a) 10%, var(--sapList_Background));
+      border: 1px solid color-mix(in srgb, var(--lane-a) 28%, transparent);
+      box-shadow: inset 0 0 10px color-mix(in srgb, var(--lane-a) 8%, transparent);
+      user-select: none;
+    }
+    .neo-lane--head {
+      --lane-a: var(--neo-cyan);
+      --lane-b: var(--neo-violet);
+      background:
+        linear-gradient(105deg,
+          color-mix(in srgb, var(--neo-cyan) 11%, var(--sapList_Background, #fff)) 0%,
+          color-mix(in srgb, var(--neo-violet) 7%, var(--sapList_Background, #fff)) 55%,
+          color-mix(in srgb, var(--sapList_Background, #fff) 92%, transparent) 100%);
+      border: 1px solid color-mix(in srgb, var(--neo-cyan) 30%, var(--neo-violet) 16%);
+      box-shadow:
+        0 3px 18px color-mix(in srgb, var(--neo-cyan) 8%, transparent),
+        inset 0 1px 0 color-mix(in srgb, #fff 50%, transparent);
+    }
+    .neo-lane--head::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 48px; right: 12px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--neo-cyan), var(--neo-violet), transparent 85%);
+      opacity: 0.7;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .neo-lane--head::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 120% at 0% 50%, color-mix(in srgb, var(--neo-cyan) 12%, transparent), transparent 65%),
+        radial-gradient(ellipse 40% 100% at 100% 50%, color-mix(in srgb, var(--neo-violet) 8%, transparent), transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .neo-lane--foot {
+      --lane-a: var(--neo-mint);
+      --lane-b: var(--neo-cyan);
+      background:
+        linear-gradient(285deg,
+          color-mix(in srgb, var(--neo-mint) 10%, var(--sapList_Background, #fff)) 0%,
+          color-mix(in srgb, var(--neo-cyan) 6%, var(--sapList_Background, #fff)) 48%,
+          color-mix(in srgb, var(--sapList_Background, #fff) 94%, transparent) 100%);
+      border: 1px solid color-mix(in srgb, var(--neo-mint) 28%, var(--neo-cyan) 14%);
+      box-shadow:
+        0 -2px 16px color-mix(in srgb, var(--neo-mint) 7%, transparent),
+        inset 0 -1px 0 color-mix(in srgb, var(--neo-mint) 18%, transparent);
+    }
+    .neo-lane--foot::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 48px; right: 12px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 15%, var(--neo-mint) 40%, var(--neo-cyan) 70%, transparent);
+      opacity: 0.65;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .neo-lane--foot::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 50% 110% at 100% 50%, color-mix(in srgb, var(--neo-mint) 10%, transparent), transparent 62%),
+        radial-gradient(ellipse 35% 90% at 0% 50%, color-mix(in srgb, var(--neo-cyan) 7%, transparent), transparent 58%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .neo-meta-strip cmx-ui5-form {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+    .neo-lane-accent,
+    .neo-lane-tag { position: relative; z-index: 2; }
+    .neo-lane cmx-ui5-form.neo-travel-form-host {
+      --neo-form-input-h: 1.52rem;
+      --neo-form-font-size: 0.76rem;
+      --neo-form-label-size: 0.76rem;
+      display: block;
+      width: 100%;
+      border-radius: 9px;
+      overflow: hidden;
+      background: transparent;
+      filter: drop-shadow(0 2px 8px color-mix(in srgb, var(--lane-a) 12%, transparent));
+    }
+    .neo-lane--head cmx-ui5-form.neo-travel-form-host {
+      --neo-form-accent: var(--neo-cyan);
+      --neo-form-accent-2: var(--neo-violet);
+    }
+    .neo-lane--foot cmx-ui5-form.neo-travel-form-host {
+      --neo-form-accent: var(--neo-mint);
+      --neo-form-accent-2: var(--neo-cyan);
+    }
+    .neo-grid-cmd-rail {
+      --rail-hue: var(--neo-cyan);
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 2px;
+      border-radius: 8px;
+      border: 1px solid color-mix(in srgb, var(--rail-hue) 24%, var(--neo-border));
+      background: color-mix(in srgb, var(--sapList_Background, #fff) 55%, transparent);
+      box-shadow:
+        inset 0 0 10px color-mix(in srgb, var(--rail-hue) 6%, transparent),
+        inset 0 1px 0 color-mix(in srgb, var(--sapTextColor, #32363a) 7%, transparent);
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd-rail {
+      padding: 0;
+      border-radius: 0;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+    }
+    .neo-grid-cmd-rail[data-tone="cyan"] { --rail-hue: var(--neo-violet); }
+    .neo-grid-cmd-rail[data-tone="azure"] { --rail-hue: var(--neo-mint); }
+    .neo-grid-cmd {
+      --cmd-hue: var(--rail-hue);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 26px;
+      min-width: 0;
+      margin: 0;
+      padding: 0 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: transparent;
+      color: var(--cmd-hue);
+      font-family: ui-monospace, monospace;
+      transition: transform 0.18s ease, filter 0.18s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd {
+      gap: 3px;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 4px;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd::before {
+      display: none;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd + .neo-grid-cmd::after {
+      display: none;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd:hover:not(:disabled):not(.is-disabled) {
+      background: color-mix(in srgb, var(--cmd-hue) 10%, transparent);
+      box-shadow: none;
+    }
+    .neo-grid-cmd::before {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      z-index: 0;
+    }
+    .neo-grid-cmd[data-cmd="swap"] { --cmd-hue: var(--neo-warn); }
+    .neo-grid-cmd[data-cmd="del"] { --cmd-hue: #ef4444; }
+    .neo-grid-cmd-icon {
+      position: relative;
+      z-index: 1;
+      font-size: 0.92rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd-icon {
+      font-size: 0.82rem;
+    }
+    .neo-grid-cmd-glyph {
+      position: relative;
+      z-index: 1;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      font-family: "STKaiti", "KaiTi", "Songti SC", serif;
+      background: linear-gradient(160deg, var(--cmd-hue), color-mix(in srgb, var(--cmd-hue) 50%, #fff));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd-glyph {
+      font-size: 0.62rem;
+    }
+    .neo-grid-cmd + .neo-grid-cmd::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 1px;
+      height: 14px;
+      transform: translateY(-50%);
+      background: color-mix(in srgb, var(--rail-hue) 35%, transparent);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .neo-grid-zone > .neo-panel-head .neo-grid-cmd + .neo-grid-cmd::after {
+      height: 12px;
+    }
+    .neo-grid-cmd:hover:not(:disabled):not(.is-disabled) {
+      transform: translateY(-1px);
+    }
+    .neo-grid-cmd:hover:not(:disabled):not(.is-disabled)::before {
+      border-color: color-mix(in srgb, var(--cmd-hue) 45%, transparent);
+      background: color-mix(in srgb, var(--cmd-hue) 10%, transparent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--cmd-hue) 22%, transparent);
+    }
+    .neo-grid-cmd:disabled,
+    .neo-grid-cmd.is-disabled {
+      cursor: not-allowed;
+      opacity: 0.34;
+      filter: grayscale(0.8);
+      transform: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .neo-kpi:hover { transform: none; }
+    }
+  
+  </style>
+
+  <div class="neo-hero" data-node-id="te-hero">
+    <div id="travelStatusSeal" class="neo-voucher-seal" data-status="draft" aria-label="单据状态：草稿" data-node-id="te-status-seal">
+      <span class="neo-seal-text"><span>草</span><span>稿</span></span>
+    </div>
+    <div class="neo-hero-title">
+      <h1><span class="neo-title-text">差旅费报销</span><span id="travelExpenseRuleText" class="neo-title-text"></span></h1>
+      <span class="neo-hero-sub">TRAVEL EXPENSE · <span id="travelClaimNo">—</span> · <span id="travelMeta">—</span></span>
+    </div>
+    <div class="neo-kpi-row">
+      <div class="neo-kpi"><div class="neo-kpi-lbl">报销合计 Total</div><div class="neo-kpi-val" id="kpiTotal">0.00</div></div>
+      <div class="neo-ring-wrap"><div id="teMixRing" title="交通/住宿类占比"></div></div>
+      <div class="neo-kpi"><div class="neo-kpi-lbl">交通类</div><div class="neo-kpi-val neo-sale" id="kpiTransport">0</div></div>
+      <div class="neo-kpi"><div class="neo-kpi-lbl">住宿类</div><div class="neo-kpi-val neo-purch" id="kpiLodging">0</div></div>
+      <div class="neo-kpi"><div class="neo-kpi-lbl">明细条数</div><div class="neo-kpi-val" id="kpiDetails">0</div></div>
+    </div>
+    <div class="neo-hero-right" data-node-id="te-hero-right">
+      <div class="neo-hero-util-rail" data-node-id="te-hero-utils" role="toolbar" aria-label="辅助操作">
+        <button type="button" id="travelEditBtn" class="neo-util-chip" data-eventclick="toggleTravelEdit();" title="进入编辑" aria-label="编辑"><span aria-hidden="true">编</span></button>
+        <button type="button" id="travelLoadBtn" class="neo-util-chip" data-eventclick="initTravel();" title="加载示例" aria-label="加载示例"><span aria-hidden="true">例</span></button>
+      </div>
+      <div class="neo-hero-act-rail" data-node-id="te-hero-actions" role="toolbar" aria-label="单据操作">
+        <button type="button" id="travelSaveBtn" class="neo-act-chip" data-act="save" data-eventclick="doSaveTravel();" title="保存（导出 JSON）" aria-label="保存"><span class="neo-act-glyph" aria-hidden="true">存</span></button>
+        <button type="button" id="travelSubmitBtn" class="neo-act-chip" data-act="submit" data-eventclick="doSubmitTravel();" title="提交（演示）" aria-label="提交"><span class="neo-act-glyph" aria-hidden="true">提</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="neo-meta-strip neo-lane neo-lane--head" data-node-id="te-head-lane">
+    <span class="neo-lane-accent" aria-hidden="true"></span>
+    <span class="neo-lane-tag" aria-hidden="true"><span>单</span><span>头</span></span>
+    <cmx-ui5-form id="headForm" class="neo-travel-form-host" data-neo-form-lane="head" data-cmx-density="compact" data-cmx-master-slave-id="ms" data-cmx-dataset-id="head" data-cmx-layout="S1 M2 L4 XL4" data-cmx-fields="[{&quot;key&quot;:&quot;claimNo&quot;,&quot;label&quot;:&quot;报销单号&quot;,&quot;type&quot;:&quot;text&quot;,&quot;placeholder&quot;:&quot;CL-202605-001&quot;},{&quot;key&quot;:&quot;claimDate&quot;,&quot;label&quot;:&quot;报销日期&quot;,&quot;type&quot;:&quot;date&quot;},{&quot;key&quot;:&quot;traveler&quot;,&quot;label&quot;:&quot;报销人&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;key&quot;:&quot;department&quot;,&quot;label&quot;:&quot;部门&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;key&quot;:&quot;tripPurpose&quot;,&quot;label&quot;:&quot;出差事由&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;key&quot;:&quot;travelerMode&quot;,&quot;label&quot;:&quot;出行模式&quot;,&quot;type&quot;:&quot;select&quot;,&quot;options&quot;:[{&quot;value&quot;:&quot;single&quot;,&quot;label&quot;:&quot;一人&quot;},{&quot;value&quot;:&quot;multi&quot;,&quot;label&quot;:&quot;多人&quot;}]},{&quot;key&quot;:&quot;tripRoute&quot;,&quot;label&quot;:&quot;行程路线&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;key&quot;:&quot;tripStart&quot;,&quot;label&quot;:&quot;出发日期&quot;,&quot;type&quot;:&quot;date&quot;}]" data-node-id="te-head-form"></cmx-ui5-form>
+  </div>
+
+  <div class="neo-panel neo-grid-zone" data-neo-tone="cyan" data-node-id="te-items" style="flex:1 1 0;min-height:0;">
+    <div class="neo-panel-head">
+      <span class="neo-sec-title"><span class="neo-sec-dot" style="background:var(--neo-cyan);box-shadow:0 0 8px var(--neo-cyan);"></span>报销费用</span>
+      <div class="neo-grid-cmd-rail" data-tone="cyan" role="toolbar" aria-label="报销费用操作">
+        <button type="button" class="neo-grid-cmd" data-cmd="add" data-eventclick="addItem();" title="新增行" aria-label="新增行" disabled><span class="neo-grid-cmd-icon" aria-hidden="true">+</span><span class="neo-grid-cmd-glyph" aria-hidden="true">增</span></button>
+        <button type="button" class="neo-grid-cmd" data-cmd="del" data-eventclick="removeItem();" title="删除行" aria-label="删除行" disabled><span class="neo-grid-cmd-icon" aria-hidden="true">×</span><span class="neo-grid-cmd-glyph" aria-hidden="true">删</span></button>
+      </div>
+    </div>
+    <div class="neo-panel-body">
+      <cmx-revo-grid id="itemGrid" class="neo-travel-grid-host" data-neo-grid-tone="cyan" data-cmx-master-slave-id="ms" data-cmx-dataset-id="head.items" data-cmx-model-id="itemModel" data-cmx-totals="{&quot;label&quot;:&quot;合计&quot;,&quot;columns&quot;:[&quot;lineAmount&quot;]}" data-eventcmx-row-selected="onItemSelected(event);" style="display:block;width:100%;flex:1 1 0%;min-height:0;" data-node-id="te-item-grid"></cmx-revo-grid>
+    </div>
+  </div>
+
+  <div class="neo-panel neo-grid-zone" data-neo-tone="azure" data-node-id="te-details" style="flex:1 1 0;min-height:0;">
+    <div class="neo-panel-head">
+      <span class="neo-sec-title"><span class="neo-sec-dot" style="background:#0284c7;box-shadow:0 0 8px #0284c7;"></span>费用明细<span class="neo-hint">锚点 expenseType · travelerMode · FlexibleCombination</span></span>
+      <div class="neo-grid-cmd-rail" data-tone="azure" role="toolbar" aria-label="费用明细操作">
+        <button type="button" class="neo-grid-cmd" data-cmd="add" data-eventclick="addDetail();" title="新增明细" aria-label="新增明细" disabled><span class="neo-grid-cmd-icon" aria-hidden="true">+</span><span class="neo-grid-cmd-glyph" aria-hidden="true">增</span></button>
+        <button type="button" class="neo-grid-cmd" data-cmd="del" data-eventclick="removeDetail();" title="删除明细" aria-label="删除明细" disabled><span class="neo-grid-cmd-icon" aria-hidden="true">×</span><span class="neo-grid-cmd-glyph" aria-hidden="true">删</span></button>
+      </div>
+    </div>
+    <div class="neo-panel-body">
+      <cmx-revo-grid id="detailGrid" class="neo-travel-grid-host" data-neo-grid-tone="azure" data-cmx-master-slave-id="ms" data-cmx-dataset-id="head.items.details" data-cmx-model-id="detailModel" data-cmx-totals="{&quot;label&quot;:&quot;合计&quot;,&quot;columns&quot;:[&quot;amount&quot;]}" style="display:block;width:100%;flex:1 1 0%;min-height:0;" data-node-id="te-detail-grid"></cmx-revo-grid>
+    </div>
+  </div>
+
+  <div class="neo-meta-strip neo-lane neo-lane--foot" data-node-id="te-foot-lane">
+    <span class="neo-lane-accent" aria-hidden="true"></span>
+    <span class="neo-lane-tag" aria-hidden="true"><span>尾</span><span>部</span></span>
+    <cmx-ui5-form id="footForm" class="neo-travel-form-host" data-neo-form-lane="foot" data-cmx-density="compact" data-cmx-master-slave-id="ms" data-cmx-dataset-id="head" data-cmx-layout="S1 M2 L2 XL2" data-cmx-fields="[{&quot;key&quot;:&quot;preparer&quot;,&quot;label&quot;:&quot;制单人&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;key&quot;:&quot;auditor&quot;,&quot;label&quot;:&quot;审核人&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;key&quot;:&quot;tripEnd&quot;,&quot;label&quot;:&quot;返回日期&quot;,&quot;type&quot;:&quot;date&quot;},{&quot;key&quot;:&quot;totalClaim&quot;,&quot;label&quot;:&quot;报销合计&quot;,&quot;type&quot;:&quot;number&quot;,&quot;readonly&quot;:true}]" data-node-id="te-foot-form"></cmx-ui5-form>
+  </div>
+
+</div>
+<script type="application/json" id="__designer_meta__">{"pageData":[{"name":"itemCounter","type":"number","defaultValue":"9"},{"name":"detailCounter","type":"number","defaultValue":"9"},{"name":"travelEditing","type":"boolean","defaultValue":"false"},{"name":"travelStatus","type":"string","defaultValue":"draft"}],"pageFns":[{"name":"applyTravelGridNeoSkin","params":"gridEl,tone","body":"host.__neoTravelGridSkinCss = `\n.host-wrap.neo-travel-grid-wrap {\n  border-radius: 0;\n  overflow: hidden;\n  border: none !important;\n  background: transparent !important;\n  box-shadow: none !important;\n  margin: 0;\n  padding: 0;\n}\nrevo-grid.neo-travel-grid {\n  --neo-grid-accent: #0ea5e9;\n  --neo-grid-accent-2: #38bdf8;\n  --neo-grid-accent-3: #0284c7;\n  --neo-grid-accent-4: #06b6d4;\n}\nrevo-grid.neo-travel-grid--azure {\n  --neo-grid-accent: #0284c7;\n  --neo-grid-accent-2: #0ea5e9;\n  --neo-grid-accent-3: #38bdf8;\n  --neo-grid-accent-4: #06b6d4;\n}\nrevo-grid.neo-travel-grid revogr-header .rgHeaderCell .header-content {\n  font-family: ui-monospace, system-ui, sans-serif;\n}\nrevo-grid.neo-travel-grid revogr-header .group-rgRow > .rgHeaderCell,\nrevo-grid.neo-travel-grid revogr-header .actual-rgRow > .rgHeaderCell,\nrevo-grid.neo-travel-grid .rowHeaders revogr-header .actual-rgRow > .rgHeaderCell {\n  font-weight: 800;\n  letter-spacing: 0.04em;\n}\nrevo-grid.neo-travel-grid revogr-header .group-rgRow > .rgHeaderCell {\n  font-size: 0.72rem;\n  text-transform: none;\n}\nrevo-grid.neo-travel-grid revogr-header .actual-rgRow > .rgHeaderCell {\n  font-size: 0.68rem;\n  text-transform: uppercase;\n}\nrevo-grid.neo-travel-grid[theme=\"material\"] revogr-header .group-rgRow > .rgHeaderCell,\nrevo-grid.neo-travel-grid[theme=\"compact\"] revogr-header .group-rgRow > .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent) 30%, var(--sapList_HeaderBackground, #f5f6f7)),\n    color-mix(in srgb, var(--neo-grid-accent) 14%, var(--sapList_Background, #fff))) !important;\n  color: color-mix(in srgb, var(--neo-grid-accent) 88%, var(--sapList_HeaderTextColor, #32363a));\n}\nrevo-grid.neo-travel-grid[theme^=\"dark\"] revogr-header .group-rgRow > .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent) 46%, var(--sapList_HeaderBackground, #1d232a)),\n    color-mix(in srgb, var(--neo-grid-accent) 24%, var(--sapList_Background, #12171c))) !important;\n  color: color-mix(in srgb, var(--neo-grid-accent-2) 82%, var(--sapList_HeaderTextColor, #e8eaeb));\n}\nrevo-grid.neo-travel-grid revogr-header .group-rgRow > .rgHeaderCell {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-travel-grid revogr-header .group-rgRow > .header-rgRow.group ~ .rgHeaderCell {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-2) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-travel-grid[theme=\"material\"] revogr-header .group-rgRow > .header-rgRow.group ~ .rgHeaderCell,\nrevo-grid.neo-travel-grid[theme=\"compact\"] revogr-header .group-rgRow > .header-rgRow.group ~ .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent-2) 26%, var(--sapList_HeaderBackground, #f5f6f7)),\n    color-mix(in srgb, var(--neo-grid-accent-2) 11%, var(--sapList_Background, #fff))) !important;\n  color: color-mix(in srgb, var(--neo-grid-accent-2) 86%, var(--sapList_HeaderTextColor, #32363a));\n}\nrevo-grid.neo-travel-grid[theme^=\"dark\"] revogr-header .group-rgRow > .header-rgRow.group ~ .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent-2) 40%, var(--sapList_HeaderBackground, #1d232a)),\n    color-mix(in srgb, var(--neo-grid-accent-2) 20%, var(--sapList_Background, #12171c))) !important;\n}\nrevo-grid.neo-travel-grid revogr-header .group-rgRow > .header-rgRow.group ~ .header-rgRow.group ~ .rgHeaderCell {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-3) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-travel-grid[theme=\"material\"] revogr-header .group-rgRow > .header-rgRow.group ~ .header-rgRow.group ~ .rgHeaderCell,\nrevo-grid.neo-travel-grid[theme=\"compact\"] revogr-header .group-rgRow > .header-rgRow.group ~ .header-rgRow.group ~ .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent-3) 24%, var(--sapList_HeaderBackground, #f5f6f7)),\n    color-mix(in srgb, var(--neo-grid-accent-3) 10%, var(--sapList_Background, #fff))) !important;\n  color: color-mix(in srgb, var(--neo-grid-accent-3) 84%, var(--sapList_HeaderTextColor, #32363a));\n}\nrevo-grid.neo-travel-grid[theme^=\"dark\"] revogr-header .group-rgRow > .header-rgRow.group ~ .header-rgRow.group ~ .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent-3) 38%, var(--sapList_HeaderBackground, #1d232a)),\n    color-mix(in srgb, var(--neo-grid-accent-3) 18%, var(--sapList_Background, #12171c))) !important;\n}\nrevo-grid.neo-travel-grid revogr-header .group-rgRow > .header-rgRow.group ~ .header-rgRow.group ~ .header-rgRow.group ~ .rgHeaderCell {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-4) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-travel-grid[theme=\"material\"] revogr-header .actual-rgRow > .rgHeaderCell,\nrevo-grid.neo-travel-grid[theme=\"compact\"] revogr-header .actual-rgRow > .rgHeaderCell,\nrevo-grid.neo-travel-grid[theme=\"material\"] .rowHeaders revogr-header .actual-rgRow > .rgHeaderCell,\nrevo-grid.neo-travel-grid[theme=\"compact\"] .rowHeaders revogr-header .actual-rgRow > .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent) 18%, var(--sapList_HeaderBackground, #f5f6f7)),\n    color-mix(in srgb, var(--neo-grid-accent) 7%, var(--sapList_Background, #fff))) !important;\n  color: var(--sapList_HeaderTextColor, #32363a);\n}\nrevo-grid.neo-travel-grid[theme^=\"dark\"] revogr-header .actual-rgRow > .rgHeaderCell,\nrevo-grid.neo-travel-grid[theme^=\"dark\"] .rowHeaders revogr-header .actual-rgRow > .rgHeaderCell {\n  background: linear-gradient(180deg,\n    color-mix(in srgb, var(--neo-grid-accent) 32%, var(--sapList_HeaderBackground, #1d232a)),\n    color-mix(in srgb, var(--neo-grid-accent) 14%, var(--sapList_Background, #12171c))) !important;\n  color: var(--sapList_HeaderTextColor, #e8eaeb);\n}\nrevo-grid.neo-travel-grid revogr-header .actual-rgRow > .rgHeaderCell:nth-child(4n+1),\nrevo-grid.neo-travel-grid .rowHeaders revogr-header .actual-rgRow > .rgHeaderCell {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-travel-grid revogr-header .actual-rgRow > .rgHeaderCell:nth-child(4n+2) {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-2) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-travel-grid revogr-header .actual-rgRow > .rgHeaderCell:nth-child(4n+3) {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-3) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-travel-grid revogr-header .actual-rgRow > .rgHeaderCell:nth-child(4n) {\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent-4) 72%, var(--revo-grid-cell-border)) inset, -1px 0 0 0 var(--revo-grid-cell-border) inset !important;\n}\nrevo-grid.neo-travel-grid[theme=\"material\"] revogr-data .rgRow:nth-child(even) .rgCell,\nrevo-grid.neo-travel-grid[theme=\"compact\"] revogr-data .rgRow:nth-child(even) .rgCell {\n  background: color-mix(in srgb, var(--neo-grid-accent) 4%, var(--sapList_Background, #fff)) !important;\n}\nrevo-grid.neo-travel-grid[theme^=\"dark\"] revogr-data .rgRow:nth-child(even) .rgCell {\n  background: color-mix(in srgb, var(--neo-grid-accent) 9%, var(--sapList_Background, #1a1f26)) !important;\n}\nrevo-grid.neo-travel-grid revogr-data .rgRow:hover .rgCell {\n  background: color-mix(in srgb, var(--neo-grid-accent) 11%, var(--sapList_Hover_Background, var(--sapList_Background, #eaecee))) !important;\n}\nrevo-grid.neo-travel-grid .rgRow.cmx-current-row .rgCell {\n  background: color-mix(in srgb, var(--neo-grid-accent) 13%, var(--sapList_SelectionBackgroundColor, #e7f1ff)) !important;\n}\nrevo-grid.neo-travel-grid .rgRow.cmx-current-row {\n  box-shadow: inset 3px 0 0 0 var(--neo-grid-accent) !important;\n  background: transparent !important;\n}\nrevo-grid.neo-travel-grid revogr-data .rgCell.cmx-revo-align-right {\n  color: color-mix(in srgb, var(--neo-grid-accent) 72%, var(--sapTextColor, #223548));\n  font-weight: 700;\n}\nrevo-grid.neo-travel-grid[theme^=\"dark\"] revogr-data .rgCell.cmx-revo-align-right {\n  color: color-mix(in srgb, var(--neo-grid-accent-2) 78%, var(--sapTextColor, #e8eaeb));\n}\nrevo-grid.neo-travel-grid .footer-wrapper {\n  background: linear-gradient(90deg,\n    color-mix(in srgb, var(--neo-grid-accent) 12%, var(--sapList_FooterBackground, #f5f6f7)),\n    color-mix(in srgb, var(--neo-grid-accent-2) 10%, var(--sapList_FooterBackground, #f5f6f7))) !important;\n  box-shadow: 0 -1px 0 0 color-mix(in srgb, var(--neo-grid-accent) 45%, var(--revo-grid-cell-border)) !important;\n  font-weight: 800;\n  color: var(--sapList_FooterTextColor, var(--sapTextColor, inherit));\n}\nrevo-grid.neo-travel-grid[theme^=\"dark\"] .footer-wrapper {\n  background: linear-gradient(90deg,\n    color-mix(in srgb, var(--neo-grid-accent) 18%, var(--sapList_FooterBackground, #1a1f26)),\n    color-mix(in srgb, var(--neo-grid-accent-2) 14%, var(--sapList_FooterBackground, #1a1f26))) !important;\n}\n`;\nif (!gridEl) return;\ntone = tone || (gridEl.dataset && gridEl.dataset.neoGridTone) || 'violet';\nfunction paint() {\n  var sr = gridEl.shadowRoot;\n  if (!sr) return false;\n  var sid = 'neo-travel-grid-skin';\n  var style = sr.getElementById(sid);\n  if (!style) {\n    style = document.createElement('style');\n    style.id = sid;\n    sr.appendChild(style);\n  }\n  style.textContent = host.__neoTravelGridSkinCss;\n  var wrap = sr.querySelector('.host-wrap');\n  var revo = sr.querySelector('revo-grid');\n  if (wrap) wrap.classList.add('neo-travel-grid-wrap');\n  if (revo) {\n    revo.classList.add('neo-travel-grid');\n    revo.classList.remove('neo-travel-grid--cyan', 'neo-travel-grid--azure');\n    revo.classList.add('neo-travel-grid--' + tone);\n  }\n  return true;\n}\nif (!paint()) requestAnimationFrame(function () { paint(); });","readsVars":[],"writesVars":[]},{"name":"applyTravelFormNeoSkin","params":"formEl,lane","body":"host.__neoTravelFormSkinCss = `:host(.neo-travel-form) {\n  --neo-form-accent: #00b4d8;\n  --neo-form-accent-2: #7c3aed;\n  --neo-form-input-h: 1.52rem;\n  --neo-form-font-size: 0.76rem;\n  --neo-form-label-size: 0.76rem;\n  --neo-form-base: var(--sapGroup_ContentBackground, var(--sapList_Background, #f4f6f8));\n  display: block;\n  position: relative;\n  border-radius: 9px;\n  overflow: hidden;\n  isolation: isolate;\n  background: transparent;\n}\n:host(.neo-travel-form--foot) {\n  --neo-form-accent: #10b981;\n  --neo-form-accent-2: #00b4d8;\n}\n:host(.neo-travel-form) ui5-form {\n  width: 100%;\n  position: relative;\n  z-index: 1;\n  box-sizing: border-box;\n  border-radius: 9px;\n  overflow: hidden;\n  background: transparent !important;\n  --sapGroup_ContentBackground: transparent;\n  --sapList_Background: transparent;\n  --sapGroup_TitleBorderColor: color-mix(in srgb, var(--neo-form-accent) 24%, transparent);\n  --ui5-v2-form-vertical-spacing: 0.1rem;\n  --ui5-v2-form-item-spacing: 0.32rem;\n}\n:host(.neo-travel-form) ui5-form::part(header) { display: none; }\n:host(.neo-travel-form) ui5-form::part(layout) {\n  padding: 0.32rem 0.42rem;\n  row-gap: 0.32rem;\n  background: transparent;\n}\n:host(.neo-travel-form) ui5-form-item::part(root) {\n  position: relative;\n  padding: 4px 10px 4px 11px;\n  border-radius: 10px;\n  background:\n    linear-gradient(128deg,\n      color-mix(in srgb, var(--neo-form-accent) 18%, var(--neo-form-base)),\n      color-mix(in srgb, var(--neo-form-accent-2) 10%, var(--neo-form-base)) 58%,\n      color-mix(in srgb, var(--neo-form-accent) 6%, var(--neo-form-base)));\n  border: 1px solid color-mix(in srgb, var(--neo-form-accent) 32%, var(--sapField_BorderColor, #89919a));\n  box-shadow:\n    inset 2px 0 0 color-mix(in srgb, var(--neo-form-accent) 72%, transparent),\n    inset 0 0 18px color-mix(in srgb, var(--neo-form-accent) 6%, transparent),\n    0 1px 8px color-mix(in srgb, var(--neo-form-accent) 10%, transparent);\n  backdrop-filter: blur(6px);\n  transition: border-color 0.22s ease, box-shadow 0.22s ease;\n}\n:host(.neo-travel-form) ui5-form-item::part(root):hover {\n  border-color: color-mix(in srgb, var(--neo-form-accent) 48%, transparent);\n  box-shadow:\n    inset 2px 0 0 var(--neo-form-accent),\n    inset 0 0 22px color-mix(in srgb, var(--neo-form-accent) 10%, transparent),\n    0 2px 12px color-mix(in srgb, var(--neo-form-accent) 16%, transparent);\n}\n:host(.neo-travel-form) ui5-form-item::part(layout) {\n  align-items: center;\n  gap: 0.4rem;\n}\n:host(.neo-travel-form) ui5-label {\n  font-size: var(--neo-form-label-size, 0.76rem);\n  font-weight: 800;\n  letter-spacing: 0.06em;\n  font-family: ui-monospace, system-ui, sans-serif;\n  line-height: var(--neo-form-input-h, 1.52rem);\n  color: color-mix(in srgb, var(--neo-form-accent) 82%, var(--sapContent_LabelColor, #6a6d70));\n  white-space: nowrap;\n  text-shadow: 0 0 12px color-mix(in srgb, var(--neo-form-accent) 18%, transparent);\n}\n:host(.neo-travel-form) ui5-form-item ui5-input,\n:host(.neo-travel-form) ui5-form-item ui5-date-picker,\n:host(.neo-travel-form) ui5-form-item ui5-select,\n:host(.neo-travel-form) ui5-form-item ui5-combobox,\n:host(.neo-travel-form) ui5-form-item ui5-textarea {\n  width: 100%;\n  min-width: 0;\n  --_ui5_input_height: var(--neo-form-input-h);\n  --_ui5_input_min_width: 0;\n  --sapField_Background: color-mix(in srgb, var(--neo-form-accent) 22%, var(--neo-form-base));\n  --sapField_BorderColor: color-mix(in srgb, var(--neo-form-accent) 34%, var(--sapField_BorderColor, #89919a));\n  --_ui5-input-border: 1px solid color-mix(in srgb, var(--neo-form-accent) 30%, transparent);\n  --_ui5_input_bottom_border_height: 0;\n  --_ui5_input_bottom_border_color: transparent;\n  --sapField_BorderCornerRadius: 7px;\n  --sapField_Hover_Background: color-mix(in srgb, var(--neo-form-accent) 28%, var(--neo-form-base));\n  --sapField_Focus_Background: color-mix(in srgb, var(--neo-form-accent) 32%, var(--neo-form-base));\n  --_ui5_input_focus_outline_color: color-mix(in srgb, var(--neo-form-accent) 55%, transparent);\n  font-size: var(--neo-form-font-size, 0.76rem);\n  font-weight: 600;\n  font-family: ui-monospace, monospace;\n  border-radius: 7px;\n  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sapTextColor, #32363a) 6%, transparent);\n}\n:host(.neo-travel-form) ui5-form-item ui5-input[focused],\n:host(.neo-travel-form) ui5-form-item ui5-date-picker[focused],\n:host(.neo-travel-form) ui5-form-item ui5-combobox[focused] {\n  --sapField_BorderColor: var(--neo-form-accent);\n  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--neo-form-accent) 32%, transparent));\n}\n:host(.neo-travel-form) ui5-form-item ui5-date-picker {\n  --cmx-form-date-picker-height: var(--neo-form-input-h);\n  min-height: var(--neo-form-input-h);\n  display: block;\n}\n:host(.neo-travel-form) ui5-form-item ui5-input[readonly],\n:host(.neo-travel-form) ui5-form-item ui5-date-picker[readonly],\n:host(.neo-travel-form) ui5-form-item ui5-select[disabled],\n:host(.neo-travel-form) ui5-form-item ui5-combobox[readonly],\n:host(.neo-travel-form) ui5-form-item ui5-textarea[readonly] {\n  --sapField_ReadOnly_Background: transparent;\n  --sapField_Background: transparent;\n  --_ui5-input-border: none;\n  --_ui5_input_readonly_border: none;\n  --_ui5_input_readonly_border_color: transparent;\n  border: none !important;\n  box-shadow: none !important;\n  font-weight: 700;\n  color: var(--sapTitleColor, #223548);\n  text-shadow: 0 0 10px color-mix(in srgb, var(--neo-form-accent) 12%, transparent);\n}\n:host(.neo-travel-form) ui5-form-item ui5-input[readonly]::part(root),\n:host(.neo-travel-form) ui5-form-item ui5-date-picker[readonly]::part(root) {\n  background: transparent !important;\n  border: none !important;\n  box-shadow: none !important;\n}\n:host(.neo-travel-form) ui5-form-item ui5-input[readonly]::part(input),\n:host(.neo-travel-form) ui5-form-item ui5-date-picker[readonly]::part(input) {\n  background: transparent !important;\n}\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+1) { --neo-field-accent: var(--neo-form-accent); }\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+2) { --neo-field-accent: var(--neo-form-accent-2); }\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+3) { --neo-field-accent: #10b981; }\n:host(.neo-travel-form) ui5-form-item:nth-child(4n) { --neo-field-accent: #f59e0b; }\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+1)::part(root),\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+2)::part(root),\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+3)::part(root),\n:host(.neo-travel-form) ui5-form-item:nth-child(4n)::part(root) {\n  background:\n    linear-gradient(128deg,\n      color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 20%, var(--neo-form-base)),\n      color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 8%, var(--neo-form-base)) 55%,\n      color-mix(in srgb, var(--neo-form-accent-2) 6%, var(--neo-form-base)));\n  border-color: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 34%, var(--sapField_BorderColor, #89919a));\n  box-shadow:\n    inset 2px 0 0 color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 75%, transparent),\n    inset 0 0 20px color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 8%, transparent),\n    0 1px 8px color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 11%, transparent);\n}\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+1) ui5-label,\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+2) ui5-label,\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+3) ui5-label,\n:host(.neo-travel-form) ui5-form-item:nth-child(4n) ui5-label {\n  color: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 84%, var(--sapContent_LabelColor, #6a6d70));\n}\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+1) ui5-input,\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+2) ui5-input,\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+3) ui5-input,\n:host(.neo-travel-form) ui5-form-item:nth-child(4n) ui5-input,\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+1) ui5-date-picker,\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+2) ui5-date-picker,\n:host(.neo-travel-form) ui5-form-item:nth-child(4n+3) ui5-date-picker,\n:host(.neo-travel-form) ui5-form-item:nth-child(4n) ui5-date-picker {\n  --sapField_Background: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 24%, var(--neo-form-base));\n  --sapField_BorderColor: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 36%, var(--sapField_BorderColor, #89919a));\n  --sapField_Hover_Background: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 30%, var(--neo-form-base));\n  --sapField_Focus_Background: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 34%, var(--neo-form-base));\n  --_ui5_input_focus_outline_color: color-mix(in srgb, var(--neo-field-accent, var(--neo-form-accent)) 58%, transparent);\n}\n:host(.neo-travel-form) .readonly-display {\n  font-family: ui-monospace, monospace;\n  font-weight: 700;\n  font-size: var(--neo-form-font-size, 0.76rem);\n  padding: 3px 2px;\n  color: var(--sapTitleColor, #223548);\n  text-shadow: 0 0 10px color-mix(in srgb, var(--neo-form-accent) 14%, transparent);\n}`;\nhost.__neoTravelUi5FormInnerSkinCss = `.ui5-form-root {\n  background:\n    linear-gradient(118deg,\n      color-mix(in srgb, var(--neo-form-accent, #00b4d8) 26%, var(--neo-form-base, #eef2f6)) 0%,\n      color-mix(in srgb, var(--neo-form-accent-2, #7c3aed) 18%, var(--neo-form-base, #eef2f6)) 54%,\n      color-mix(in srgb, var(--neo-form-accent, #00b4d8) 12%, var(--neo-form-base, #eef2f6)) 100%) !important;\n  background-color: transparent !important;\n  border-radius: 9px;\n  box-shadow:\n    inset 0 0 0 1px color-mix(in srgb, var(--neo-form-accent, #00b4d8) 28%, transparent),\n    inset 0 1px 0 color-mix(in srgb, var(--sapTextColor, #32363a) 8%, transparent),\n    0 2px 14px color-mix(in srgb, var(--neo-form-accent, #00b4d8) 10%, transparent);\n  position: relative;\n  overflow: hidden;\n}\n.ui5-form-root::before {\n  content: '';\n  position: absolute;\n  inset: 0;\n  border-radius: inherit;\n  background-image:\n    linear-gradient(color-mix(in srgb, var(--neo-form-accent, #00b4d8) 10%, transparent) 1px, transparent 1px),\n    linear-gradient(90deg, color-mix(in srgb, var(--neo-form-accent, #00b4d8) 10%, transparent) 1px, transparent 1px);\n  background-size: 16px 16px;\n  mask-image: radial-gradient(ellipse 100% 92% at 50% 0%, #000 14%, transparent 82%);\n  opacity: 0.44;\n  pointer-events: none;\n  z-index: 0;\n}\n.ui5-form-layout {\n  position: relative;\n  z-index: 1;\n  padding: 0.32rem 0.42rem !important;\n  row-gap: 0.32rem !important;\n  background: transparent !important;\n}\n.ui5-form-header {\n  background: transparent !important;\n  border-bottom-color: color-mix(in srgb, var(--neo-form-accent, #00b4d8) 24%, transparent) !important;\n}\n.ui5-form-column {\n  background: transparent !important;\n}`;\nif (!formEl) return;\nlane = lane || (formEl.dataset && formEl.dataset.neoFormLane) || 'head';\nfunction paintInnerUi5Form(ui5form) {\n  if (!ui5form || !ui5form.shadowRoot) return false;\n  var isid = 'neo-travel-ui5-form-inner';\n  var ist = ui5form.shadowRoot.getElementById(isid);\n  if (!ist) {\n    ist = document.createElement('style');\n    ist.id = isid;\n    ui5form.shadowRoot.appendChild(ist);\n  }\n  ist.textContent = host.__neoTravelUi5FormInnerSkinCss;\n  ui5form.style.setProperty('--sapGroup_ContentBackground', 'transparent');\n  ui5form.style.setProperty('--sapList_Background', 'transparent');\n  return true;\n}\nfunction paint() {\n  var sr = formEl.shadowRoot;\n  if (!sr) return false;\n  var sid = 'neo-travel-form-skin';\n  var style = sr.getElementById(sid);\n  if (!style) {\n    style = document.createElement('style');\n    style.id = sid;\n    sr.appendChild(style);\n  }\n  style.textContent = host.__neoTravelFormSkinCss;\n  formEl.classList.add('neo-travel-form');\n  formEl.classList.remove('neo-travel-form--head', 'neo-travel-form--foot');\n  formEl.classList.add('neo-travel-form--' + lane);\n  var ui5form = sr.querySelector('ui5-form');\n  if (ui5form) paintInnerUi5Form(ui5form);\n  return true;\n}\nfunction retryPaint() {\n  if (paint()) {\n    requestAnimationFrame(function () {\n      var sr = formEl.shadowRoot;\n      var ui5form = sr && sr.querySelector('ui5-form');\n      if (ui5form) paintInnerUi5Form(ui5form);\n    });\n  } else {\n    requestAnimationFrame(retryPaint);\n  }\n}\nretryPaint();","readsVars":[],"writesVars":[]},{"name":"wireTravelFormNeoSkin","params":"","body":"var root = host.shadowRoot;\nif (!root) return;\nvar head = root.querySelector('#headForm');\nvar foot = root.querySelector('#footForm');\nif (head) host.applyTravelFormNeoSkin(head, 'head');\nif (foot) host.applyTravelFormNeoSkin(foot, 'foot');\nif (!host.__travelFormThemeWired) {\n  host.__travelFormThemeWired = true;\n  window.addEventListener('cmx-portal-theme-change', function () {\n    host.wireTravelFormNeoSkin();\n  });\n}","readsVars":[],"writesVars":[]},{"name":"wireTravelGridNeoSkin","params":"","body":"var root = host.shadowRoot;\nif (!root) return;\nvar item = root.querySelector('#itemGrid');\nvar detail = root.querySelector('#detailGrid');\nif (item) host.applyTravelGridNeoSkin(item, 'cyan');\nif (detail) host.applyTravelGridNeoSkin(detail, 'azure');\nif (!host.__travelGridThemeWired) {\n  host.__travelGridThemeWired = true;\n  window.addEventListener('cmx-portal-theme-change', function () {\n    host.wireTravelGridNeoSkin();\n  });\n}\n[item, detail].forEach(function (grid) {\n  if (!grid || grid.__neoSkinColsWired) return;\n  grid.__neoSkinColsWired = true;\n  grid.addEventListener('cmx-columns-changed', function () {\n    host.applyTravelGridNeoSkin(grid, grid.dataset && grid.dataset.neoGridTone);\n  });\n});","readsVars":[],"writesVars":[]},{"name":"refreshTravelSeal","params":"","body":"host.TRAVEL_STATUS_MAP = host.TRAVEL_STATUS_MAP || { draft:{label:'草稿',status:'draft'}, void:{label:'作废',status:'void'}, saved:{label:'保存',status:'saved'}, audited:{label:'审核',status:'audited'}, approved:{label:'审批',status:'approved'} };\nvar st = ($data.travelStatus || 'draft').toLowerCase();\nvar m = host.TRAVEL_STATUS_MAP[st] || host.TRAVEL_STATUS_MAP.draft;\n$data.travelStatus = m.status;\nvar el = host.shadowRoot && host.shadowRoot.querySelector('#travelStatusSeal');\nif (!el) return;\nel.setAttribute('data-status', m.status);\nel.setAttribute('aria-label', '单据状态：' + m.label);\nvar box = el.querySelector('.neo-seal-text');\nif (box) { box.innerHTML = ''; m.label.split('').forEach(function(ch){ var s=document.createElement('span'); s.textContent=ch; box.appendChild(s); }); }\nif (host.syncTravelActionButtons) host.syncTravelActionButtons();","readsVars":["tradeStatus"],"writesVars":["tradeStatus"]},{"name":"setTravelStatus","params":"status","body":"host.TRAVEL_STATUS_MAP = host.TRAVEL_STATUS_MAP || { draft:{label:'草稿',status:'draft'}, void:{label:'作废',status:'void'}, saved:{label:'保存',status:'saved'}, audited:{label:'审核',status:'audited'}, approved:{label:'审批',status:'approved'} };\nvar key = String(status || 'draft').toLowerCase();\nif (!host.TRAVEL_STATUS_MAP[key]) key = 'draft';\n$data.travelStatus = key;\nvar ms = host.ms;\nif (ms && ms.getFlatData) { var h0=(ms.getFlatData().head||[])[0]; if (h0&&h0.id&&ms.getRow){ var row=ms.getRow('head',h0.id); if(row&&typeof row.set==='function') row.set('travelStatus',key); else if(row) row.travelStatus=key; } }\nhost.refreshTravelSeal();","readsVars":[],"writesVars":["tradeStatus"]},{"name":"syncTravelActionButtons","params":"","body":"var root=host.shadowRoot; if(!root) return;\nvar st=($data.travelStatus||'draft').toLowerCase(); var voided=st==='void'; var approved=st==='approved';\nvar saveBtn=root.querySelector('#travelSaveBtn'); var submitBtn=root.querySelector('#travelSubmitBtn'); var editBtn=root.querySelector('#travelEditBtn');\nfunction dis(el,on){ if(!el)return; if(on){el.setAttribute('disabled','');el.classList.add('is-disabled');} else{el.removeAttribute('disabled');el.classList.remove('is-disabled');} }\ndis(editBtn,voided||approved); dis(saveBtn,voided||approved); dis(submitBtn,voided||approved||st==='draft');\n[saveBtn,submitBtn].forEach(function(el){ if(!el)return; el.removeAttribute('data-done'); el.removeAttribute('data-current'); });\nvar order=['draft','saved','audited','approved']; var idx=order.indexOf(st); if(idx<0) idx=0;\nif(saveBtn&&idx>=1) saveBtn.setAttribute('data-done','true');\nif(submitBtn&&idx>=2) submitBtn.setAttribute('data-done','true');\nif(!voided&&!approved){ if(st==='draft'&&saveBtn) saveBtn.setAttribute('data-current','true'); else if((st==='saved'||st==='audited')&&submitBtn) submitBtn.setAttribute('data-current','true'); }","readsVars":["tradeStatus"],"writesVars":[]},{"name":"doSaveTravel","params":"","body":"if(!host.ms){alert('请先加载示例');return;} if(host.exportMsJson) host.exportMsJson(); host.setTravelStatus('saved'); if(host.setTravelEditMode) host.setTravelEditMode(false); alert('已保存（演示：数据已导出为 JSON）');","readsVars":[],"writesVars":["tradeStatus","tradeEditing"]},{"name":"doSubmitTravel","params":"","body":"if(!host.ms){alert('请先加载示例');return;} var st=($data.travelStatus||'draft').toLowerCase();\nif(st==='void'){alert('单据已作废');return;} if(st==='draft'){alert('请先保存单据');return;} if(st==='approved'){alert('单据已审批通过');return;}\nif(st==='saved'){host.setTravelStatus('audited'); if(host.setTravelEditMode) host.setTravelEditMode(false); alert('已提交审批（演示）'); return;}\nif(st==='audited'){host.setTravelStatus('approved'); if(host.setTravelEditMode) host.setTravelEditMode(false); alert('审批通过（演示）');}","readsVars":["tradeStatus"],"writesVars":["tradeStatus","tradeEditing"]},{"name":"refreshTravelHud","params":"","body":"function fmt(n){ return (Number(n)||0).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2}); }\nvar ms=host.ms, root=host.shadowRoot; if(!ms||!root)return;\nvar flat=ms.getFlatData?ms.getFlatData():{}; var head=(flat.head&&flat.head[0])||{}; var items=flat.items||[], details=flat.details||[];\nvar total=0, transport=0, lodging=0; items.forEach(function(r){ var la=Number(r.lineAmount)||0; total+=la; var t=r.expenseType||''; if(['train','car','plane','ferry','self_drive','local_transit'].indexOf(t)>=0) transport++; if(t==='accommodation') lodging++; });\nif(total<0.005) details.forEach(function(d){ total+=Number(d.amount)||0; });\nvar elDoc=root.querySelector('#travelClaimNo'); var elMeta=root.querySelector('#travelMeta'); var elTot=root.querySelector('#kpiTotal');\nvar elTrans=root.querySelector('#kpiTransport'); var elLodg=root.querySelector('#kpiLodging'); var elDet=root.querySelector('#kpiDetails');\nif(elDoc) elDoc.textContent=head.claimNo||'—'; if(elMeta) elMeta.textContent=(items.length+' 项 · '+details.length+' 明细');\nif(elTot) elTot.textContent=fmt(total); if(elTrans) elTrans.textContent=String(transport); if(elLodg) elLodg.textContent=String(lodging); if(elDet) elDet.textContent=String(details.length);\nif(host.refreshTravelSeal) host.refreshTravelSeal(); if(host.refreshTravelContextBadge) host.refreshTravelContextBadge();","readsVars":["tradeStatus"],"writesVars":[]},{"name":"wireTravelFlexibleCombination","params":"","body":"if (!host.detailGrid || !host.itemGrid) return;\nif (!host.__detailColumnsWired) { host.__detailColumnsWired = true; host.detailGrid.addEventListener('cmx-columns-changed', function () { host.onDetailColumnsChanged(); }); }\nif (!host.itemGrid.__travelAnchorWired) {\n  host.itemGrid.__travelAnchorWired = true;\n  host.itemGrid.addEventListener('cmx-cell-changed', function (ev) {\n    var d = ev && ev.detail; var prop = d && (d.prop || d.column);\n    if (prop === 'expenseType' || prop === 'travelerMode') {\n      var rowId = d && d.id;\n      if (rowId && host.ms && host.ms.getRow) host.applyDetailSchema(host.ms.getRow('head.items', rowId) || {});\n    }\n    if (host.refreshTravelHud) host.refreshTravelHud();\n  });\n}\nif (!host.detailGrid.__neoHudWired) {\n  host.detailGrid.__neoHudWired = true;\n  host.detailGrid.addEventListener('cmx-cell-changed', function(){ if (host.refreshTravelHud) host.refreshTravelHud(); });\n}","readsVars":[],"writesVars":[]},{"name":"refreshTravelContextBadge","params":"","body":"var root=host.shadowRoot; if(!root) return;\nvar el=root.querySelector('#travelExpenseRuleText'); var cp=host.detailFlexibleCombination; if(!el) return;\nvar ruleId=cp&&cp._currentRuleId;\nif(ruleId){\n  el.textContent=' - '+String(ruleId).toUpperCase();\n  el.setAttribute('title','FlexibleCombination 规则：'+ruleId);\n} else {\n  el.textContent='';\n  el.setAttribute('title','等待 FlexibleCombination 规则');\n}","readsVars":[],"writesVars":[]},{"name":"exportMsJson","params":"","body":"var ms = host.ms;\nif (!ms || typeof ms.exportKeyValue !== 'function') { alert('协调器未初始化或不支持导出'); return; }\nvar data = ms.exportKeyValue();\nvar text = JSON.stringify(data, null, 2);\ntry {\n  var blob = new Blob([text], { type: 'application/json;charset=utf-8' });\n  var url = URL.createObjectURL(blob);\n  var a = document.createElement('a');\n  a.href = url;\n  a.download = (host.__pageId || 'masterslave') + '-export.json';\n  document.body.appendChild(a); a.click();\n  setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 0);\n} catch (e) { console.log(text); alert('导出数据已打印到控制台（下载失败）'); }","readsVars":[],"writesVars":[]},{"name":"initTravel","params":"","body":"var ms = host.ms;\nif (!ms) { alert('协调器尚未初始化'); return; }\nhost.__flexibleCombinationCache = {};\nvar demoHeads = [{ id:'h1', claimNo:'CL-202605-001', claimDate:'2026-05-29', traveler:'张明', department:'销售部', tripPurpose:'华东客户拜访', travelerMode:'multi', tripRoute:'北京-上海-杭州', tripStart:'2026-05-20', tripEnd:'2026-05-24', preparer:'张明', auditor:'李主管', travelStatus:'draft' }];\nvar demoItems = [\n  { id:'e1', claimId:'h1', expenseType:'plane', travelerMode:'single', summary:'北京-上海机票', personCount:1 },\n  { id:'e2', claimId:'h1', expenseType:'train', travelerMode:'multi', summary:'上海-杭州高铁', personCount:3 },\n  { id:'e3', claimId:'h1', expenseType:'car', travelerMode:'multi', summary:'杭州-宁波长途汽车', personCount:3 },\n  { id:'e4', claimId:'h1', expenseType:'ferry', travelerMode:'single', summary:'舟山轮渡', personCount:1 },\n  { id:'e5', claimId:'h1', expenseType:'self_drive', travelerMode:'multi', summary:'自驾油费过路费', personCount:2 },\n  { id:'e6', claimId:'h1', expenseType:'accommodation', travelerMode:'multi', summary:'上海酒店3晚', personCount:3 },\n  { id:'e7', claimId:'h1', expenseType:'dining', travelerMode:'multi', summary:'客户招待餐', personCount:4 },\n  { id:'e8', claimId:'h1', expenseType:'local_transit', travelerMode:'single', summary:'上海地铁/出租车', personCount:1 },\n  { id:'e9', claimId:'h1', expenseType:'accounting', travelerMode:'single', summary:'差旅审计咨询费', personCount:1 }\n];\nvar demoDetails = [\n  { id:'d1', expenseId:'e1', routeFrom:'北京', routeTo:'上海', unitPrice:980, quantity:1, amount:980 },\n  { id:'d2', expenseId:'e2', routeFrom:'上海', routeTo:'杭州', unitPrice:120, personCount:3, amount:360 },\n  { id:'d3', expenseId:'e3', routeFrom:'杭州', routeTo:'宁波', unitPrice:85, personCount:3, amount:255 },\n  { id:'d4', expenseId:'e4', routeFrom:'宁波', routeTo:'舟山', unitPrice:120, quantity:1, amount:120 },\n  { id:'d5', expenseId:'e5', routeFrom:'宁波', routeTo:'周边', unitPrice:280, personCount:2, amount:560 },\n  { id:'d6', expenseId:'e6', city:'SHA', nights:3, roomRate:420, personCount:3, amount:3780 },\n  { id:'d7', expenseId:'e7', personCount:4, perCapita:180, amount:720 },\n  { id:'d8', expenseId:'e8', trips:6, tripCost:45, amount:270 },\n  { id:'d9', expenseId:'e9', serviceItem:'差旅合规审计', amount:1500, invoiceNo:'INV-202605-88' }\n];\nms.setFlatData({ head: demoHeads, items: demoItems, details: demoDetails });\nvar root = host.shadowRoot; var itemGrid = root.querySelector('#itemGrid'); var detailGrid = root.querySelector('#detailGrid');\nitemGrid.setOptions({ selectionMode:'single', fillHeight:true, showRowIndex:true });\ndetailGrid.setOptions({ selectionMode:'single', fillHeight:true, showRowIndex:true });\nitemGrid.setTotals({ label:'合计', columns:['lineAmount'] }); detailGrid.setTotals({ label:'合计', columns:['amount'] });\nhost.itemGrid = itemGrid; host.detailGrid = detailGrid;\nif (host.wireTravelFlexibleCombination) host.wireTravelFlexibleCombination();\nhost.applyDetailSchema(demoItems[0] || {});\n$data.travelStatus = 'draft'; $data.itemCounter = 9; $data.detailCounter = 9;\nif (host.refreshTravelHud) host.refreshTravelHud();\nif (!host.__travelHudTimer) host.__travelHudTimer = setInterval(function(){ if (host.refreshTravelHud) host.refreshTravelHud(); }, 800);\nif (host.setTravelEditMode) host.setTravelEditMode(false);\nif (host.refreshTravelSeal) host.refreshTravelSeal();\nif (host.syncTravelActionButtons) host.syncTravelActionButtons();\nif (host.wireTravelGridNeoSkin) host.wireTravelGridNeoSkin();\nif (host.wireTravelFormNeoSkin) host.wireTravelFormNeoSkin();","readsVars":[],"writesVars":["itemCounter","detailCounter","tradeEditing","tradeStatus"]},{"name":"onItemSelected","params":"e","body":"var rowId = e && e.detail && e.detail.id;\nif (!rowId || !host.ms) return;\nvar row = host.ms.getRow ? host.ms.getRow('head.items', rowId) : null;\nhost.applyDetailSchema(row || {});","readsVars":[],"writesVars":[]},{"name":"applyDetailSchema","params":"anchor","body":"if (!host.detailFlexibleCombination) return;\nvar tx = anchor && anchor.expenseType, pt = anchor && anchor.travelerMode;\nvar p = host.detailFlexibleCombination.loadByAnchor({ expenseType: tx || '', travelerMode: pt || '' });\nif (p && typeof p.then === 'function') {\n  p.then(function(){ if (host.refreshTravelContextBadge) host.refreshTravelContextBadge(); })\n   .catch(function(){ if (host.refreshTravelContextBadge) host.refreshTravelContextBadge(); });\n} else if (host.refreshTravelContextBadge) host.refreshTravelContextBadge();","readsVars":[],"writesVars":[]},{"name":"onDetailColumnsChanged","params":"","body":"if (!host.detailGrid || !host.detailModel) return;\nhost.detailGrid.setTotals({ label: '合计', columns: ['amount'] });\nif (typeof host.setTravelEditMode === 'function') host.setTravelEditMode($data.travelEditing);\nif (host.refreshTravelContextBadge) host.refreshTravelContextBadge();\nif (host.detailGrid && host.applyTravelGridNeoSkin) host.applyTravelGridNeoSkin(host.detailGrid, 'azure');","readsVars":["tradeEditing"],"writesVars":[]},{"name":"addItem","params":"","body":"if (!$data.travelEditing) { alert('请先进入编辑状态'); return; }\nif (!host.ms) { alert('请先加载示例'); return; }\n$data.itemCounter = ($data.itemCounter || 3) + 1;\nvar n = $data.itemCounter;\nhost.itemGrid.addRow({ id: 't' + n, claimId: 'h1', expenseType: 'sale', travelerMode: 'goods', traveler:'C001', summary: '' });\nhost.refreshTravelHud();","readsVars":["itemCounter","tradeEditing"],"writesVars":["itemCounter"]},{"name":"removeItem","params":"","body":"if (!$data.travelEditing) { alert('请先进入编辑状态'); return; }\nif (!host.ms) { alert('请先加载示例'); return; }\nvar selectedId = host.itemGrid && host.itemGrid._selectedId;\nif (!selectedId) { alert('请先选择一条报销行'); return; }\nhost.itemGrid.removeRows([selectedId]);","readsVars":["tradeEditing"],"writesVars":[]},{"name":"addDetail","params":"","body":"if (!$data.travelEditing) { alert('请先进入编辑状态'); return; }\nif (!host.ms) { alert('请先加载示例'); return; }\nvar selectedId = host.itemGrid && host.itemGrid._selectedId;\nif (!selectedId) { alert('请先选择一条报销行'); return; }\n$data.detailCounter = ($data.detailCounter || 3) + 1;\nvar n = $data.detailCounter;\nhost.detailGrid.addRow({ id: 'dt' + n, expenseId: selectedId, amount: 0 });","readsVars":["detailCounter","tradeEditing"],"writesVars":["detailCounter"]},{"name":"removeDetail","params":"","body":"if (!$data.travelEditing) { alert('请先进入编辑状态'); return; }\nif (!host.ms) { alert('请先加载示例'); return; }\nvar selectedId = host.detailGrid && host.detailGrid._selectedId;\nif (!selectedId) { alert('请先选择一条报销明细'); return; }\nhost.detailGrid.removeRows([selectedId]);","readsVars":["tradeEditing"],"writesVars":[]},{"name":"setTravelEditMode","params":"flag","body":"var editing=!!flag; $data.travelEditing=editing; host.__travelEditing=editing;\nfunction setGridEditable(grid){ if(!grid)return; if(typeof grid.setEditable==='function') grid.setEditable(editing); else if(typeof grid.setOptions==='function') grid.setOptions({editable:editing,readonly:!editing}); }\nsetGridEditable(host.itemGrid); setGridEditable(host.detailGrid);\nvar root=host.shadowRoot; if(!root) return; var btn=root.querySelector('#travelEditBtn');\nif(btn){ var sp=btn.querySelector('span'); if(sp) sp.textContent=editing?'退':'编'; btn.setAttribute('title',editing?'退出编辑':'进入编辑'); if(editing) btn.classList.add('is-active'); else btn.classList.remove('is-active'); }\n['addItem','removeItem','addDetail','removeDetail'].forEach(function(fnName){ root.querySelectorAll('[data-eventclick=\"'+fnName+'();\"]').forEach(function(el){ if(editing){el.removeAttribute('disabled');el.classList.remove('is-disabled');} else{el.setAttribute('disabled','');el.classList.add('is-disabled');} }); });\n['#headForm','#footForm'].forEach(function(sel){ var form=root.querySelector(sel); var sr=form&&form.shadowRoot; if(!sr)return; sr.querySelectorAll('ui5-input,ui5-date-picker,ui5-textarea').forEach(function(el){ if(editing) el.removeAttribute('readonly'); else el.setAttribute('readonly',''); }); sr.querySelectorAll('ui5-select,ui5-checkbox,ui5-combobox').forEach(function(el){ if(editing) el.removeAttribute('disabled'); else el.setAttribute('disabled',''); }); });\nif(host.syncTravelActionButtons) host.syncTravelActionButtons();\nif (host.wireTravelFormNeoSkin) host.wireTravelFormNeoSkin();","readsVars":[],"writesVars":["tradeEditing"]},{"name":"toggleTravelEdit","params":"","body":"var st=($data.travelStatus||'draft').toLowerCase(); if(st==='paid'||st==='void'){alert('当前状态不可编辑');return;} host.setTravelEditMode(!$data.travelEditing);","readsVars":["tradeEditing","tradeStatus"],"writesVars":[]}],"pageServices":[{"name":"resolveFlexibleCombination","type":"rest","url":"/api/flexible-combination/rule","method":"GET","rpcMethod":"","headers":"","bodyTemplate":"","responseTo":"","responseTransform":""},{"name":"genericHello","type":"rest","url":"/api/hello","method":"GET","rpcMethod":"","headers":"","bodyTemplate":"","responseTo":"","responseTransform":""}],"pageDeps":[],"pageInterfaces":[{"name":"isDirty","enabled":true,"body":"return host.__cmxDirty === true;"},{"name":"getState","enabled":true,"body":"return Object.assign({}, $data);"},{"name":"validate","enabled":true,"body":"return { valid: true };"},{"name":"initPage","enabled":true,"body":"if (!$data.travelStatus) $data.travelStatus = 'draft';\nif (host.refreshTravelSeal) host.refreshTravelSeal();\nif (host.syncTravelActionButtons) host.syncTravelActionButtons();\nif (host.initTravel) host.initTravel();"},{"name":"onActivate","enabled":true,"body":"if (host.wireTravelFlexibleCombination) host.wireTravelFlexibleCombination();\nif (host.refreshTravelHud) host.refreshTravelHud();\nif (host.refreshTravelSeal) host.refreshTravelSeal();\nif (host.syncTravelActionButtons) host.syncTravelActionButtons();\nvar rowId = host.itemGrid && host.itemGrid._selectedId;\nif (rowId && host.ms && host.ms.getRow && host.applyDetailSchema) host.applyDetailSchema(host.ms.getRow('head.items', rowId) || {});\nelse if (host.applyDetailSchema && host.ms && host.ms.getFlatData) { var items=(host.ms.getFlatData().items||[]); if(items[0]) host.applyDetailSchema(items[0]); }\nif (host.wireTravelGridNeoSkin) host.wireTravelGridNeoSkin();\nif (host.wireTravelFormNeoSkin) host.wireTravelFormNeoSkin();"}],"dataSources":[],"dataFlow":{"schema":[{"id":"head","kind":"list","children":[{"id":"items","kind":"list","children":[{"id":"details","kind":"list","children":[]}]}]}],"aggregations":[{"from":"head.items.details","to":"head.items","field":"amount","toField":"lineAmount","agg":"sum"},{"from":"head.items","to":"head","field":"lineAmount","toField":"totalClaim","agg":"sum"}],"relations":[{"parent":"head","child":"items","parentKey":"id","childKey":"claimId"},{"parent":"items","child":"details","parentKey":"id","childKey":"expenseId"}]},"models":[{"id":"m1","modelType":"CmxDataSet","instanceId":"headDataSet","props":{"dataSource":"","dataSourceEvent":"onInit","children":[{"childId":"items","instanceId":"itemDataSet"}]},"events":{}},{"id":"m2","modelType":"CmxDataSet","instanceId":"itemDataSet","props":{"dataSource":"","dataSourceEvent":"onInit","children":[{"childId":"details","instanceId":"detailsDataSet"}]},"events":{}},{"id":"m3","modelType":"CmxDataSet","instanceId":"detailsDataSet","props":{"dataSource":"","dataSourceEvent":"onInit","children":[]},"events":{}},{"id":"m4","modelType":"CmxMasterSlave","instanceId":"ms","props":{"schema":[{"id":"head","children":[{"id":"items","children":[{"id":"details"}]}]}],"aggregations":[{"from":"head.items.details","to":"head.items","field":"amount","toField":"lineAmount","agg":"sum"},{"from":"head.items","to":"head","field":"lineAmount","toField":"totalClaim","agg":"sum"}]},"events":{}},{"id":"m5","modelType":"CmxColumnModel","instanceId":"itemModel","props":{"datasetId":"head.items","columns":[{"id":"expenseType","caption":"费用类型","type":"select","width":"120px","editSettings":{"options":[{"value":"train","label":"火车"},{"value":"car","label":"汽车"},{"value":"plane","label":"飞机"},{"value":"ferry","label":"轮渡"},{"value":"self_drive","label":"自驾车"},{"value":"accommodation","label":"住宿"},{"value":"dining","label":"餐饮"},{"value":"accounting","label":"会计"},{"value":"local_transit","label":"市内交通"}]}},{"id":"travelerMode","caption":"人数模式","type":"select","width":"100px","editSettings":{"options":[{"value":"single","label":"一人"},{"value":"multi","label":"多人"}]}},{"id":"summary","caption":"费用摘要","type":"text","width":"220px"},{"id":"personCount","caption":"人数","type":"number","width":"80px","align":"right"},{"id":"lineAmount","caption":"行金额","type":"number","width":"120px","align":"right","editMode":"readonly"}]},"events":{}},{"id":"m6","modelType":"CmxColumnModel","instanceId":"detailModel","props":{"datasetId":"head.items.details","columns":[{"id":"remark","caption":"备注","type":"text","width":"240px"},{"id":"amount","caption":"金额","type":"number","width":"120px","align":"right"}]},"events":{}},{"id":"m7","modelType":"FlexibleCombination","instanceId":"detailFlexibleCombination","props":{"domain":"fi","app":"cmxfico","module":"gl","scenario":"travel-expense","columnModelId":"detailModel","serviceFn":"resolveFlexibleCombination","apiPath":"/api/flexible-combination/rule","anchorDimensions":["expenseType","travelerMode"]},"events":{}}]}</script>

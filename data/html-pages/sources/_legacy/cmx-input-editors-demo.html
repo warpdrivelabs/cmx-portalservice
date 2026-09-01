@@ -1,0 +1,111 @@
+<div data-node-id="n-root" style="display:flex;flex-direction:column;width:100%;height:100%;min-height:760px;gap:8px;padding:8px;box-sizing:border-box;background:var(--sapBackgroundColor,#fafafa);overflow:auto;">
+
+  <ui5-bar design="Header" accessible-role="Toolbar" data-node-id="n-hdr">
+    <ui5-label slot="startContent" data-node-id="n-hdr-t" wrapping-type="Normal" style="font-weight:800;font-size:1.05rem;color:var(--sapShellTitleColor,var(--sapTitleColor));">录入控件演示 · cmx-text / number / date / datetime-input</ui5-label>
+    <ui5-label slot="endContent" data-node-id="n-hdr-s" wrapping-type="Normal" style="color:var(--sapContent_LabelColor);font-size:0.8rem;">三端「录入控件」下拉选中后实际使用的四个组件</ui5-label>
+    <ui5-button design="Emphasized" slot="endContent" icon="show" data-node-id="n-hdr-b" data-eventclick="dumpValues();" accessible-role="Button" loading-delay="1000">读取全部当前值</ui5-button>
+  </ui5-bar>
+
+  <!-- 下拉值 → 组件 映射说明 -->
+  <div data-node-id="n-map" style="display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;background:var(--sapInformationBackground,#eaf4ff);border:1px solid var(--sapInformationBorderColor,#b3d4ff);border-radius:4px;font-size:0.78rem;color:var(--sapTextColor,#32363a);">
+    <span style="font-weight:700;" data-node-id="n-1">下拉 → 组件映射：</span>
+    <span style="padding:1px 8px;background:var(--sapButton_Background,#fff);color:var(--sapButton_TextColor,#0a6ed1);border-radius:10px;border:1px solid var(--sapButton_BorderColor,#cfe2ff);" data-node-id="n-2">输入(cmx-text-input) → &lt;cmx-text-input&gt;</span>
+    <span style="padding:1px 8px;background:var(--sapButton_Background,#fff);color:var(--sapButton_TextColor,#0a6ed1);border-radius:10px;border:1px solid var(--sapButton_BorderColor,#cfe2ff);" data-node-id="n-3">数字(cmx-number-input) → &lt;cmx-number-input&gt;</span>
+    <span style="padding:1px 8px;background:var(--sapButton_Background,#fff);color:var(--sapButton_TextColor,#0a6ed1);border-radius:10px;border:1px solid var(--sapButton_BorderColor,#cfe2ff);" data-node-id="n-4">日期(cmx-date-input) → &lt;cmx-date-input&gt;</span>
+    <span style="padding:1px 8px;background:var(--sapButton_Background,#fff);color:var(--sapButton_TextColor,#0a6ed1);border-radius:10px;border:1px solid var(--sapButton_BorderColor,#cfe2ff);" data-node-id="n-5">日期时间(cmx-datetime-input) → &lt;cmx-datetime-input&gt;</span>
+  </div>
+
+  <!-- 四组件卡片网格 -->
+  <div data-node-id="n-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;">
+
+    <!-- 文本输入框 -->
+    <div data-node-id="n-c1" style="display:flex;flex-direction:column;gap:10px;padding:12px;background:var(--sapList_Background,#fff);border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:6px;">
+      <div style="display:flex;align-items:center;gap:6px;" data-node-id="n-6">
+        <ui5-icon name="edit" style="color:var(--sapHighlightColor);" design="Default" mode="Decorative" data-node-id="n-7"></ui5-icon>
+        <ui5-title level="H6" size="H6" style="margin:0;font-weight:800;color:var(--sapTitleColor);" wrapping-type="Normal" data-node-id="n-8">文本输入框 · &lt;cmx-text-input&gt;</ui5-title>
+      </div>
+
+      <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-9">普通文本（最大长度 10）</ui5-label>
+      <cmx-text-input id="t-plain" data-node-id="n-10" maxlength="10" placeholder="最多10字" style="display:block;width:100%;" data-eventcmx-value-change="echoValue(event,'t-echo');"></cmx-text-input>
+
+      <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-11">邮箱（内置正则校验）</ui5-label>
+      <cmx-text-input id="t-email" data-node-id="n-12" input-type="email" placeholder="name@example.com" style="display:block;width:100%;" data-eventcmx-value-change="echoValue(event,'t-echo');"></cmx-text-input>
+
+      <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-13">手机号（内置正则校验）</ui5-label>
+      <cmx-text-input id="t-phone" data-node-id="n-14" input-type="phone" placeholder="13800138000" style="display:block;width:100%;" data-eventcmx-value-change="echoValue(event,'t-echo');"></cmx-text-input>
+
+      <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-15">身份证（内置正则校验）</ui5-label>
+      <cmx-text-input id="t-idcard" data-node-id="n-16" input-type="idcard" placeholder="18位身份证" style="display:block;width:100%;" data-eventcmx-value-change="echoValue(event,'t-echo');"></cmx-text-input>
+
+      <ui5-label id="t-echo" style="font-size:0.75rem;color:var(--sapPositiveColor,#107e3e);min-height:1rem;" wrapping-type="Normal" data-node-id="n-17">当前值：—</ui5-label>
+    </div>
+
+    <!-- 数字输入框 -->
+    <div data-node-id="n-c2" style="display:flex;flex-direction:column;gap:10px;padding:12px;background:var(--sapList_Background,#fff);border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:6px;">
+      <div style="display:flex;align-items:center;gap:6px;" data-node-id="n-18">
+        <ui5-icon name="number-sign" style="color:var(--sapHighlightColor);" design="Default" mode="Decorative" data-node-id="n-19"></ui5-icon>
+        <ui5-title level="H6" size="H6" style="margin:0;font-weight:800;color:var(--sapTitleColor);" wrapping-type="Normal" data-node-id="n-20">数字输入框 · &lt;cmx-number-input&gt;</ui5-title>
+      </div>
+
+      <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-21">金额（2 位小数 + 千分位，范围 0~1000000）</ui5-label>
+      <cmx-number-input id="n-amount" data-node-id="n-22" decimal-digits="2" min="0" max="1000000" placeholder="0.00" style="display:block;width:100%;" data-eventcmx-value-change="echoValue(event,'n-echo');"></cmx-number-input>
+
+      <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-23">整数（整数位≤4，范围 0~9999）</ui5-label>
+      <cmx-number-input id="n-int" data-node-id="n-24" int-digits="4" decimal-digits="0" min="0" max="9999" placeholder="整数" style="display:block;width:100%;" data-eventcmx-value-change="echoValue(event,'n-echo');"></cmx-number-input>
+
+      <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-25">表达式计算（试输入 <code data-node-id="n-26">=12*3+4</code> 回车 / 点尾部计算器）</ui5-label>
+      <cmx-number-input id="n-expr" data-node-id="n-27" decimal-digits="2" placeholder="=12*3+4" style="display:block;width:100%;" data-eventcmx-value-change="echoValue(event,'n-echo');"></cmx-number-input>
+
+      <ui5-label id="n-echo" style="font-size:0.75rem;color:var(--sapPositiveColor,#107e3e);min-height:1rem;" wrapping-type="Normal" data-node-id="n-28">当前值：—</ui5-label>
+    </div>
+
+    <!-- 日期输入框 -->
+    <div data-node-id="n-c3" style="display:flex;flex-direction:column;gap:10px;padding:12px;background:var(--sapList_Background,#fff);border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:6px;">
+      <div style="display:flex;align-items:center;gap:6px;" data-node-id="n-29">
+        <ui5-icon name="appointment-2" style="color:var(--sapHighlightColor);" design="Default" mode="Decorative" data-node-id="n-30"></ui5-icon>
+        <ui5-title level="H6" size="H6" style="margin:0;font-weight:800;color:var(--sapTitleColor);" wrapping-type="Normal" data-node-id="n-31">日期输入框 · &lt;cmx-date-input&gt;</ui5-title>
+      </div>
+
+      <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-32">日期（默认格式 yyyy-MM-dd，点击弹日历）</ui5-label>
+      <cmx-date-input id="d-default" data-node-id="n-33" format="yyyy-MM-dd" style="display:block;width:100%;" data-eventcmx-value-change="echoValue(event,'d-echo');"></cmx-date-input>
+
+      <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-34">日期（自定义格式 yyyy年MM月dd日）</ui5-label>
+      <cmx-date-input id="d-cn" data-node-id="n-35" format="yyyy年MM月dd日" style="display:block;width:100%;" data-eventcmx-value-change="echoValue(event,'d-echo');"></cmx-date-input>
+
+      <ui5-label id="d-echo" style="font-size:0.75rem;color:var(--sapPositiveColor,#107e3e);min-height:1rem;" wrapping-type="Normal" data-node-id="n-36">当前值：—</ui5-label>
+    </div>
+
+    <!-- 日期时间输入框 -->
+    <div data-node-id="n-c4" style="display:flex;flex-direction:column;gap:10px;padding:12px;background:var(--sapList_Background,#fff);border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:6px;">
+      <div style="display:flex;align-items:center;gap:6px;" data-node-id="n-37">
+        <ui5-icon name="date-time" style="color:var(--sapHighlightColor);" design="Default" mode="Decorative" data-node-id="n-38"></ui5-icon>
+        <ui5-title level="H6" size="H6" style="margin:0;font-weight:800;color:var(--sapTitleColor);" wrapping-type="Normal" data-node-id="n-39">日期时间输入框 · &lt;cmx-datetime-input&gt;</ui5-title>
+      </div>
+
+      <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-40">日期时间（默认 yyyy-MM-dd HH:mm:ss）</ui5-label>
+      <cmx-datetime-input id="dt-default" data-node-id="n-41" format="yyyy-MM-dd HH:mm:ss" style="display:block;width:100%;" data-eventcmx-value-change="echoValue(event,'dt-echo');"></cmx-datetime-input>
+
+      <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-42">日期时间（只读态演示）</ui5-label>
+      <cmx-datetime-input id="dt-ro" data-node-id="n-43" format="yyyy-MM-dd HH:mm:ss" readonly="true" style="display:block;width:100%;" data-eventcmx-value-change="echoValue(event,'dt-echo');"></cmx-datetime-input>
+
+      <ui5-label id="dt-echo" style="font-size:0.75rem;color:var(--sapPositiveColor,#107e3e);min-height:1rem;" wrapping-type="Normal" data-node-id="n-44">当前值：—</ui5-label>
+    </div>
+
+  </div>
+
+  <!-- grid 端演示 -->
+  <div data-node-id="n-gridcard" style="display:flex;flex-direction:column;gap:8px;padding:12px;background:var(--sapList_Background,#fff);border:1px solid var(--sapGroup_ContentBorderColor,#e0e0e0);border-radius:6px;min-height:340px;">
+    <div style="display:flex;align-items:center;gap:6px;" data-node-id="n-45">
+      <ui5-icon name="grid" style="color:var(--sapHighlightColor);" design="Default" mode="Decorative" data-node-id="n-46"></ui5-icon>
+      <ui5-title level="H6" size="H6" style="margin:0;font-weight:800;color:var(--sapTitleColor);" wrapping-type="Normal" data-node-id="n-47">grid 端 · 四列分别用四个组件作单元格编辑器（双击单元格编辑）</ui5-title>
+    </div>
+    <ui5-label style="font-size:0.78rem;color:var(--sapContent_LabelColor);" wrapping-type="Normal" data-node-id="n-48">列「文本/数字/日期/日期时间」的 edit.mode = cmx-text-input / cmx-number-input / cmx-date-input / cmx-datetime-input，与上方卡片同源组件。</ui5-label>
+    <cmx-revo-grid id="demoGrid" data-cmx-model-id="demoModel" data-cmx-dataset-id="demoDs" style="display: block; width: 100%; height: 280px;" data-node-id="n-49"></cmx-revo-grid>
+  </div>
+
+  <ui5-bar design="Footer" accessible-role="Toolbar" data-node-id="n-ftr">
+    <ui5-label slot="startContent" wrapping-type="Normal" style="color:var(--sapContent_LabelColor);font-size:0.75rem;" data-node-id="n-50">所有组件事件均为 cmx-value-change { value, valid }；本页直接 document.createElement 挂载，证明 customElement 已注册并可用。</ui5-label>
+  </ui5-bar>
+
+</div>
+<script type="application/json" id="__designer_meta__">{"pageData":[],"pageFns":[{"name":"setupGrid","params":"","body":"/* 列模型(demoModel)与数据集(demoDs)已由 init-page-models 依据 grid 上的\n   data-cmx-model-id / data-cmx-dataset-id 自动创建并绑定（见 __designer_meta__.models）。\n   此处只需开启编辑（revo-grid 默认 editable:false）。 */\nvar root = host.shadowRoot;\nvar grid = root.querySelector('#demoGrid');\nif (!grid) return;\nif (typeof grid.setEditable === 'function') grid.setEditable(true);\nif (typeof grid.setOptions === 'function') grid.setOptions({ editable:true, selectionMode:'single', showRowIndex:true });","readsVars":[],"writesVars":[]},{"name":"dumpValues","params":"","body":"var root = host.shadowRoot;\nvar ids = ['t-plain','t-email','t-phone','t-idcard','n-amount','n-int','n-expr','d-default','d-cn','dt-default','dt-ro'];\nvar lines = [];\nids.forEach(function(id){\n  var el = root.querySelector('#' + id);\n  if (!el) return;\n  var v = (typeof el.getValue === 'function') ? el.getValue() : undefined;\n  var valid = (typeof el.validate === 'function') ? el.validate() : true;\n  lines.push(id + ' = ' + (typeof v === 'object' ? JSON.stringify(v) : v) + (valid === true ? '' : '  [校验:' + valid + ']'));\n});\nalert('各组件当前取值：\\n\\n' + lines.join('\\n'));","readsVars":[],"writesVars":[]},{"name":"echoValue","params":"event, echoId","body":"var d = (event && event.detail) || {};\nvar echo = host.shadowRoot.querySelector('#' + echoId);\nif (!echo) return;\nvar v = d.value;\nvar txt = (v == null || v === '') ? '—' : (typeof v === 'object' ? JSON.stringify(v) : String(v));\necho.textContent = '当前值：' + txt + (d.valid === false ? '  ✗ 校验未过' : '  ✓');\necho.style.color = d.valid === false ? 'var(--sapNegativeColor,#bb0000)' : 'var(--sapPositiveColor,#107e3e)';","readsVars":[],"writesVars":[]}],"pageServices":[],"pageDeps":[],"pageInterfaces":[{"name":"initPage","enabled":true,"body":"var root = host.shadowRoot;\nvar ro = root.querySelector('#dt-ro');\nif (ro && typeof ro.setValue === 'function') ro.setValue('2026-06-12 09:30:00', { silent:true });\nif (host.setupGrid) host.setupGrid();"},{"name":"onActivate","enabled":true,"body":""},{"name":"isDirty","enabled":true,"body":"return false;"},{"name":"getState","enabled":true,"body":"return {};"},{"name":"validate","enabled":true,"body":"return { valid: true };"}],"dataSources":[],"dataFlow":{"schema":[],"aggregations":[],"relations":[]},"models":[{"id":"demoModel","modelType":"CmxColumnModel","instanceId":"demoModel","props":{"datasetId":"demoDs","columns":[{"id":"name","caption":{"zh_CN":"文本(cmx-text-input)"},"dataType":"VARCHAR","width":"160px","edit":{"mode":"cmx-text-input"},"display":{},"name":"name"},{"id":"amount","caption":{"zh_CN":"数字(cmx-number-input)"},"dataType":"DECIMAL","width":"140px","edit":{"mode":"cmx-number-input"},"display":{"decimalDigits":2,"thousandSeparator":true},"decimalDigits":2,"name":"amount"},{"id":"day","caption":{"zh_CN":"日期(cmx-date-input)"},"dataType":"DATE","width":"150px","edit":{"mode":"cmx-date-input"},"display":{},"name":"day"},{"id":"ts","caption":{"zh_CN":"日期时间(cmx-datetime-input)"},"dataType":"DATETIME","width":"200px","edit":{"mode":"cmx-datetime-input"},"display":{},"name":"ts"}],"columnGroups":[]},"events":{}},{"id":"demoDs","modelType":"CmxDataSet","instanceId":"demoDs","props":{"rows":[{"name":"示例一","amount":1234.5,"day":"2026-06-01","ts":"2026-06-01 08:00:00"},{"name":"示例二","amount":9999.99,"day":"2026-06-12","ts":"2026-06-12 09:30:00"},{"name":"示例三","amount":0,"day":"2026-12-31","ts":"2026-12-31 23:59:59"}]},"events":{}}]}</script>

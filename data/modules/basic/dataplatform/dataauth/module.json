@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "domain": "basic",
+  "application": "dataplatform",
+  "module": "dataauth",
+  "title": "数据权限",
+  "status": "active",
+  "aliases": [
+    "basic.dataplatform.dataauth",
+    "dataauth"
+  ],
+  "resources": {},
+  "notes": [
+    "数据权限引擎（独立微服务 cmx-data-auth，默认 :8098）的门户模块登记。",
+    "菜单经 dataauth-portal-menu.sql 落 cmx_menu；工作台 /console 由平台反代（DataAuthProxyModule）。"
+  ]
+}

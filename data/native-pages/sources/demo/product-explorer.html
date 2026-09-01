@@ -1,0 +1,38 @@
+<div style="display:flex;flex-direction:column;height:100%;font-family:-apple-system,'Segoe UI','PingFang SC',sans-serif;box-sizing:border-box">
+  <div style="padding:10px 12px;border-bottom:1px solid var(--sapList_BorderColor,#e0e6ed);font-weight:700;font-size:0.9rem;color:var(--sapTitleColor,#1d2d3e);display:flex;align-items:center;gap:6px">
+    <span style="font-size:1rem">📁</span> 产品列表 · explorer 区（CE-A）
+  </div>
+  <ul id="prod-list" style="list-style:none;margin:0;padding:6px;flex:1 1 auto;overflow:auto"></ul>
+  <div style="padding:8px 12px;border-top:1px solid var(--sapList_BorderColor,#e0e6ed);font-size:0.72rem;color:var(--sapContent_LabelColor,#6a6d70)">
+    点击产品 → 经 workspace.context 通知 content 区详情
+  </div>
+
+  <script>
+    // native_pages 普通脚本：框架注入 workspace / host（无需 __designer_meta__）。
+    // 查本页 DOM 用 host.renderRoot（在本 CE 的 shadowRoot 内，id 与他页隔离）。
+    var root = host.renderRoot;
+    var products = [
+      { id: 'p1', name: '智能网关 G100', price: 1299, stock: 42, desc: '工业级边缘网关，支持 5G/Wi-Fi 6，双核处理器，宽温运行。', tags: ['网关', '5G', '边缘'] },
+      { id: 'p2', name: '温湿度传感器 S200', price: 89, stock: 530, desc: '高精度温湿度采集，±0.3℃ / ±2%RH，LoRa 无线传输。', tags: ['传感器', 'LoRa'] },
+      { id: 'p3', name: '边缘服务器 E500', price: 8800, stock: 7, desc: '8 核 32G，4×2.5GbE，支持容器化部署与 AI 推理加速。', tags: ['服务器', 'AI', '容器'] },
+      { id: 'p4', name: '工业摄像头 C300', price: 2150, stock: 88, desc: '500 万像素，IP67 防护，宽动态，支持 ONVIF 与边缘分析。', tags: ['摄像头', 'IP67', 'ONVIF'] }
+    ];
+
+    var ul = root.querySelector('#prod-list');
+    products.forEach(function (p) {
+      var li = document.createElement('li');
+      li.dataset.id = p.id;
+      li.style.cssText = 'padding:9px 10px;margin:3px 2px;border:1px solid var(--sapList_BorderColor,#e8edf3);border-radius:8px;cursor:pointer;font-size:0.85rem';
+      li.innerHTML = '<div style="font-weight:600;color:var(--sapTitleColor,#1d2d3e)">' + p.name + '</div>'
+        + '<div style="font-size:0.74rem;color:var(--sapContent_LabelColor,#6a6d70);margin-top:2px">¥' + p.price + ' · 库存 ' + p.stock + '</div>';
+      li.addEventListener('click', function () {
+        ul.querySelectorAll('li').forEach(function (x) { x.style.background = ''; x.style.borderColor = 'var(--sapList_BorderColor,#e8edf3)'; });
+        li.style.background = 'var(--sapList_SelectionBackgroundColor,#e3f0ff)';
+        li.style.borderColor = 'var(--sapContent_Selected_ForegroundColor,#0a6ed1)';
+        // ★ 跨区域交互：写共享中间对象 workspace.context（content 区订阅它）
+        if (workspace && workspace.context) workspace.context.set('selectedProduct', p);
+      });
+      ul.appendChild(li);
+    });
+  </script>
+</div>

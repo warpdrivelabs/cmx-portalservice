@@ -1,0 +1,46 @@
+<div style="display:flex;flex-direction:column;height:100%;font-family:-apple-system,'Segoe UI','PingFang SC',sans-serif;box-sizing:border-box;background:var(--sapBackgroundColor,#fafafa)">
+  <div style="padding:10px 16px;border-bottom:1px solid var(--sapList_BorderColor,#e0e6ed);font-weight:700;font-size:0.9rem;color:var(--sapTitleColor,#1d2d3e);display:flex;align-items:center;gap:6px">
+    <span style="font-size:1rem">📦</span> 产品详情 · content 区（CE-B）
+  </div>
+  <div id="detail" style="flex:1 1 auto;overflow:auto;padding:22px 26px"></div>
+
+  <script>
+    // native_pages 普通脚本：订阅 workspace.context，另一区域的页面 set 时本页刷新。
+    var root = host.renderRoot;
+    var box = root.querySelector('#detail');
+
+    function esc (s) {
+      return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function renderDetail (p) {
+      if (!p) {
+        box.innerHTML = '<div style="padding:40px;text-align:center;color:var(--sapContent_LabelColor,#9aa7b5);font-size:0.9rem">← 在左侧 explorer 区选择一个产品<br><span style="font-size:0.78rem">（两个独立 CE 通过 workspace.context 联动）</span></div>';
+        return;
+      }
+      var tags = (p.tags || []).map(function (t) {
+        return '<span style="display:inline-block;background:var(--sapInformationBackground,#eaf4ff);color:var(--sapInformationColor,#0a6ed1);border-radius:12px;padding:2px 10px;font-size:0.72rem;margin:0 6px 6px 0">' + esc(t) + '</span>';
+      }).join('');
+      box.innerHTML = '<div style="font-size:1.3rem;font-weight:800;color:var(--sapTitleColor,#1d2d3e);margin-bottom:4px">' + esc(p.name) + '</div>'
+        + '<div style="display:flex;gap:24px;margin:14px 0">'
+        + '<div><div style="font-size:0.74rem;color:var(--sapContent_LabelColor,#6a6d70)">单价</div><div style="font-size:1.5rem;font-weight:700;color:#0a6ed1">¥' + esc(p.price) + '</div></div>'
+        + '<div><div style="font-size:0.74rem;color:var(--sapContent_LabelColor,#6a6d70)">库存</div><div style="font-size:1.5rem;font-weight:700;color:' + (p.stock < 10 ? '#bb0000' : '#107e3e') + '">' + esc(p.stock) + '</div></div>'
+        + '</div>'
+        + '<div style="font-size:0.9rem;line-height:1.7;color:var(--sapTextColor,#32363a);margin:10px 0 16px">' + esc(p.desc) + '</div>'
+        + '<div>' + tags + '</div>'
+        + '<div style="margin-top:18px;font-size:0.72rem;color:var(--sapContent_LabelColor,#9aa7b5)">产品 ID：' + esc(p.id) + ' · 收到 context 推送 ' + new Date().toLocaleTimeString() + '</div>';
+    }
+
+    if (workspace && workspace.context) {
+      var onChange = function (ev) {
+        if (ev && ev.key === 'selectedProduct') renderDetail(ev.value);
+      };
+      workspace.context.on('change', onChange);
+      // 解绑：host 从 DOM 移除时清理订阅（native host 暴露 onDispose 钩子）
+      host.onDispose = function () { try { workspace.context.off('change', onChange); } catch (e) {} };
+      // 同步当前值（explorer 可能已先选）
+      renderDetail(workspace.context.get('selectedProduct'));
+    } else {
+      renderDetail(null);
+    }
+  </script>
+</div>

@@ -1,0 +1,28 @@
+meta {
+  name: 页面元数据查询
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/rpc
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "jsonrpc": "2.0",
+    "method": "page.getMeta",
+    "params": {},
+    "id": 1
+  }
+}
+
+docs {
+  JSON-RPC：获取页面元数据。method = page.getMeta。
+}

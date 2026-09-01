@@ -1,0 +1,89 @@
+<div class="dictbx-root" style="display:flex;flex-direction:column;height:100%;font:13px/1.45 -apple-system,'Segoe UI','PingFang SC',sans-serif;color:var(--sapTextColor,#1d2d3e);background:var(--sapList_Background,#fff);box-sizing:border-box">
+  <div style="padding:9px 12px;border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);font-weight:700;display:flex;align-items:center;gap:6px;flex:0 0 auto">
+    <span>🗂️</span> 字典基础元数据 · 文件
+  </div>
+  <div id="filelist" style="flex:0 0 auto;display:flex;flex-direction:column;gap:6px;padding:8px;overflow:auto;max-height:45%"></div>
+  <div style="padding:6px 12px;font-weight:700;border-top:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);border-bottom:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);flex:0 0 auto">字段集</div>
+  <div id="fslist" style="flex:1 1 auto;display:flex;flex-direction:column;gap:6px;padding:8px;overflow:auto"></div>
+
+  <style>
+    .dictbx-root .dx-item{border:1px solid var(--sapGroup_TitleBorderColor,#d9d9d9);background:var(--sapList_Background,#fff);text-align:left;padding:8px;border-radius:6px;cursor:pointer;color:inherit;font:inherit}
+    .dictbx-root .dx-item:hover{background:var(--sapList_Hover_Background,#f0f5fb)}
+    .dictbx-root .dx-item.active{border-color:var(--sapHighlightColor,#0070f2);box-shadow:inset 3px 0 0 var(--sapHighlightColor,#0070f2)}
+    .dictbx-root .dx-sub{font-size:12px;color:var(--sapContent_LabelColor,#6a6d70);margin-top:2px}
+    .dictbx-root .dx-empty{padding:12px;color:var(--sapContent_LabelColor,#6a6d70)}
+  </style>
+
+  <script>
+    /* 字典基础元数据 · 列表页（native_pages 新模式：普通 HTML+脚本，shadowRoot 隔离，
+       跨区域状态走 workspace.context）。本页只读列表 + 写选择态到 context；
+       数据加载/保存由 content 区的 manager 页负责，本页订阅其广播的 dictDoc。 */
+    var root = host.renderRoot;
+    var ctx = workspace && workspace.context;
+    var esc = function (s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
+
+    async function apiJson (url) {
+      var res = await fetch(url, { headers: { Accept: 'application/json' }, credentials: 'same-origin' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }
+
+    function renderFiles (items, curFile) {
+      var box = root.querySelector('#filelist');
+      box.innerHTML = '';
+      if (!items.length) { box.innerHTML = '<div class="dx-empty">无 BASE 文件</div>'; return; }
+      items.forEach(function (it) {
+        var b = document.createElement('button');
+        b.className = 'dx-item' + (curFile === it.file ? ' active' : '');
+        b.innerHTML = '<strong>' + esc(it.title || it.file) + '</strong><div class="dx-sub">' + esc(it.file) + ' · ' + esc(it.fieldSetCount || 0) + ' 字段集</div>';
+        b.addEventListener('click', function () {
+          if (ctx) ctx.set('dictSelectedFile', { domain: it.domain || 'base', module: it.module || '', file: it.file });
+        });
+        box.appendChild(b);
+      });
+    }
+
+    function renderFieldSets (doc, curFs) {
+      var box = root.querySelector('#fslist');
+      box.innerHTML = '';
+      var sets = (doc && doc.fieldSets && typeof doc.fieldSets === 'object') ? Object.keys(doc.fieldSets) : [];
+      if (!sets.length) { box.innerHTML = '<div class="dx-empty">请选择左侧文件加载字段集</div>'; return; }
+      sets.forEach(function (name) {
+        var fs = doc.fieldSets[name] || {};
+        var b = document.createElement('button');
+        b.className = 'dx-item' + (curFs === name ? ' active' : '');
+        b.innerHTML = '<strong>' + esc(name) + '</strong><div class="dx-sub">' + esc(fs.remark || '') + ' · ' + ((fs.fields || []).length) + ' 字段</div>';
+        b.addEventListener('click', function () { if (ctx) ctx.set('dictSelectedFieldSet', name); });
+        box.appendChild(b);
+      });
+    }
+
+    // 初始：加载文件列表
+    apiJson('/api/definitions/list?kind=BASE&domain=base').then(function (data) {
+      var items = Array.isArray(data.items) ? data.items : [];
+      host.__files = items;
+      var cur = ctx && ctx.get('dictSelectedFile');
+      renderFiles(items, cur && cur.file);
+      // 若还没人选文件，默认选第一个 dct 文件 → 触发 manager 加载
+      if (ctx && !cur) {
+        var def = items.find(function (x) { return String(x.file).indexOf('dct') >= 0; }) || items[0];
+        if (def) ctx.set('dictSelectedFile', { domain: def.domain || 'base', module: def.module || '', file: def.file });
+      }
+      renderFieldSets(ctx && ctx.get('dictDoc'), ctx && ctx.get('dictSelectedFieldSet'));
+    }).catch(function (e) {
+      root.querySelector('#filelist').innerHTML = '<div class="dx-empty">加载失败：' + esc(e.message) + '</div>';
+    });
+
+    // 订阅 context：文件高亮、字段集列表（manager 加载完会广播 dictDoc）
+    if (ctx) {
+      var onChange = function (ev) {
+        if (ev.key === 'dictSelectedFile') renderFiles(host.__files || [], ev.value && ev.value.file);
+        if (ev.key === 'dictDoc' || ev.key === 'dictSelectedFieldSet') {
+          renderFieldSets(ctx.get('dictDoc'), ctx.get('dictSelectedFieldSet'));
+        }
+      };
+      ctx.on('change', onChange);
+      host.onDispose = function () { try { ctx.off('change', onChange); } catch (e) {} };
+    }
+  </script>
+</div>
