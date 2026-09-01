@@ -27,6 +27,7 @@ const DEFAULT_VALUE_NAME = '(默认)'
 
 // ─── 小工具 ──────────────────────────────────────────────────────────────
 const { escHtml: esc } = globalThis.__cmxDataComp // 共享转义（cmx-data-comp/lib/cmx-page-helpers.js；最严格五字符集合，文本/属性上下文皆安全）
+const { deepClone } = globalThis.__cmxDataComp // 共享深拷贝（cmx-data-comp/lib/cmx-deep-clone.js；审查 B-04）
 
 const isObj = (v) => v != null && typeof v === 'object' && !Array.isArray(v)
 const isKeyNode = (k) => !k.startsWith('__')
@@ -357,7 +358,7 @@ function searchAll(keyword, limit) {
 function exportSubtree(segs) {
   const hit = getNode(segs)
   if (!hit) return null
-  return JSON.parse(JSON.stringify(hit.node))
+  return deepClone(hit.node)
 }
 
 // 导入：深合并 obj 到目标键；返回 { added, updated }
