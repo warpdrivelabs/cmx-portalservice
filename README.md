@@ -100,32 +100,33 @@ cmx-portalservice/                        （独立 workspace）
 | 文件 | 作用 |
 |---|---|
 | `.env` | 环境变量。`dotenvy` 在启动最前读 cwd 的 `.env`。关键项：`CONFIG_FILE="./portal-server.toml"`、`WEB_FOLDER`、`RUST_LOG`、`NACOS_*` |
-| `portal-server.toml` | 主配置（`CONFIG_FILE` 指向）：`[server]`（host/port）、`[portal]`（前端 dist 托管）、`[[databases]]`、`[redis]`、`[storage]`、`[plugin]`、`[center_client]`… |
+| `portal-server.toml` | 主配置（`CONFIG_FILE` 指向）：`[server]`（host/port）、`[portal]`（前端 dist 托管）、`[[databases]]`、`[redis]`、`[storage]`、`[plugin]`、`[service_rpc]`… |
 
 配置装配统一走 `ConfigManager`（与 flow/report/mdm 同一制度：`CONFIG_FILE` toml + env → 全局 ConfigManager，Nacos 启用时叠加远程源）。
 
-### 微服务开关 `[center_client]`
+### 微服务开关 `[service_rpc]`
 
-门户对下游能力中心「内嵌 vs 独立微服务」只看这一段配置——服务定位为**自由键值表**（urls 手动基址 /
-discovery.services Nacos 服务名，新增微服务只加一行键值），`mode` 驱动导入器传输与反代目标来源
-（local → 不挂反代；http_url → urls 基址；http_discovery/grpc → Nacos 服务发现选例）：
+门户对下游能力中心「内嵌 vs 独立微服务」只看这一段配置（原 `[center_client]` 已更名，旧段残留会
+**启动报错**）——服务定位为 per-key **自由键值表**（`url` 静态基址 / `discovery` Nacos 服务名，
+新增微服务只加一行键值；url 与 discovery 并存时 url 优先，删 url 即切服务发现选例）：
 
 ```toml
-[center_client]
-mode = "http_url"
+[service_rpc]
+default_transport = "http"   # 服务间调用全局传输缺省（grpc 需 [service_rpc.server] + 键配 discovery）
+timeout_ms = 30000
+retry_max = 1                # 幂等调用重试上限（仅连接级错误换实例重试）
 
-[center_client.urls]
+[service_rpc.services]
 # 导入器目标（自环门户统一端点）
-menu = "http://127.0.0.1:8080"
-# 反代目标：非空 → 独立微服务模式，门户的 /api/flow/* 转发到此基址；不配 → 门户无该路由。
-flow = "http://127.0.0.1:8091"
-report = "http://127.0.0.1:8092"
-rules = "http://127.0.0.1:8094"
-
-[center_client.discovery.services]
-# mode = "http_discovery"/"grpc" 时改查此表（Nacos 注册名）
-flow = "cmx-flow-server"
+menu = { url = "http://127.0.0.1:8080" }
+# 反代目标：配了 → 独立微服务模式，门户的 /api/flow/* 转发到此基址；不配 → 门户无该路由。
+flow   = { url = "http://127.0.0.1:8091", discovery = "cmx-flow-server" }
+report = { url = "http://127.0.0.1:8092", discovery = "cmx-rpt-server" }
+rules  = { url = "http://127.0.0.1:8094", discovery = "cmx-rule-server" }
 ```
+
+环境变量覆盖：`SERVICE_RPC__SERVICES__<KEY>__<FIELD>`（旧前缀 `CENTER_CLIENT__` 已废弃）。完整
+字段手册见 [cmx-container/config/CONFIG_MANUAL.md](../cmx-container/config/CONFIG_MANUAL.md)「服务间统一调用目录（service_rpc）」章。
 
 ---
 

@@ -142,20 +142,22 @@ base_path = "cmx-server/"
 # 服务定位为「自由键值表」：urls（手动基址）与 discovery.services（Nacos 服务名），新增微服务
 # 只在 toml 加一行键值，无需改代码。定位与传输均 per-key：每键自带 url/discovery 定位
 #（url 优先，删 url 即切 Nacos 选例）与可选 transport 覆盖（http|grpc，仅导入调用生效）。
-[center_client]
+[service_rpc]
 # 部署蓝本：三引擎独立微服务 + 手动基址反代。
-# 服务间调用全局传输缺省：http | grpc（grpc 需 [rpc] + 各键 discovery）；键级 transport 可覆盖。
+# 服务间调用全局传输缺省：http | grpc（grpc 需 [service_rpc.server] + 各键 discovery）；键级 transport 可覆盖。
 default_transport = "http"
 # Nacos 分组（discovery 定位的键共用，缺省 DEFAULT_GROUP）
 nacos_group = "DEFAULT_GROUP"
 timeout_ms = 30000
+# 幂等调用重试上限（仅幂等方法 + 连接级错误换实例重试），键级 retry_max 可覆盖
+retry_max = 1
 
 # 服务键 → 服务描述（自由表，新增微服务加一行即可）：
 # - url       = 静态基址（纯基址无路径，端点由消费方拼接）；与 discovery 并存时 url 优先
 # - discovery = Nacos 服务名（删 url 即切服务发现选例；transport=grpc 时必配）
 # - transport = http|grpc（仅服务间导入调用生效，反代恒 HTTP；缺省取 default_transport）
-# 环境变量覆盖：CENTER_CLIENT__SERVICES__FLOW__URL 等（值需带 scheme，纯数字值会被解析为整数）
-[center_client.services]
+# 环境变量覆盖：SERVICE_RPC__SERVICES__FLOW__URL 等（值需带 scheme，纯数字值会被解析为整数）
+[service_rpc.services]
 # 导入器目标：菜单/权限/表单定义导入 → 门户自身统一端点（自环）。
 # 服务发现备用值：注册名以各服务 .env 的 NACOS_NAMING_SERVICE_NAME 为准（门户实注册 cmx-portal-local）。
 menu = { url = "http://127.0.0.1:8080", discovery = "cmx-portal-local" }
@@ -177,12 +179,12 @@ meta = { url = "http://127.0.0.1:8096", discovery = "cmx-meta-server" }
 # ============================================
 # RPC 配置（默认关闭）
 # ============================================
-[rpc]
+[service_rpc.server]
 enabled = false
 protocol = "grpc"
 warmup_services = []
 
-[rpc.grpc]
+[service_rpc.server.grpc]
 port = 9090
 timeout_ms = 30000
 connect_timeout_ms = 3000
