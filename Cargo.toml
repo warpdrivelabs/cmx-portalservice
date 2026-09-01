@@ -38,10 +38,10 @@ cmx-web-chassis = { path = "../cmx-container/crates/libs/cmx-web-chassis", versi
 # —— 跨 workspace 复用 cmx-container 基础库（cmx-portal 的依赖；仍是 cmx-container 成员）——
 cmx-jsonstore = { path = "../cmx-container/crates/libs/cmx-jsonstore", version = "0.1.12" }
 cmx-form = { path = "../cmx-container/crates/libs/cmx-form", version = "0.1.12" }
-# cmx-model-meta：模型中心已抽独立 workspace cmx-model，容器内原址 crate 退役，**单一事实源**在
-# cmx-model。门户经 cmx-portal 依赖它；指向 cmx-model 副本，与 cmx-mdm 等跨 ws 消费方全链同源
-# （避免 package collision：同名同版异路径）。
-cmx-model-meta = { path = "../cmx-model/crates/cmx-model-meta", version = "0.1.12" }
+# cmx-model-meta：定义 JSON 读取层（definitions store/resolve/coord）。数据运行态 crate 已随
+# 第二批阶段三回沉 cmx-container（真源在平台仓），门户经 cmx-portal 依赖它——与 cmx-mdm/cmx-model
+# 等跨 ws 消费方全链单源（同名同版同路径，无 package collision）。
+cmx-model-meta = { path = "../cmx-container/crates/libs/cmx-model/cmx-model-meta", version = "0.1.12" }
 cmx-database = { path = "../cmx-container/crates/libs/cmx-infra/cmx-database", version = "0.1.12" }
 cmx-core = { path = "../cmx-container/crates/libs/cmx-core", version = "0.1.12" }
 cmx-utils = { path = "../cmx-container/crates/libs/cmx-utils", version = "0.1.12" }
