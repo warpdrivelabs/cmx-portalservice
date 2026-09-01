@@ -1027,8 +1027,8 @@ dependencies = [
  "cmx-plugin-trigger",
  "cmx-plugin-trigger-store-pg",
  "cmx-portal",
- "cmx-rpc",
  "cmx-service",
+ "cmx-service-rpc",
  "cmx-storage",
  "cmx-traits",
  "cmx-utils",
@@ -1409,8 +1409,8 @@ dependencies = [
  "async-trait",
  "chrono",
  "cmx-core",
- "cmx-rpc",
  "cmx-rpc-gen",
+ "cmx-service-rpc",
  "cmx-traits",
  "pilota",
  "serde_json",
@@ -1459,12 +1459,12 @@ dependencies = [
  "cmx-plugin-trigger-store-pg",
  "cmx-registry-config",
  "cmx-resource-rpc",
- "cmx-rpc",
  "cmx-rpt-api",
  "cmx-rule-api",
  "cmx-runtime",
  "cmx-service",
  "cmx-service-base",
+ "cmx-service-rpc",
  "cmx-storage",
  "cmx-storage-api",
  "cmx-traits",
@@ -1507,8 +1507,8 @@ dependencies = [
  "cmx-orchestrator-rpc",
  "cmx-registry-config",
  "cmx-resource-rpc",
- "cmx-rpc",
  "cmx-service",
+ "cmx-service-rpc",
  "cmx-storage",
  "cmx-traits",
  "cmx-utils",
@@ -1651,8 +1651,8 @@ name = "cmx-resource-rpc"
 version = "0.1.12"
 dependencies = [
  "async-trait",
- "cmx-rpc",
  "cmx-rpc-gen",
+ "cmx-service-rpc",
  "cmx-traits",
  "tokio",
  "tracing",
@@ -1670,25 +1670,6 @@ dependencies = [
  "serde_json",
  "tracing",
  "uuid",
-]
-
-[[package]]
-name = "cmx-rpc"
-version = "0.1.12"
-dependencies = [
- "anyhow",
- "async-broadcast",
- "cmx-core",
- "cmx-registry-config",
- "cmx-traits",
- "cmx-utils",
- "serde",
- "serde_json",
- "thiserror 2.0.20",
- "tokio",
- "tracing",
- "volo",
- "volo-grpc",
 ]
 
 [[package]]
@@ -1773,9 +1754,9 @@ dependencies = [
  "cmx-http",
  "cmx-plugin",
  "cmx-registry-config",
- "cmx-rpc",
  "cmx-runtime",
  "cmx-service",
+ "cmx-service-rpc",
  "cmx-storage",
  "cmx-traits",
  "cmx-utils",
@@ -1785,6 +1766,27 @@ dependencies = [
  "tokio",
  "toml 0.8.23",
  "tracing",
+]
+
+[[package]]
+name = "cmx-service-rpc"
+version = "0.1.12"
+dependencies = [
+ "async-broadcast",
+ "async-trait",
+ "cmx-core",
+ "cmx-registry-config",
+ "cmx-traits",
+ "cmx-utils",
+ "rand 0.8.7",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.20",
+ "tokio",
+ "tracing",
+ "volo",
+ "volo-grpc",
 ]
 
 [[package]]
