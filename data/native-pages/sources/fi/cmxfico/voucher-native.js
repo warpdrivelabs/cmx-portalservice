@@ -137,7 +137,7 @@ function styleHtml () {
 .vch-root{display:flex;flex-direction:column;height:100%;gap:6px;padding:8px;box-sizing:border-box;min-width:0}
 .vch-bar{flex:0 0 auto}
 .vch-title{font-weight:600}
-.vch-msg{margin-left:12px;color:#0854a0;font-size:12px}
+.vch-msg{margin-left:12px;color:var(--sapLinkColor, #0854a0);font-size:12px}
 .vch-grids{flex:1;display:flex;flex-direction:column;gap:6px;min-height:0;min-width:0;overflow:hidden}
 .vch-pane{flex:1 1 0;display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden}
 .vch-grid{display:block;width:100%;flex:1;min-height:0;min-width:0}

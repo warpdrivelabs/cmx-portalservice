@@ -42,7 +42,7 @@ function styleCss () {
       background:color-mix(in srgb,var(--neo-cyan) 12%,var(--sapList_HeaderBackground,#eef2f6))}
     .nc-head ui5-icon{width:1.2rem;height:1.2rem;color:var(--neo-cyan)}
     .nc-title{font-weight:700;font-size:14px}
-    .nc-count{font-size:11px;font-weight:700;color:#fff;background:var(--neo-red);border-radius:999px;padding:1px 7px;min-width:18px;text-align:center}
+    .nc-count{font-size:11px;font-weight:700;color: #fff;background:var(--neo-red);border-radius:999px;padding:1px 7px;min-width:18px;text-align:center}
     .nc-count[data-zero="1"]{background:var(--sapNeutralBackground,#c8ccd0)}
     .nc-actions{margin-left:auto;display:flex;gap:6px}
     .nc-btn{border:1px solid color-mix(in srgb,var(--neo-cyan) 20%,transparent);border-radius:6px;background:var(--sapList_Background,#fff);

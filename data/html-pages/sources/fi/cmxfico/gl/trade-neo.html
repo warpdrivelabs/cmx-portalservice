@@ -44,7 +44,7 @@
       box-shadow:
         0 6px 28px color-mix(in srgb, var(--neo-violet) 10%, transparent),
         0 2px 12px color-mix(in srgb, var(--neo-cyan) 8%, transparent),
-        inset 0 1px 0 color-mix(in srgb, #fff 55%, transparent);
+        inset 0 1px 0 color-mix(in srgb, var(--sapList_Background, #ffffff) 55%, transparent);
       backdrop-filter: none;
     }
     .neo-hero::before {
@@ -284,7 +284,7 @@
       justify-content: center;
       position: relative;
       transform: rotate(-12deg);
-      color: #ea580c;
+      color: var(--sapCriticalTextColor, #ea580c);
       background: color-mix(in srgb, currentColor 10%, var(--neo-glass));
       border: 2px double currentColor;
       box-shadow:
@@ -322,12 +322,12 @@
       font-family: "STKaiti", "KaiTi", "Songti SC", serif;
       z-index: 1;
     }
-    .neo-voucher-seal[data-status="draft"] { color: #ea580c; }
-    .neo-voucher-seal[data-status="void"] { color: #dc2626; }
-    .neo-voucher-seal[data-status="saved"] { color: #16a34a; }
-    .neo-voucher-seal[data-status="audited"] { color: #7c3aed; }
-    .neo-voucher-seal[data-status="posted"] { color: #2563eb; }
-    .neo-voucher-seal[data-status="paid"] { color: #2563eb; }
+    .neo-voucher-seal[data-status="draft"] { color: var(--sapCriticalTextColor, #ea580c); }
+    .neo-voucher-seal[data-status="void"] { color: var(--sapNegativeTextColor, #dc2626); }
+    .neo-voucher-seal[data-status="saved"] { color: var(--sapPositiveTextColor, #16a34a); }
+    .neo-voucher-seal[data-status="audited"] { color: var(--neo-violet, #7c3aed); }
+    .neo-voucher-seal[data-status="posted"] { color: var(--sapLinkColor, #2563eb); }
+    .neo-voucher-seal[data-status="paid"] { color: var(--sapLinkColor, #2563eb); }
     .neo-hero-right {
       flex-shrink: 0;
       margin-left: auto;
@@ -439,7 +439,7 @@
         linear-gradient(145deg, color-mix(in srgb, var(--act-hue) 18%, transparent), transparent 55%),
         color-mix(in srgb, var(--sapList_Background) 82%, transparent);
       border: 1px solid color-mix(in srgb, var(--act-hue) 38%, transparent);
-      box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 35%, transparent);
+      box-shadow: inset 0 1px 0 color-mix(in srgb, var(--sapList_Background, #ffffff) 35%, transparent);
       transition: box-shadow 0.25s ease, border-color 0.25s ease;
       z-index: 0;
     }
@@ -483,7 +483,7 @@
     }
     .neo-act-chip:hover:not(:disabled):not(.is-disabled)::before {
       box-shadow:
-        inset 0 1px 0 color-mix(in srgb, #fff 45%, transparent),
+        inset 0 1px 0 color-mix(in srgb, var(--sapList_Background, #ffffff) 45%, transparent),
         0 0 12px color-mix(in srgb, var(--act-hue) 35%, transparent);
       border-color: color-mix(in srgb, var(--act-hue) 65%, transparent);
     }
@@ -563,7 +563,7 @@
       border: 1px solid color-mix(in srgb, var(--neo-cyan) 30%, var(--neo-violet) 16%);
       box-shadow:
         0 3px 18px color-mix(in srgb, var(--neo-cyan) 8%, transparent),
-        inset 0 1px 0 color-mix(in srgb, #fff 50%, transparent);
+        inset 0 1px 0 color-mix(in srgb, var(--sapList_Background, #ffffff) 50%, transparent);
     }
     .neo-lane--head::before {
       content: '';

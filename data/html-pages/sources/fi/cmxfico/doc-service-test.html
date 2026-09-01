@@ -1,18 +1,18 @@
-<div style="font:13px/1.5 -apple-system,Segoe UI,sans-serif;padding:12px;height:100%;box-sizing:border-box;overflow:auto;color:#222;" data-node-id="n-1">
+<div style="font:13px/1.5 -apple-system,Segoe UI,sans-serif;padding:12px;height:100%;box-sizing:border-box;overflow:auto;color:var(--sapTextColor, #222222);" data-node-id="n-1">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;" data-node-id="n-2">
     <span style="font-weight:600;font-size:15px;">业务单据加载服务 · 全后端能力自检（html_pages）</span>
     <ui5-button design="Emphasized" accessible-role="Button" data-node-id="n-3" data-eventclick="runTest();">重新运行</ui5-button>
     <span id="stSum" class="st-sum" style="margin-left:auto;font-weight:600;">未运行</span>
   </div>
-  <div style="margin:6px 0;color:#777;font-size:12px;" data-node-id="n-4">坐标：fi/cmxfico/gl/cmxfico_doc_meta_v1.json · db=fico-db</div>
+  <div style="margin:6px 0;color:var(--sapContent_LabelColor, #777777);font-size:12px;" data-node-id="n-4">坐标：fi/cmxfico/gl/cmxfico_doc_meta_v1.json · db=fico-db</div>
   <style>
-  .st-item{display:flex;gap:10px;padding:6px 10px;border-top:1px solid #f0f0f0;align-items:baseline;}
-  #stList{border:1px solid #e5e5e5;border-radius:6px;overflow:hidden;}
+  .st-item{display:flex;gap:10px;padding:6px 10px;border-top:1px solid var(--sapGroup_ContentBorderColor, #f0f0f0);align-items:baseline;}
+  #stList{border:1px solid var(--sapGroup_ContentBorderColor, #e5e5e5);border-radius:6px;overflow:hidden;}
   .st-badge{flex:0 0 auto;width:44px;text-align:center;font-weight:700;border-radius:3px;font-size:11px;padding:1px 0;}
-  .st-badge.ok{background:#e6f4ea;color:#107e3e;}.st-badge.bad{background:#fbe9e9;color:#bb0000;}
-  .st-name{flex:0 0 40%;font-weight:600;}.st-detail{flex:1;color:#555;word-break:break-all;}
-  .st-ms{flex:0 0 auto;color:#999;font-size:11px;min-width:44px;text-align:right;}
-  .st-sum.ok{color:#107e3e;}.st-sum.bad{color:#bb0000;}
+  .st-badge.ok{background:#e6f4ea;color:var(--sapPositiveElementColor, #107e3e);}.st-badge.bad{background:#fbe9e9;color:var(--sapNegativeElementColor, #bb0000);}
+  .st-name{flex:0 0 40%;font-weight:600;}.st-detail{flex:1;color:var(--sapContent_LabelColor, #555555);word-break:break-all;}
+  .st-ms{flex:0 0 auto;color:var(--sapContent_LabelColor, #999999);font-size:11px;min-width:44px;text-align:right;}
+  .st-sum.ok{color:var(--sapPositiveTextColor, #107e3e);}.st-sum.bad{color:var(--sapNegativeTextColor, #bb0000);}
   </style>
   <div id="stList" data-node-id="n-5"><div class="st-item"><span class="st-detail">初始化中…</span></div></div>
 </div>

@@ -9,7 +9,7 @@
     .fico-exp-filterbar-spacer { flex:1 1 auto; min-width:8px; }
     .fico-exp-period-label { color:var(--sapContent_LabelColor,#6a6d70); font-size:var(--fico-exp-sub-size); font-weight:400; }
     .fico-exp-period-select { width:6.1rem; min-width:6.1rem; }
-    .fico-exp-batch-pane { flex:1 1 50%; min-height:0; display:flex; flex-direction:column; border-bottom:2px solid var(--sapGroup_ContentBorderColor,#d0d0d0); background:color-mix(in srgb, var(--sapList_Background,#fff) 96%, #7c3aed 4%); }
+    .fico-exp-batch-pane { flex:1 1 50%; min-height:0; display:flex; flex-direction:column; border-bottom:2px solid var(--sapGroup_ContentBorderColor,#d0d0d0); background:color-mix(in srgb, var(--sapList_Background,#fff) 96%, var(--neo-violet, #7c3aed) 4%); }
     .fico-exp-detail-pane { flex:1 1 50%; min-height:0; display:flex; flex-direction:column; }
     .fico-exp-batch-list { flex:1; min-height:0; background:transparent; }
     .fico-exp-batch-form { display:block; flex:1; min-height:0; overflow:auto; padding:2px; font-size:var(--fico-exp-head-size); }
@@ -18,14 +18,14 @@
     .fico-exp-pager-info { font-size:var(--fico-exp-sub-size); color:var(--sapContent_LabelColor,#6a6d70); }
   </style>
   <template id="fico-batch-list-skin">
-    .cmx-list { gap:8px; padding:8px 10px; --fico-batch-accent:#00b4d8; --fico-batch-accent-2:#7c3aed; --fico-batch-mint:#10b981; --fico-batch-ic-size:26px; --fico-batch-icon-size:14px; --fico-batch-ic-radius:7px; }
+    .cmx-list { gap:8px; padding:8px 10px; --fico-batch-accent:#00b4d8; --fico-batch-accent-2:var(--neo-violet, #7c3aed); --fico-batch-mint:#10b981; --fico-batch-ic-size:26px; --fico-batch-icon-size:14px; --fico-batch-ic-radius:7px; }
     .cmx-list-item { gap:8px; padding:8px 10px; border-radius:12px; background:color-mix(in srgb, var(--sapList_Background,#fff) 92%, transparent); border:1px solid color-mix(in srgb, var(--fico-batch-accent) 16%, var(--sapGroup_TitleBorderColor,#ddd)); transition:border-color 0.18s ease, box-shadow 0.18s ease, transform 0.15s ease, background 0.18s ease; }
     .cmx-list-item:not(.is-selected):hover { transform:translateY(-2px); border-color:var(--fico-batch-accent); box-shadow:0 8px 24px color-mix(in srgb, var(--fico-batch-accent) 14%, transparent); }
     .cmx-list-item.is-selected { background:linear-gradient(105deg, color-mix(in srgb, var(--fico-batch-accent-2) 14%, var(--sapList_Background,#fff)), color-mix(in srgb, var(--fico-batch-accent) 12%, var(--sapList_Background,#fff))); border:1px solid color-mix(in srgb, var(--fico-batch-accent-2) 30%, var(--fico-batch-accent) 20%); box-shadow:0 4px 16px color-mix(in srgb, var(--fico-batch-accent-2) 12%, transparent); }
     .cmx-list-item__ic { width:var(--fico-batch-ic-size); height:var(--fico-batch-ic-size); border-radius:var(--fico-batch-ic-radius); background:color-mix(in srgb, var(--fico-batch-accent) 12%, transparent); color:var(--fico-batch-accent); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .cmx-list-item__ic ui5-icon { width:var(--fico-batch-icon-size); height:var(--fico-batch-icon-size); color:inherit; }
-    .cmx-list-item.is-selected .cmx-list-item__ic { background:conic-gradient(from 210deg, var(--fico-batch-accent-2), var(--fico-batch-accent), var(--fico-batch-mint), var(--fico-batch-accent-2)); color:#fff; }
-    .cmx-list-item.is-selected .cmx-list-item__ic ui5-icon { color:#fff; }
+    .cmx-list-item.is-selected .cmx-list-item__ic { background:conic-gradient(from 210deg, var(--fico-batch-accent-2), var(--fico-batch-accent), var(--fico-batch-mint), var(--fico-batch-accent-2)); color: #fff; }
+    .cmx-list-item.is-selected .cmx-list-item__ic ui5-icon { color: #fff; }
     .cmx-list-item__title { font-size:var(--sapFontSize,0.875rem); font-weight:600; color:var(--sapTextColor,#223548); overflow-wrap:anywhere; line-height:1.35; }
     .cmx-list-item__desc { font-size:0.75rem; color:var(--sapContent_LabelColor,#6a6d70); margin-top:2px; line-height:1.4; overflow-wrap:anywhere; }
 

@@ -829,7 +829,7 @@ function renderInto (host) {
 function styleHtml () {
   return `<style>
     .dam-neo{
-      --neo-cyan:#00b4d8;--neo-violet:#7c3aed;--neo-mint:#10b981;--neo-warn:#f59e0b;
+      --neo-cyan:#00b4d8;--neo-violet: #7c3aed;--neo-mint:#10b981;--neo-warn:#f59e0b;
       --dam-hue-domain:var(--neo-violet);--dam-hue-app:var(--neo-cyan);--dam-hue-module:var(--neo-mint);
       --dam-body-bg:var(--sapList_Background,#fff);
       --dam-head-bg:color-mix(in srgb,var(--neo-cyan) 14%,var(--sapList_HeaderBackground,#eef2f6));
@@ -907,7 +907,7 @@ function styleHtml () {
     .dam-icon-btn{width:24px;height:24px;border:1px solid color-mix(in srgb,var(--neo-cyan) 12%,transparent);border-radius:5px;background:color-mix(in srgb,var(--sapList_Background,#fff) 90%,var(--neo-cyan) 10%);color:var(--neo-cyan);display:inline-flex;align-items:center;justify-content:center;padding:0;cursor:pointer;transition:background .15s ease,border-color .15s ease,box-shadow .15s ease,transform .15s ease}
     .dam-icon-btn ui5-icon{width:14px;height:14px}
     .dam-icon-btn:hover{background:color-mix(in srgb,var(--neo-cyan) 14%,var(--sapList_Background,#fff));border-color:color-mix(in srgb,var(--neo-cyan) 35%,transparent);box-shadow:0 0 10px color-mix(in srgb,var(--neo-cyan) 18%,transparent)}
-    .dam-icon-btn.primary{color:#fff;background:linear-gradient(135deg,var(--neo-cyan),color-mix(in srgb,var(--neo-violet) 40%,var(--neo-cyan)));border-color:transparent}
+    .dam-icon-btn.primary{color: #fff;background:linear-gradient(135deg,var(--neo-cyan),color-mix(in srgb,var(--neo-violet) 40%,var(--neo-cyan)));border-color:transparent}
     .dam-icon-btn.danger{color:var(--sapNegativeTextColor,#b00);background:color-mix(in srgb,var(--sapNegativeElementColor,#b00) 8%,var(--sapList_Background,#fff));border-color:color-mix(in srgb,var(--sapNegativeElementColor,#b00) 22%,transparent)}
     .dam-editor-card{min-height:0}
     .dam-editor-context{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:7px;align-items:center;min-height:36px;padding:4px 8px;border-bottom:1px solid color-mix(in srgb,var(--neo-cyan) 10%,var(--sapGroup_TitleBorderColor,#d9d9d9));background:
