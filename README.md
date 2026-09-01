@@ -58,7 +58,7 @@ cmx-portalservice/                        （独立 workspace）
 |---|---|
 | `meta` | 门户导航元数据：menu / activities / domains / registry / dam_registry / modules / workspace_nodes |
 | `pages`（← `cmx-form`） | 表单中心：form / html / native 页面 |
-| `definitions` / `dict`（← `cmx-model-meta`） | 模型中心：定义 / 弹性组合 / 数据字典 |
+| `definitions` / `dict`（← `cmx-model-meta`，真源 cmx-container） | 定义 / 弹性组合 / 数据字典（模型中心数据运行态读取层） |
 | `dam` | DAM 注册表（主数据已迁数据库） |
 | `notify` | 通知中心（hub + store + 未读计数缓存） |
 | `help` / `fact` / `launcher` / `service_catalog` | 帮助 / 事实 / 启动器 / 服务目录 |
