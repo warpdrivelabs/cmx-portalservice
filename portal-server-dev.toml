@@ -53,9 +53,9 @@ page_cache_max_entries = 4096
 db_id = "primary"
 db_name = "主控数据库"
 db_type = "postgres"
-#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmxlocal"
+db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmxlocal"
 #db_url = "postgres://postgres:postgres@192.168.1.100:5433/cmx"
-db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmxlocal"
+#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmxlocal"
 # （临时指向 cmx_fico 以将 onto 菜单落入该库，用完恢复上一行 cmxlocal）
 #db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmx_fico"
 default = true
@@ -67,8 +67,8 @@ health_check_timeout = 5
 db_id = "fico-db"
 db_name = "总账数据库"
 db_type = "postgres"
-db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmx_fico"
-#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmx_fico"
+#db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.157.46:5432/cmx_fico"
+db_url = "postgres://dbuser_dba:9lWsRQY4i4VToPpkHcCRFzki@192.168.1.14:5432/cmx_fico"
 #db_url = "postgres://postgres:postgres@192.168.1.100:5433/fico"
 default = false
 source_type = "biz"
@@ -79,6 +79,7 @@ health_check_timeout = 5
 [redis]
 #url = "redis://localhost:6379/12"
 url = "redis://192.168.1.14:6379/13"
+#url = "redis://192.168.157.46:6379/13"
 
 [templates]
 # 模板目录在 cmx-container 内 → ../cmx-container/ 前缀
