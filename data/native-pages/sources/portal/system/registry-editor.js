@@ -18,7 +18,7 @@ const DEFAULT_PATH = ['HKEY_CURRENT_USER', 'Software', 'CMX', 'Portal']
 // 值类型元数据：徽章色 / 说明。类型系统对齐 Windows 注册表（子集）+ JSON。
 const TYPE_META = {
   REG_SZ: { caption: '字符串', color: 'var(--neo-cyan,#00b4d8)' },
-  REG_DWORD: { caption: '数字 (32 位)', color: 'var(--neo-violet,#7c3aed)' },
+  REG_DWORD: { caption: '数字 (32 位)', color: 'var(--neo-violet,var(--neo-violet, #7c3aed))' },
   REG_BOOL: { caption: '布尔', color: 'var(--neo-mint,#10b981)' },
   REG_JSON: { caption: 'JSON', color: 'var(--neo-warn,#f59e0b)' },
 }
@@ -27,6 +27,7 @@ const DEFAULT_VALUE_NAME = '(默认)'
 
 // ─── 小工具 ──────────────────────────────────────────────────────────────
 const { escHtml: esc } = globalThis.__cmxDataComp // 共享转义（cmx-data-comp/lib/cmx-page-helpers.js；最严格五字符集合，文本/属性上下文皆安全）
+const { deepClone } = globalThis.__cmxDataComp // 共享深拷贝（cmx-data-comp/lib/cmx-deep-clone.js；审查 B-04）
 
 const isObj = (v) => v != null && typeof v === 'object' && !Array.isArray(v)
 const isKeyNode = (k) => !k.startsWith('__')
@@ -110,7 +111,7 @@ function defaultDb() {
     HKEY_USERS: mkKey(null, {
       '.DEFAULT': mkKey(null, {
         'Control Panel': mkKey(null, {
-          Colors: mkKey({ Accent: mkVal('REG_SZ', '#00b4d8'), Background: mkVal('REG_SZ', '#0b0f17') }),
+          Colors: mkKey({ Accent: mkVal('REG_SZ', 'var(--sapInformationElementColor, #00b4d8)'), Background: mkVal('REG_SZ', 'var(--sapInformationElementColor, #0b0f17)') }),
         }),
       }),
     }),
@@ -357,7 +358,7 @@ function searchAll(keyword, limit) {
 function exportSubtree(segs) {
   const hit = getNode(segs)
   if (!hit) return null
-  return JSON.parse(JSON.stringify(hit.node))
+  return deepClone(hit.node)
 }
 
 // 导入：深合并 obj 到目标键；返回 { added, updated }
@@ -497,7 +498,7 @@ function renderSearchResults(box) {
         <td class="reg-vdata">${esc(r.path)}</td><td></td><td>${r.readonly ? '<span class="reg-ro">只读</span>' : ''}</td></tr>`
     }
     return `<tr class="reg-srow" data-path="${esc(r.path)}" data-name="${esc(r.name)}">
-      <td><span class="reg-badge" style="--bc:var(--neo-violet,#7c3aed)">值</span></td>
+      <td><span class="reg-badge" style="--bc:var(--neo-violet,var(--neo-violet, #7c3aed))">值</span></td>
       <td class="reg-vdata">${esc(r.path)}</td>
       <td>${esc(r.name)} = ${esc(fmtData(r))}</td><td>${r.readonly ? '<span class="reg-ro">只读</span>' : ''}</td></tr>`
   }).join('')
@@ -939,7 +940,7 @@ const STYLE = `
 .reg-root{
   --reg-bg:#0b0f17; --reg-bg2:#0e1421; --reg-panel:#101a2b; --reg-hover:#16233a;
   --reg-line:rgba(0,180,216,.16); --reg-line-strong:rgba(0,180,216,.42);
-  --reg-cyan:var(--neo-cyan,#00b4d8); --reg-violet:var(--neo-violet,#7c3aed);
+  --reg-cyan:var(--neo-cyan,#00b4d8); --reg-violet:var(--neo-violet,var(--neo-violet, #7c3aed));
   --reg-mint:var(--neo-mint,#10b981); --reg-warn:var(--neo-warn,#f59e0b);
   --reg-text:#d5e3f5; --reg-dim:#7d8fb0;
   display:flex;flex-direction:column;height:100%;box-sizing:border-box;

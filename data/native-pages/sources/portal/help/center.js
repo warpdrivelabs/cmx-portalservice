@@ -743,7 +743,7 @@ function styleHtml () {
 function styleCss () {
   return `
     .help-neo{
-      --neo-cyan:#00b4d8;--neo-violet:#7c3aed;--neo-mint:#10b981;--neo-warn:#f59e0b;
+      --neo-cyan:#00b4d8;--neo-violet: #7c3aed;--neo-mint:#10b981;--neo-warn:#f59e0b;
       --help-body-bg:var(--sapList_Background,#fff);
       --help-head-bg:color-mix(in srgb,var(--neo-cyan) 14%,var(--sapList_HeaderBackground,#eef2f6));
       --help-border:color-mix(in srgb,var(--neo-cyan) 22%,var(--sapGroup_TitleBorderColor,#d9d9d9));

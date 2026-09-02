@@ -1,6 +1,6 @@
 <style>
   .acctws-explorer-root {
-    --acct-cyan: #00b4d8; --acct-violet: #7c3aed;
+    --acct-cyan: #00b4d8; --acct-violet: var(--neo-violet, #7c3aed);
     --acct-border: color-mix(in srgb, var(--acct-cyan) 14%, var(--sapGroup_ContentBorderColor, #e0e0e0));
     display: flex; flex-direction: column; height: 100%; box-sizing: border-box;
     background: linear-gradient(180deg, color-mix(in srgb, var(--acct-cyan) 3%, var(--sapList_Background,#fff)), var(--sapList_Background,#fff));
@@ -68,7 +68,7 @@
   </div>
   <cmx-split-pane id="orgSplitPane" orientation="horizontal" size="70%" min-first="120" min-second="100" splitter-size="3" style="display:block;flex:1;min-height:0;">
     <div slot="first" class="acctws-tree-wrap">
-      <cmx-web-treeview id="tree" class="acctws-org-tree" selected-node-class="acctws-tree-selected" id-member="id" path-member="full_path" level-member="level_no" display-value-member="displayValue" is-selected-member="is_selected" icon-member="icon" should-toggle-on-node-click="false" toggle-icon-mode="swap" expand-level="9" data-cmx-skin="colored" data-cmx-accent-color="#00b4d8" data-cmx-tree-lines="false"></cmx-web-treeview>
+      <cmx-web-treeview id="tree" class="acctws-org-tree" selected-node-class="acctws-tree-selected" id-member="id" path-member="full_path" level-member="level_no" display-value-member="displayValue" is-selected-member="is_selected" icon-member="icon" should-toggle-on-node-click="false" toggle-icon-mode="swap" expand-level="9" data-cmx-skin="colored" data-cmx-accent-color="var(--sapInformationElementColor, #00b4d8)" data-cmx-tree-lines="false"></cmx-web-treeview>
     </div>
     <div slot="second" class="acctws-detail-wrap">
     <div class="acctws-detail-title"><ui5-icon name="detail-view"></ui5-icon><span>组织详情</span></div>

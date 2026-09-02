@@ -875,7 +875,7 @@ function gaugeHtml (d) {
       <div class="gauge-rate ${live ? 'live' : ''}">
         <span class="gv">${t.idle ? '—' : t.rate}</span><span class="gu">${t.idle ? '空闲等待' : 'msg/s'}</span>
       </div>
-      <div class="gauge-spark">${sparkline(t.samples, live ? '#8fc0ef' : '#8b98a5')}</div>
+      <div class="gauge-spark">${sparkline(t.samples, live ? '#8fc0ef' : 'var(--sapInformationElementColor, #8b98a5)')}</div>
     </div>
     <div class="gauge-grid">
       <div class="gc"><div class="gc-n">${t.processed.toLocaleString()}</div><div class="gc-l">累计处理</div></div>
